@@ -1,0 +1,66 @@
+# .rubocop.yml
+
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  Exclude:
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'config/**/*'
+
+# Style preferences for readability and consistency
+Style/StringLiterals:
+  EnforcedStyle: single_quotes # Enforce single quotes for strings
+
+Layout/LineLength:
+  Max: 100 # Max line length for readability; adjust as preferred
+
+Layout/TrailingEmptyLines:
+  Enabled: true # Ensure a single trailing newline at the end of each file
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: true # Adds space around blocks for readability
+
+# Rails-specific cops
+Rails:
+  Enabled: true
+
+Rails/SkipsModelValidations:
+  Enabled: true # Encourage using Rails validations over database constraints
+
+Rails/TimeZone:
+  Enabled: true # Use `Time.zone` over `Time` for consistency with time zones
+
+Rails/OutputSafety:
+  Enabled: true # Caution for raw HTML output (to prevent XSS vulnerabilities)
+
+# Basic complexity and readability checks
+Metrics/MethodLength:
+  Max: 10 # Limit method length to encourage concise methods
+
+Metrics/ClassLength:
+  Max: 150 # Limit class length for better readability and maintainability
+
+Metrics/BlockLength:
+  Max: 25 # Keep blocks to a manageable length
+
+Metrics/AbcSize:
+  Max: 15 # Keep method complexity in check
+
+# Lint cops to catch common issues
+Lint/UselessAssignment:
+  Enabled: true # Detect and prevent unused assignments
+
+Lint/UnusedMethodArgument:
+  Enabled: true # Flag unused method arguments for cleanup
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: true # Warns if a block could be misinterpreted
+
+Lint/ShadowingOuterLocalVariable:
+  Enabled: true # Avoid accidental variable shadowing
+
+Style/Documentation:
+  Enabled: false
