@@ -65,3 +65,4 @@ end
 gem 'devise', '~> 4.9'
 gem 'puma', '~> 6.0'
 gem 'execjs', '>= 2.9'
+gem 'dotenv-rails'
