@@ -59,13 +59,9 @@ end
 
 gem 'devise', '~> 4.9'
 
-gem 'puma', '~> 5.0'
-
 # For production deployment
 group :production do
   gem 'puma', '~> 5.6' # High-performance web server for production
 end
 
 gem 'execjs', '>= 2.9'
-
-gem 'sprockets', '>= 4.0.2'
