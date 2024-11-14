@@ -12,16 +12,21 @@ gem 'rails', '~> 7.0.0'
 gem 'pg', '>= 1.1', '< 2.0'
 
 # Use SCSS for stylesheets
-gem 'sassc-rails', '~> 2.1'
+# gem 'sassc-rails', '~> 2.1'
 
 # Use CSS bundling with esbuild (recommended in Rails 7)
-gem 'cssbundling-rails'
+# gem 'cssbundling-rails'
 
 # JavaScript bundling for assets (Rails 7 default setup)
-gem 'jsbundling-rails'
+# gem 'jsbundling-rails'
+
+gem 'jquery-rails'
+
+gem 'turbolinks', '~> 5'
+
 
 # Use Uglifier as compressor for JavaScript assets if needed
-gem 'uglifier', '>= 4.2.0'
+# gem 'uglifier', '>= 4.2.0'
 
 # Use CoffeeScript if required, though many Rails 7 apps use JavaScript modules instead
 # gem 'coffee-rails', '~> 5.0'
@@ -48,6 +53,11 @@ gem 'rubocop', require: false
 gem 'rubocop-rails', require: false # For Rails-specific cops (recommended for Rails projects)
 gem 'rubocop-rspec', require: false
 gem 'rubocop-rspec_rails', require: false
+
+# Gemfile
+gem 'sprockets-rails'  # Manages the asset pipeline in Rails
+gem 'sprockets'        # Core asset pipeline library
+
 
 # Group gems for development and testing
 group :development, :test do
