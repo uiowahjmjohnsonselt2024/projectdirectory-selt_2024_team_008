@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 
+gem 'rails', '~> 7.0'  # Ensure compatibility with Railties and Rails components
+
 # Use PostgreSQL as the database for Active Record (recommended over sqlite3 for production)
 gem 'pg', '>= 1.1', '< 2.0'
 
@@ -43,7 +45,6 @@ group :development, :test do
   # Better errors and debugging
   gem 'byebug'
   gem 'rspec-rails', '~> 5.0' # Updated for Rails 7
-
   # Pry is an alternative for debugging
   gem 'pry-rails'
 end
@@ -51,17 +52,16 @@ end
 group :development do
   # Web console to debug from the browser
   gem 'web-console', '~> 4.2.0'
-
   # Spring for faster Rails command execution
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'
 end
 
-gem 'devise', '~> 4.9'
-
 # For production deployment
 group :production do
-  gem 'puma', '~> 5.6' # High-performance web server for production
+
 end
 
+gem 'devise', '~> 4.9'
+gem 'puma', '~> 6.0'
 gem 'execjs', '>= 2.9'
