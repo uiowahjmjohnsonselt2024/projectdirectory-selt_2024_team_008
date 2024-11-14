@@ -9,24 +9,23 @@ class ApplicationController < ActionController::Base
 
   # Configure additional parameters for Devise
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :authenticate_user!, except: [:home]
 
   protected
 
   # Permit additional parameters for Devise (e.g., email and password for sign up)
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :email, :password, :password_confirmation])
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :password])
     devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :current_password])
   end
-
-  before_action :authenticate_user!, except: [:home]
 
   # def after_sign_in_path_for(resource)
   #   # Redirect to the desired page, e.g., user profile or dashboard
   #   # user_dashboard_path # or any other path you want
   # end
   #
-  # def after_sign_out_path_for(resource_or_scope)
-  #   # Redirect to a page after sign-out, like the home or sign-in page
-  #   # new_user_session_path
-  # end
+  def after_sign_out_path_for(resource_or_scope)
+    root_path
+  end
 end
