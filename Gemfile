@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
-
-gem 'rails', '~> 7.0'  # Ensure compatibility with Railties and Rails components
+gem 'rails', '~> 7.0' # Ensure compatibility with Railties and Rails components
 
 # Use PostgreSQL as the database for Active Record (recommended over sqlite3 for production)
 gem 'pg', '>= 1.1', '< 2.0'
@@ -36,9 +37,8 @@ gem 'rubocop-rspec', require: false
 gem 'rubocop-rspec_rails', require: false
 
 # Gemfile
-gem 'sprockets-rails'  # Manages the asset pipeline in Rails
 gem 'sprockets'        # Core asset pipeline library
-
+gem 'sprockets-rails'  # Manages the asset pipeline in Rails
 
 # Group gems for development and testing
 group :development, :test do
@@ -67,11 +67,10 @@ group :development do
 end
 
 # For production deployment
-group :production do
-  
-end
+# group :production do
+# end
 
 gem 'devise', '~> 4.9'
-gem 'puma', '~> 6.0'
-gem 'execjs', '>= 2.9'
 gem 'dotenv-rails'
+gem 'execjs', '>= 2.9'
+gem 'puma', '~> 6.0'
