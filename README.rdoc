@@ -1,2 +1,3 @@
-Instructions: 
+Instructions:
+
 For Devise authentication, we have set up a Gmail account for password recovery. Authentication for this account is kept in a '.env' file that needs to be in the root directory for this project. This file is kept in the Files for our Teams Channel and can be downloaded from there. Devise also has a secret key which can also be found in the same '.env' file. 
