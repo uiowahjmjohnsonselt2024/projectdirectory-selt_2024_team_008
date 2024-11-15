@@ -47,6 +47,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 5.0' # Updated for Rails 7
   # Pry is an alternative for debugging
   gem 'pry-rails'
+
+  gem 'sqlite3', '~> 1.4'
 end
 
 group :development do
