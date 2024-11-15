@@ -44,7 +44,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -78,4 +78,21 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Set up Gmail SMTP for Action Mailer
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'gmail.com',
+    user_name:            ENV['GMAIL_USERNAME'],
+    password:             ENV['GMAIL_APP_PASSWORD'],
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_url_options = { host: 'https://selt-group008-final-project-f5f66b74f699.herokuapp.com/', protocol: 'https' }
+
 end

@@ -2,12 +2,35 @@
 <html>
 <head>
   <title>ShardsOfTheGrid</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+  <!-- Main Stylesheets -->
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= csrf_meta_tags %>
+
+  <!-- Conditional Stylesheet for Sessions Controller -->
+  <% if controller_name == 'sessions' || controller_name = 'registrations'%>
+    <%= stylesheet_link_tag 'sessions' %>
+  <% end %>
 </head>
+
 <body>
 
+<!-- Flash Messages -->
+<p class="notice"><%= flash[:notice] %></p>
+<p class="alert"><%= flash[:alert] %></p>
+
+<!-- Header Links (Conditional for Login/Signup Pages) -->
+<% if !current_page?(new_user_session_path) && !current_page?(new_user_registration_path) %>
+  <% if user_signed_in? %>
+    <%= link_to "Log out", destroy_user_session_path, method: :delete %>
+  <% else %>
+    <%= link_to "Log in", new_user_session_path %> |
+    <%= link_to "Sign up", new_user_registration_path %>
+  <% end %>
+<% end %>
+
+<!-- Main Content -->
 <%= yield %>
 
 </body>
