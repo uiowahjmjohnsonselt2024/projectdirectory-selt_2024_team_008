@@ -18,7 +18,7 @@ RSpec.describe "User Login", type: :request do
     expect(response.body).to include("Signed in successfully")
   end
 
-  it "does not log in with invalid credentials" do
+  it "does not log in with invalid password" do
     post user_session_path, params: {
       user: {
         login: "test@example.com",
@@ -28,5 +28,26 @@ RSpec.describe "User Login", type: :request do
 
     expect(response.body).to include("Invalid Login or password")
   end
+
+  it "does not log in with invalid login field" do
+    post user_session_path, params: {
+      user: {
+        login: "wronglogin@example.com",
+        password: "password"
+      }
+    }
+
+    expect(response.body).to include("Invalid Login or password")
+  end
+
+  it "does not log in with a blank password field" do
+    post user_session_path, params: {
+      user: {
+        login: "test@example.com",
+        password: ""
+      }
+    }
+  end
+
 end
 
