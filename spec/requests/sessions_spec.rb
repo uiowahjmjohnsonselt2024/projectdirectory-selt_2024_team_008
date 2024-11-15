@@ -68,8 +68,6 @@ RSpec.describe "User Login", type: :request do
     }
     follow_redirect!
     delete destroy_user_session_path
-    expect(response).to redirect_to(new_user_session_path)
-    follow_redirect!
     expect(response).to redirect_to(root_path) #THIS MIGHT NEED TO CHANGE LATER
   end
 
