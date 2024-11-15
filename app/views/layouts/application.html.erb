@@ -4,7 +4,7 @@
   <title>ShardsOfTheGrid</title>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-<%= csrf_meta_tags %>
+  <%= csrf_meta_tags %>
 </head>
 <body>
 
@@ -17,6 +17,7 @@
   <%= link_to "Log in", new_user_session_path %> |
   <%= link_to "Sign up", new_user_registration_path %>
 <% end %>
+
 <%= yield %>
 
 </body>
