@@ -40,9 +40,12 @@ Rails/TimeZone:
 Rails/OutputSafety:
   Enabled: true # Caution for raw HTML output (to prevent XSS vulnerabilities)
 
+Rails/LexicallyScopedActionFilter:
+  Enabled: false # possibility for functions to be inherited that are flagged
+
 # Basic complexity and readability checks
 Metrics/MethodLength:
-  Max: 10 # Limit method length to encourage concise methods
+  Max: 25 # Limit method length to encourage concise methods
 
 Metrics/ClassLength:
   Max: 150 # Limit class length for better readability and maintainability

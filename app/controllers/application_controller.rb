@@ -15,9 +15,10 @@ class ApplicationController < ActionController::Base
 
   # Permit additional parameters for Devise (e.g., email and password for sign up)
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :email, :password, :password_confirmation])
-    devise_parameter_sanitizer.permit(:sign_in, keys: [:login, :password])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation, :current_password])
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[username email password password_confirmation])
+    devise_parameter_sanitizer.permit(:sign_in, keys: %i[login password])
+    devise_parameter_sanitizer.permit(:account_update,
+                                      keys: %i[email password password_confirmation current_password])
   end
 
   # def after_sign_in_path_for(resource)
@@ -25,7 +26,7 @@ class ApplicationController < ActionController::Base
   #   # user_dashboard_path # or any other path you want
   # end
   #
-  def after_sign_out_path_for(resource_or_scope)
+  def after_sign_out_path_for(_resource_or_scope)
     root_path
   end
 end
