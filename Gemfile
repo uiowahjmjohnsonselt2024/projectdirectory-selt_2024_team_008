@@ -49,6 +49,13 @@ group :development, :test do
   gem 'pry-rails'
 end
 
+group :test do
+  gem 'capybara'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner'
+end
+
+
 group :development do
   # Web console to debug from the browser
   gem 'web-console', '~> 4.2.0'
