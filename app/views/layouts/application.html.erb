@@ -9,7 +9,7 @@
   <%= csrf_meta_tags %>
 
   <!-- Conditional Stylesheet for Sessions Controller -->
-  <% if controller_name == 'sessions' %>
+  <% if controller_name == 'sessions' || controller_name = 'registrations'%>
     <%= stylesheet_link_tag 'sessions' %>
   <% end %>
 </head>
