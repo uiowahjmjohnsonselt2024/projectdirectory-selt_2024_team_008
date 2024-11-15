@@ -49,5 +49,30 @@ RSpec.describe "User Login", type: :request do
     }
   end
 
+  it 'redirects to the correct path after a successful login' do
+    post user_session_path, params: {
+      user: {
+        login: "test@example.com",
+        password: "password"
+      }
+    }
+    expect(response).to redirect_to(root_path)
+  end
+
+  it 'logs out successfully and redirects user to login page' do
+    post user_session_path, params: {
+      user: {
+        login: "test@example.com",
+        password: "password"
+      }
+    }
+    follow_redirect!
+    delete destroy_user_session_path
+    expect(response).to redirect_to(new_user_session_path)
+    follow_redirect!
+    expect(response).to redirect_to(root_path) #THIS MIGHT NEED TO CHANGE LATER
+  end
+
+
 end
 
