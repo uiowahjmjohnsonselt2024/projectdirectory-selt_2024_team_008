@@ -51,12 +51,20 @@ group :development, :test do
   gem 'sqlite3', '~> 1.4'
 end
 
+group :test do
+  gem 'capybara'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner'
+end
+
+
 group :development do
   # Web console to debug from the browser
   gem 'web-console', '~> 4.2.0'
   # Spring for faster Rails command execution
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'
+  gem 'simplecov', require: false
 end
 
 # For production deployment
