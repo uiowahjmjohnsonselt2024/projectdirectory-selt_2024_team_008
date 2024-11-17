@@ -9,6 +9,16 @@ Rails.application.routes.draw do
   # Only using this to start, will change later
   root 'main_menu#index'
 
+  resources :shard_accounts, only: [] do
+    collection do
+      post :add_funds
+      post :buy_item
+    end
+  end
+
+  resources :shop, only: [:index, :show]
+
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

@@ -1,0 +1,13 @@
+<h2>Shop Items</h2>
+<ul>
+  <% @shop_items.each do |item| %>
+    <li>
+      <%= item.name %> - <%= item.price_in_shards %> Shards
+      <%= button_to "Buy", buy_item_shard_accounts_path(item_id: item.id), method: :post %>
+    </li>
+  <% end %>
+</ul>
+
+<div>
+  <%= link_to "Return to Menu", root_path, class: "btn btn-secondary" %>
+</div>
