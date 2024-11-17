@@ -29,16 +29,3 @@
     <% end %>
   </div>
 </div>
-
-<div id="shard-purchase-section">
-  <h2>Choose Your Shards Package</h2>
-  <div class="shard-options">
-    <% ShardAccount::SHARD_PACKAGES.each do |package| %>
-      <div class="shard-tile">
-        <h3><%= package[:shards] %> Shards</h3>
-        <p>$<%= '%.2f' % package[:price] %></p>
-        <%= button_to "Buy Now", add_funds_shard_accounts_path(price: package[:price], shards: package[:shards]), method: :post, class: "btn-tile" %>
-      </div>
-    <% end %>
-  </div>
-</div>
