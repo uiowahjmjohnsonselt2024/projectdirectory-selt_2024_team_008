@@ -7,3 +7,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+ShopItem.create([
+                  { name: "Sword of Valor", description: "A legendary weapon.", price_in_shards: 100 },
+                  { name: "Healing Potion", description: "Restores 50 health points.", price_in_shards: 5 }
+                ])
