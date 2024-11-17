@@ -18,6 +18,15 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :shard_accounts, only: [] do
+    collection do
+      post :add_funds
+      post :buy_item
+    end
+  end
+
+  resources :shop, only: [:index, :show]
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
