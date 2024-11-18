@@ -23,5 +23,8 @@ jobs:
       - name: Install dependencies
         run: bundle install
 
-      - name: Run tests
-        run: bundle exec rspec 
+      - name: Run RSpec tests
+        run: bundle exec rspec
+
+      - name: Run Cucumber tests
+        run: bundle exec cucumber
