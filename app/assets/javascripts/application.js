@@ -3,6 +3,7 @@
 //= require actioncable
 //= require servers
 //= require_tree .
+//= require mystery_boxes
 
 console.log(">>> application.js loaded <<<");
 
