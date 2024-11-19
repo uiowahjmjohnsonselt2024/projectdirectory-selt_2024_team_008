@@ -12,6 +12,11 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
 
+  has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id'
+  has_many :memberships
+  has_many :joined_servers, through: :memberships, source: :server
+  has_many :messages
+
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
