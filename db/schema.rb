@@ -88,6 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_20_222616) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  add_foreign_key "shard_accounts", "users"
   create_table "servers", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id", null: false
