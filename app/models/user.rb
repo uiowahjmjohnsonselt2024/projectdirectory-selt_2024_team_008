@@ -12,7 +12,8 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
 
-  @shard_account = nil
+  has_one :shard_account, dependent: :destroy
+  after_create :initialize_shard_account
 
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
@@ -23,5 +24,11 @@ class User < ApplicationRecord
     else
       where(conditions.to_h).first
     end
+  end
+
+  private
+
+  def initialize_shard_account
+    create_shard_account(balance: 0) # Start with 0 balance
   end
 end
