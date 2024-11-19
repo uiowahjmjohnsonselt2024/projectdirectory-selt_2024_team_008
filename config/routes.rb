@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 
   resources :shop, only: [:index, :show]
 
+  get '/mystery_box', to: 'mystery_box#open'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
