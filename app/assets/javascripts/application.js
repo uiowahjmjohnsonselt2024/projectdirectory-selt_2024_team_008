@@ -2,6 +2,7 @@
 //= require turbolinks
 //= require channels/server_channel
 //= require actioncable
+//= require servers
 //= require_tree .
 
 console.log(">>> application.js loaded <<<");
