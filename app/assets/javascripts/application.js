@@ -1,6 +1,7 @@
 //= require rails-ujs
 //= require turbolinks
 //= require_tree .
+//= require mystery_boxes
 
 document.addEventListener('DOMContentLoaded', function () {
     const tabs = document.querySelectorAll('.shop-tab');
