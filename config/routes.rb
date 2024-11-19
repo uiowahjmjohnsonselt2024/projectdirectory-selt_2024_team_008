@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   resources :servers do
     resources :messages, only: [:create]
   end
-  root 'servers#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

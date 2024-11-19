@@ -1,0 +1,8 @@
+<h1><%= @server.name %></h1>
+<div id="messages">
+  <%= render @messages %>
+</div>
+<%= form_with(model: [@server, Message.new], remote: true) do |f| %>
+  <%= f.text_area :content, placeholder: "Type a message" %>
+  <%= f.submit "Send" %>
+<% end %>
