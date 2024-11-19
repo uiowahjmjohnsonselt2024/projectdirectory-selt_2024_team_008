@@ -1,42 +1,11 @@
-/* app/assets/stylesheets/mystery_boxes.css */
-.case-opening-container {
-    width: 500px; /* Width of the visible area */
-    height: 100px; /* Height of the container */
-    overflow: hidden;
-    border: 2px solid #000; /* Optional styling */
-    margin: 20px auto;
-    position: relative;
-}
-
-.slider {
+.centered {
     display: flex;
-    gap: 10px; /* Space between items */
-    position: relative;
-    left: 0;
-    transition: left 0.5s ease-in-out; /* Smooth sliding */
-}
-
-.item {
-    width: 100px;
-    height: 100px;
-    background-color: lightgray;
-    border: 1px solid #ccc;
-    display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    font-size: 14px;
-    color: #333;
+    justify-content: center;
+    min-height: 100vh;
 }
 
-#case-container {
-    margin: auto;
-    background-color: #f9f9f9;
-}
-
-.item {
-    width: 100px;
-    text-align: center;
-    background-color: #ddd;
-    margin: 5px;
-    border-radius: 5px;
+#item-reveal img {
+    margin-top: 20px;
 }

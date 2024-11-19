@@ -1,47 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
     const openCaseButton = document.getElementById("open-case-btn");
-    const itemSlider = document.getElementById("item-slider");
-    const items = document.querySelectorAll(".item");
+    const boxOpeningVideo = document.getElementById("box-opening-video");
+    const itemReveal = document.getElementById("item-reveal");
+    const itemName = document.getElementById("item-name");
+    const itemImage = document.getElementById("item-image");
+
+    const items = [
+        { name: "Rare Item 1", image: "/assets/images/item1.png" },
+        { name: "Rare Item 2", image: "/assets/images/item1.png" },
+        { name: "Rare Item 3", image: "/assets/images/item1.png" },
+        { name: "Rare Item 4", image: "/assets/images/item1.png" },
+        { name: "Rare Item 5", image: "/assets/images/item1.png" },
+        { name: "Rare Item 6", image: "/assets/images/item1.png" },
+    ];
 
     openCaseButton.addEventListener("click", () => {
-        const totalItems = items.length;
-        const randomIndex = Math.floor(Math.random() * totalItems); // Randomly select the final item
-        const sliderWidth = itemSlider.scrollWidth;
-        const containerWidth = document.getElementById("case-container").offsetWidth;
-        const itemWidth = sliderWidth / totalItems;
+        // Hide the button
+        openCaseButton.style.display = "none";
 
-        let cycles = 40; // Number of cycles before slowing down
-        let currentIndex = 0;
-        const animationDuration = 50000; // Total animation duration in milliseconds
-        const intervalTime = animationDuration / (cycles * totalItems); // Time per cycle step
+        // Show the video
+        boxOpeningVideo.style.display = "block";
+        boxOpeningVideo.play();
 
-        itemSlider.style.transition = "none";
-        itemSlider.style.transform = "translateX(0)";
+        // When the video ends, reveal the item
+        boxOpeningVideo.addEventListener("ended", () => {
+            const randomItem = items[Math.floor(Math.random() * items.length)];
+            boxOpeningVideo.style.display = "none";
 
-        let cycleInterval = setInterval(() => {
-            // Calculate the current position
-            currentIndex = (currentIndex + 1) % totalItems;
-            const offset = -(currentIndex * itemWidth);
-
-            // Update the slider position
-            itemSlider.style.transition = "transform 0.1s linear";
-            itemSlider.style.transform = `translateX(${offset}px)`;
-
-            cycles--;
-
-            if (cycles <= 0) {
-                clearInterval(cycleInterval);
-
-                // After cycling, land on the selected item
-                setTimeout(() => {
-                    const finalOffset = -(randomIndex * itemWidth);
-                    itemSlider.style.transition = "transform 1s ease-out";
-                    itemSlider.style.transform = `translateX(${finalOffset}px)`;
-
-                    alert(`You received: ${items[randomIndex].innerText}`); // Show the received item
-                }, 500);
-            }
-        }, intervalTime);
+            // Update item reveal section
+            itemName.textContent = randomItem.name;
+            itemImage.src = randomItem.image;
+            itemReveal.style.display = "block";
+        });
     });
 });
-
