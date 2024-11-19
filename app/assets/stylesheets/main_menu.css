@@ -106,6 +106,16 @@ body {
     transform: translateX(80px);
 }
 
+body.main-menu #logoutButton{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1rem;
+    color: purple;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 
 #playButton:hover,
 #settingsButton:hover,
