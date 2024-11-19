@@ -53,6 +53,9 @@ body {
 
 /* Buttons */
 .button {
+    display: flex;
+    align-items: center; /*Center text alignment*/
+    justify-content: center; /*vertical alignment*/
     padding: 15px 30px;
     font-size: 1.5rem;
     font-weight: bold;
@@ -64,15 +67,37 @@ body {
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
 }
+#playButton{
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    background-color: green;
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; /* tells which part of the box to animate*/
+}
+#settingsButton, #shopButton{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    background-color: green;
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 70px;
+}
 
 #settingsButton{
-    transform: translateX(-10px);
-    transform: translateY(50px);
+    transform: translateX(-80px);
 }
 
 #shopButton{
-    transform: translateX(10px);
-    transform: translateY(50px);
+    transform: translateX(80px);
 }
 
 
