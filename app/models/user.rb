@@ -12,10 +12,15 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates :email, presence: true, uniqueness: true
 
+
   has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id'
   has_many :memberships
   has_many :joined_servers, through: :memberships, source: :server
   has_many :messages
+
+  has_one :shard_account, dependent: :destroy
+  after_create :initialize_shard_account
+
 
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
@@ -32,4 +37,9 @@ class User < ApplicationRecord
     Rails.cache.fetch("user_#{id}_online", raw: true) || false
   end
 
+  private
+
+  def initialize_shard_account
+    create_shard_account(balance: 0) # Start with 0 balance
+  end
 end

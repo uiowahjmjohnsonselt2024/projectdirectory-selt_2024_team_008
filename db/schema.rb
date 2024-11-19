@@ -10,9 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_20_223258) do
-# These are extensions that must be enabled in order to support this database
+ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
   enable_extension "plpgsql"
+
+  create_table "shard_accounts", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "balance"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_shard_accounts_on_user_id"
+  end
 
   create_table "shop_items", force: :cascade do |t|
     t.string "name"
@@ -75,4 +82,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_20_223258) do
   add_foreign_key "messages", "servers"
   add_foreign_key "messages", "users"
   add_foreign_key "servers", "users", column: "creator_id"
+  add_foreign_key "shard_accounts", "users"
 end
