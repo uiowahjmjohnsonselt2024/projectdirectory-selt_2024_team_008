@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_16_232456) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
+  create_table "shard_accounts", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "balance"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_shard_accounts_on_user_id"
+  end
+
   create_table "shop_items", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -38,4 +46,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_16_232456) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "shard_accounts", "users"
 end
