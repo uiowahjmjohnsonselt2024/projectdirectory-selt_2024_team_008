@@ -1,16 +1,15 @@
 <h1><%= @server.name %></h1>
+
+<!-- Messages Container -->
 <div id="messages">
   <%= render @messages %>
 </div>
-<%= form_with(model: [@server, Message.new], remote: true) do |f| %>
-  <%= f.text_area :content, placeholder: "Type a message" %>
-  <%= f.submit "Send" %>
 
-  <div id="server-id" data-server-id="<%= @server.id %>"></div>
-  <div id="messages">
-    <% @messages.each do |message| %>
-      <p><%= message.content %></p>
-    <% end %>
-  </div>
-
+<!-- New Message Form -->
+<%= form_with(model: [@server, Message.new], remote: true, id: 'new_message') do |f| %>
+  <%= f.text_area :content, placeholder: "Type a message", id: 'message_content' %>
+  <%= f.submit "Send", id: 'send_button' %>
 <% end %>
+
+<!-- Server Metadata -->
+<div id="server-id" data-server-id="<%= @server.id %>"></div>
