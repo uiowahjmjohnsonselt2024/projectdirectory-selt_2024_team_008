@@ -9,6 +9,11 @@ Rails.application.routes.draw do
   # Only using this to start, will change later
   root 'main_menu#index'
 
+  resources :servers do
+    resources :messages, only: [:create]
+  end
+  root 'servers#index'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
