@@ -1,47 +1,65 @@
-import consumer from "./consumer";
+//= require ./consumer
+//= require actioncable
 
-export function setupServerChannel() {
-    document.addEventListener("turbolinks:load", () => {
-        // Get server ID and messages container
-        const serverElement = document.getElementById("server-id");
-        const messagesContainer = document.getElementById("messages");
+console.log(">>> server_channel.js loaded <<<");
 
-        if (serverElement && messagesContainer) {
-            const serverId = serverElement.dataset.serverId;
+window.setupServerChannel = function () {
+    console.log("Setting up server channel");
 
-            // Ensure no duplicate subscriptions
-            consumer.subscriptions.subscriptions.forEach((subscription) => {
-                if (subscription.identifier.includes(`"server_id":"${serverId}"`)) {
-                    subscription.unsubscribe();
-                }
-            });
+    const serverElement = document.getElementById("server-id");
+    const messagesContainer = document.getElementById("messages");
 
-            consumer.subscriptions.create(
-                { channel: "ServerChannel", server_id: serverId },
-                {
-                    connected() {
-                        console.log(`Connected to ServerChannel for server ID: ${serverId}`);
-                    },
+    if (!serverElement) {
+        console.error("Server ID element (div#server-id) is missing from the DOM!");
+    } else {
+        console.log("Found serverElement:", serverElement);
+    }
 
-                    disconnected() {
-                        console.log(`Disconnected from ServerChannel for server ID: ${serverId}`);
-                    },
+    if (!messagesContainer) {
+        console.error("Messages container element (div#messages) is missing from the DOM!");
+    } else {
+        console.log("Found messagesContainer:", messagesContainer);
+    }
 
-                    received(data) {
-                        console.log("Message received:", data);
+    if (serverElement && messagesContainer) {
+        const serverId = serverElement.dataset.serverId;
+        console.log(`Subscribing to server_${serverId}`);
 
-                        // Validate and append the message
-                        if (data.message) {
-                            messagesContainer.insertAdjacentHTML("beforeend", data.message);
-                            messagesContainer.scrollTop = messagesContainer.scrollHeight
-                        } else {
-                            console.error("Received data does not contain a message:", data);
-                        }
-                    },
-                }
-            );
-        } else {
-            console.warn("Server ID or messages container not found. Ensure the HTML structure is correct.");
-        }
-    });
-}
+        // Ensure no duplicate subscriptions
+        App.cable.subscriptions.subscriptions.forEach((subscription) => {
+            if (subscription.identifier.includes(`"server_id":"${serverId}"`)) {
+                console.warn(`Unsubscribing duplicate subscription for server_${serverId}`);
+                subscription.unsubscribe();
+            }
+        });
+
+        const subscription = App.cable.subscriptions.create(
+            { channel: "ServerChannel", server_id: serverId },
+            {
+                connected() {
+                    console.log(`Connected to ServerChannel for server_${serverId}`);
+                },
+                disconnected() {
+                    console.log(`Disconnected from ServerChannel for server_${serverId}`);
+                },
+                received(data) {
+                    console.log("Message received:", data);
+
+                    if (data.message) {
+                        messagesContainer.insertAdjacentHTML("beforeend", data.message);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    } else {
+                        console.error("Received data does not contain a message:", data);
+                    }
+                },
+            }
+        );
+
+        console.log("Subscription created:", subscription);
+    }
+};
+
+document.addEventListener("turbolinks:load", () => {
+    console.log(">>> turbolinks:load event fired <<<");
+    setupServerChannel();
+});

@@ -7,3 +7,13 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+
+# NOTE: Will probably want to remove this later, using it for dev
+
+Server.all.each do |server|
+  User.all.each do |user|
+    Membership.find_or_create_by(user: user, server: server)
+  end
+end
+

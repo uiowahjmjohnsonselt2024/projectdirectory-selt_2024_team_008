@@ -1,0 +1,17 @@
+{
+  "name": "projectdirectory-selt_2024_team_008",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uiowahjmjohnsonselt2024/projectdirectory-selt_2024_team_008.git"
+  },
+  "private": true,
+  "dependencies": {
+    "@rails/actioncable": "^8.0.0"
+  }
+}
