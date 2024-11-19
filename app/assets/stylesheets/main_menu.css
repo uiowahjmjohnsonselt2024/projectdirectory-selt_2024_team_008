@@ -8,7 +8,7 @@ body {
     justify-content: center;
     height: 100vh;
     overflow: hidden;
-    background-color: #000; /* Fallback background color */
+    background-color: white; /* Fallback background color */
 }
 
 /* Moving background */
@@ -65,7 +65,7 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: background-color 0.2s ease;
 }
 #playButton{
     margin: 0;
@@ -92,6 +92,12 @@ body {
     top: 70px;
 }
 
+#playButton,
+#settingsButton,
+#shopButton {
+    background-color: green; /* Default button color */
+}
+
 #settingsButton{
     transform: translateX(-80px);
 }
@@ -101,7 +107,9 @@ body {
 }
 
 
-.button:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 5px 15px rgba(0, 255, 0, 0.5);
+#playButton:hover,
+#settingsButton:hover,
+#shopButton:hover {
+    background-color: gray; /* Change to gray on hover */
+    color: white; /* Ensure text remains white */
 }
