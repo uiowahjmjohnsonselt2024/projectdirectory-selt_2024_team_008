@@ -37,12 +37,13 @@ body {
 .title {
     position: absolute;
     top: 10%;
-    font-size: 4rem;
     color: white;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
 }
-
+body.main-menu .title{
+    font-size: 6rem;
+}
 /* Button container */
 .button-container {
     position: relative;
