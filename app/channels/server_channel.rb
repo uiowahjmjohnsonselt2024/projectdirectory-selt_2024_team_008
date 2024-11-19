@@ -3,14 +3,15 @@ class ServerChannel < ApplicationCable::Channel
     server = Server.find_by(id: params[:server_id])
 
     if server && current_user && server.user_can_access?(current_user)
-        Rails.logger.info("Subscribed to server_#{params[:server_id]}")
-        stream_from "server_#{params[:server_id]}"
-        ActionCable.server.broadcast(
-          "server_#{params[:server_id]}",
-          { message: "#{current_user.username} has joined the server" }
-        )
-      else
-        reject
+      Rails.logger.info("Subscribed to server_#{params[:server_id]}")
+      stream_from "server_#{params[:server_id]}"
+      ActionCable.server.broadcast(
+        "server_#{params[:server_id]}",
+        { message: "#{current_user.username} has joined the server" }
+      )
+    else
+      Rails.logger.info("Subscription rejected for server_#{params[:server_id]}")
+      reject
       end
     end
 

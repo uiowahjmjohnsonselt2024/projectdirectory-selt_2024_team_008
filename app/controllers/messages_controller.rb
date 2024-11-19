@@ -4,9 +4,12 @@ class MessagesController < ApplicationController
     @message = @server.messages.new(message_params)
     @message.user = current_user
     if @message.save
-      ActionCable.server.broadcast "server_#{@server.id}", render_message(@message)
+      broadcast_message = render_message(@message)
+      Rails.logger.info("Broadcasting message: #{broadcast_message}")
+      ActionCable.server.broadcast "server_#{@server.id}", broadcast_message
       head :no_content
     else
+      Rails.logger.error("Message could not be saved: #{@message.errors.full_messages}")
       render json: { error: "Message could not be sent" }, status: :unprocessable_entity
     end
 
