@@ -4,8 +4,12 @@ class MessagesController < ApplicationController
     @message = @server.messages.new(message_params)
     @message.user = current_user
     if @message.save
-      ActionCable.server.broadcast "server_#{@server.id}_channel", render_message(@message)
+      ActionCable.server.broadcast "server_#{@server.id}", render_message(@message)
+      head :no_content
+    else
+      render json: { error: "Message could not be sent" }, status: :unprocessable_entity
     end
+
   end
 
   private

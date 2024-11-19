@@ -5,4 +5,12 @@
 <%= form_with(model: [@server, Message.new], remote: true) do |f| %>
   <%= f.text_area :content, placeholder: "Type a message" %>
   <%= f.submit "Send" %>
+
+  <div id="server-id" data-server-id="<%= @server.id %>"></div>
+  <div id="messages">
+    <% @messages.each do |message| %>
+      <p><%= message.content %></p>
+    <% end %>
+  </div>
+
 <% end %>

@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     resources :messages, only: [:create]
   end
 
+  mount ActionCable.server => '/cable'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
