@@ -8,6 +8,7 @@ class User < ApplicationRecord
 
   # Virtual attribute for authenticating by either username or email
   attr_accessor :login
+  # test
 
   validates :username, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
