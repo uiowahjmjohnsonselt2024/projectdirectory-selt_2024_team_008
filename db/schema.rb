@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_20_222616) do
+  create_table "items", force: :cascade do |t|
+    t.string "item_name", null: false
+    t.string "item_type", null: false
+    t.json "attributes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "shard_accounts", force: :cascade do |t|
     t.integer "user_id"
     t.integer "balance"
@@ -25,6 +33,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
     t.integer "price_in_shards"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_items", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "item_id", null: false
+    t.integer "quantity", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_user_items_on_item_id"
+    t.index ["user_id"], name: "index_user_items_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -46,5 +64,25 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  create_table "items", force: :cascade do |t|
+    t.string "item_name", null: false
+    t.string "item_type", null: false
+    t.json "attributes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_items", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "item_id", null: false
+    t.integer "quantity", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_user_items_on_item_id"
+    t.index ["user_id"], name: "index_user_items_on_user_id"
+  end
+
   add_foreign_key "shard_accounts", "users"
+  add_foreign_key "user_items", "items"
+  add_foreign_key "user_items", "users"
 end

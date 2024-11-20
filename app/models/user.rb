@@ -15,6 +15,10 @@ class User < ApplicationRecord
   has_one :shard_account, dependent: :destroy
   after_create :initialize_shard_account
 
+
+  has_many :user_items
+  has_many :items, through: :user_items
+
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
@@ -31,4 +35,6 @@ class User < ApplicationRecord
   def initialize_shard_account
     create_shard_account(balance: 0) # Start with 0 balance
   end
+
+
 end
