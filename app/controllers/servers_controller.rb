@@ -30,10 +30,15 @@ class ServersController < ApplicationController
 
   def ensure_membership
     @server = Server.find(params[:id])
-    return if @server.user_can_access?(current_user)
+
+    # Check if the current user already has access
+    if @server.user_can_access?(current_user)
+      Rails.logger.info("User #{current_user.id} already has access to server #{params[:id]}")
+      return
+    end
 
     # Add the current user to the server's membership if they don't already have access
-    @server.memberships.create(user: current_user)
+    @server.memberships.create!(user: current_user)
     Rails.logger.info("Added user #{current_user.id} to server #{params[:id]}")
   rescue StandardError => e
     Rails.logger.error("Failed to add user #{current_user.id} to server #{params[:id]}: #{e.message}")
