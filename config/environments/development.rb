@@ -69,4 +69,7 @@ Rails.application.configure do
 
   config.reload_claasses_only_on_change = true
 
+  config.logger = Logger.new(STDOUT)
+  config.log_level = :debug
+
 end
