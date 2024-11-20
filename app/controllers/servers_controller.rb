@@ -3,6 +3,9 @@ class ServersController < ApplicationController
   before_action :ensure_membership, only: :show
   def index
     @servers = current_user.joined_servers
+    respond_to do |format|
+      format.html { render plain: "Servers list: #{@servers.map(&:name).join(', ')}" }
+    end
   end
 
   def create
@@ -10,7 +13,7 @@ class ServersController < ApplicationController
     if @server.save
       redirect_to @server
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
