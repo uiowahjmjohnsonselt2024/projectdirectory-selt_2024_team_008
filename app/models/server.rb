@@ -29,8 +29,10 @@ class Server < ApplicationRecord
   private
 
   def add_creator_to_memberships
-    memberships.create(user: creator)
-    Rails.logger.info("Added creator #{creator.id} to memberships for server #{id}")
+    unless memberships.exists?(user: creator)
+      memberships.create!(user: creator)
+      Rails.logger.info("Added creator #{creator.id} to memberships for server #{id}")
+    end
   rescue StandardError => e
     Rails.logger.error("Failed to add creator to memberships for server #{id}: #{e.message}")
   end
