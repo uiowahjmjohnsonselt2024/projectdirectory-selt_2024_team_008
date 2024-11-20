@@ -8,8 +8,8 @@ class User < ApplicationRecord
 
   # Virtual attribute for authenticating by either username or email
   attr_accessor :login
-  
-  validates :username, presence: true, uniqueness: true
+
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates :email, presence: true, uniqueness: true
 
   has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id'
