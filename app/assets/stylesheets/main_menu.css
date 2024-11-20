@@ -1,4 +1,4 @@
-/* General styles */
+/* General Styles */
 body {
     margin: 0;
     padding: 0;
@@ -35,14 +35,24 @@ body {
 
 /* Title */
 .title {
-    position: absolute;
-    top: 10%;
+    margin-top: 100px; /* Provide spacing from the New Game button */
     color: white;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
 }
-body.main-menu .title {
+body.main-menu .title{
     font-size: 6rem;
+}
+
+/* Puts Log out in the top right*/
+body.main-menu #logoutButton{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1rem;
+    color: purple;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Button container */
@@ -60,21 +70,19 @@ body.main-menu .title {
     display: flex;
     align-items: center; /* Center text alignment */
     justify-content: center; /* Vertical alignment */
-    padding: 15px 30px;
-    font-size: 1.5rem;
+    padding: 25px 50px; /* Larger padding for bigger buttons */
+    font-size: 2rem; /* Increase font size for button text */
     font-weight: bold;
     text-align: center;
-    color: white;
-    background-color: green;
+    color: white; /* Text color */
+    background-color: green; /* Button background */
     border: none;
-    border-radius: 8px;
+    border-radius: 12px; /* Slightly rounded corners */
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    width: 200px; /* Set a consistent button width */
+    transition: background-color 0.2s ease, transform 0.2s ease; /* Add smooth animations */
 }
 
-#playButton:hover,
-#shopButton:hover {
-    background-color: gray; /* Change to gray on hover */
-    color: white; /* Ensure text remains white */
+.button:hover {
+    background-color: darkgreen; /* Darken the green background on hover */
+    transform: scale(1.1); /* Slightly enlarge button on hover */
 }

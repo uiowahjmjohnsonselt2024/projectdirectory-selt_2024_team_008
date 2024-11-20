@@ -20,14 +20,34 @@ body {
     z-index: -1;
 }
 
+.new-game-container{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
 .title {
     position: absolute;
     top: 10%;
     color: white;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
+    font-size: 4rem;
 }
 
-body.multiplayer-sessions .title{
-    font-size: 4rem;
+#newGameButton {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background-color: green;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#newGameButton:hover {
+    background-color: gray; /* Change to gray on hover */
+    color: white; /* Ensure text remains white */
 }
