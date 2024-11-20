@@ -11,9 +11,13 @@
 
 # NOTE: Will probably want to remove this later, using it for dev
 
-Server.all.each do |server|
-  User.all.each do |user|
-    Membership.find_or_create_by(user: user, server: server)
-  end
+test_user = User.find_or_create_by!(email: 'test_user@example.com') do |user|
+  user.username = 'testuser'
+  user.password = 'password123' # Ensure this matches your application's requirements
 end
 
+test_server = Server.find_or_create_by!(name: 'Test Server', creator: test_user)
+
+Membership.find_or_create_by!(user: test_user, server: test_server)
+
+puts "Seeded test_user with membership to Test Server."
