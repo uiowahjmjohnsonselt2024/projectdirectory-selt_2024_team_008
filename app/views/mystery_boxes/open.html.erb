@@ -2,7 +2,7 @@
   <div class="top-navigation">
     <%= button_to "Return to Store", shop_index_path, class: "btn return-btn" %>
     <div class="shard-balance-display">
-      <p><strong>Mystery Boxes:</strong> <%= "5" %></p>
+      <p><strong>Mystery Boxes:</strong> <%= @mystery_box_count %> </p>
     </div>
     <%= button_to "View Inventory", "#", class: "btn add-funds-btn", method: :get %>
   </div>
