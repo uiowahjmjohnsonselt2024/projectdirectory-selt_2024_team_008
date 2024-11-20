@@ -10,8 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_20_222616) do
+
   enable_extension "plpgsql"
+
+  create_table "items", force: :cascade do |t|
+    t.string "item_name", null: false
+    t.string "item_type", null: false
+    t.json "attributes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "shard_accounts", force: :cascade do |t|
     t.integer "user_id"
@@ -28,7 +37,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-  
+
+  create_table "user_items", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "item_id", null: false
+    t.integer "quantity", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_user_items_on_item_id"
+    t.index ["user_id"], name: "index_user_items_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -48,7 +67,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
-  
+
   create_table "memberships", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "server_id", null: false
@@ -82,5 +101,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_18_040343) do
   add_foreign_key "messages", "servers"
   add_foreign_key "messages", "users"
   add_foreign_key "servers", "users", column: "creator_id"
+
   add_foreign_key "shard_accounts", "users"
+  add_foreign_key "user_items", "items"
+  add_foreign_key "user_items", "users"
 end
