@@ -1,31 +1,24 @@
-//= require ./consumer
-//= require actioncable
+// = require ./consumer
+// = require actioncable
 
-console.log(">>> server_channel.js loaded <<<");
+let channelInitialized = false;
 
-window.setupServerChannel = function () {
-    console.log("Setting up server channel");
+const initializeChannel = () => {
+    if (channelInitialized) {
+        console.log("Channel already initialized. Skipping...");
+        return;
+    }
+    channelInitialized = true;
+
+    console.log("Initializing ServerChannel");
 
     const serverElement = document.getElementById("server-id");
     const messagesContainer = document.getElementById("messages");
 
-    if (!serverElement) {
-        console.error("Server ID element (div#server-id) is missing from the DOM!");
-    } else {
-        console.log("Found serverElement:", serverElement);
-    }
-
-    if (!messagesContainer) {
-        console.error("Messages container element (div#messages) is missing from the DOM!");
-    } else {
-        console.log("Found messagesContainer:", messagesContainer);
-    }
-
     if (serverElement && messagesContainer) {
         const serverId = serverElement.dataset.serverId;
-        console.log(`Subscribing to server_${serverId}`);
 
-        // Ensure no duplicate subscriptions
+        // Unsubscribe from existing subscriptions for the same server
         App.cable.subscriptions.subscriptions.forEach((subscription) => {
             if (subscription.identifier.includes(`"server_id":"${serverId}"`)) {
                 console.warn(`Unsubscribing duplicate subscription for server_${serverId}`);
@@ -33,6 +26,7 @@ window.setupServerChannel = function () {
             }
         });
 
+        // Create a new subscription
         const subscription = App.cable.subscriptions.create(
             { channel: "ServerChannel", server_id: serverId },
             {
@@ -49,17 +43,21 @@ window.setupServerChannel = function () {
                         messagesContainer.insertAdjacentHTML("beforeend", data.message);
                         messagesContainer.scrollTop = messagesContainer.scrollHeight;
                     } else {
-                        console.error("Received data does not contain a message:", data);
+                        console.error("Received invalid data:", data);
                     }
                 },
             }
         );
 
         console.log("Subscription created:", subscription);
+    } else {
+        console.warn("Server ID or messages container not found. Skipping setup.");
     }
 };
 
+// Compatibility for both DOMContentLoaded and Turbolinks
+document.addEventListener("DOMContentLoaded", initializeChannel);
 document.addEventListener("turbolinks:load", () => {
-    console.log(">>> turbolinks:load event fired <<<");
-    setupServerChannel();
+    channelInitialized = false; // Reset flag for Turbolinks navigation
+    initializeChannel();
 });
