@@ -25,10 +25,15 @@ class ServerChannel < ApplicationCable::Channel
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
     stop_all_streams
-    ActionCable.server.broadcast(
-      "server_#{params[:server_id]}",
-      { message: "#{current_user.username} has left the chat room" }
-    )
-    Rails.logger.info("Stopped streaming for user #{current_user.id} on server #{params[:server_id]}")
+    if current_user
+      ActionCable.server.broadcast(
+        "server_#{params[:server_id]}",
+        { message: "#{current_user.username} has left the chat room" }
+      )
+      Rails.logger.info("Stopped streaming for user #{current_user.id} on server #{params[:server_id]}")
+    else
+      Rails.logger.warn("Unsubscribed called without a valid current_user")
+    end
+
   end
 end
