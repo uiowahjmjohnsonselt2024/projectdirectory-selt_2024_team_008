@@ -13,3 +13,5 @@
 //= link multiplayer_sessions.css
 
 //= link box-opening.mp4
+
+//= link shop.css

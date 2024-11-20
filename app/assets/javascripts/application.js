@@ -4,6 +4,7 @@
 //= require servers
 //= require_tree .
 //= require mystery_boxes
+//= require shop
 
 console.log(">>> application.js loaded <<<");
 

@@ -1,5 +1,11 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="<%= asset_path 'shop.css' %>">
+</head>
+
 <div class="top-navigation">
-  <%= button_to "Return to Menu", root_path, class: "btn return-btn" %>
+  <%= button_to "Return to Shop", shop_index_path, class: "btn return-btn", method: :get %>
   <div class="shard-balance-display">
     <p><strong>Shard Balance:</strong> <%= current_user.shard_account.balance %> Shards</p>
   </div>
@@ -37,15 +43,3 @@
 <div>
   <%= button_to "Return to Shop", shop_index_path, class: "btn btn-secondary" %>
 </div>
-
-<!--<h2>Choose Your Shards Package</h2>-->
-<!--<div class="shard-options">-->
-  <%# @shard_packages.each do |package| %>
-<!--    <div class="shard-tile">-->
-<!--      <h3><%#= package[:shards] %> Shards</h3>-->
-<!--      <p>$<%#= '%.2f' % package[:price] %></p>-->
-      <%#= button_to "Buy Now", add_funds_shard_accounts_path(price: package[:price], shards: package[:shards]), method: :post, class: "btn-buy" %>
-<!--    </div>-->
-  <%# end %>
-<!--</div>-->
-
