@@ -1,6 +1,8 @@
 //= require rails-ujs
 //= require turbolinks
 //= require_tree .
+//= require shop
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const tabs = document.querySelectorAll('.shop-tab');
