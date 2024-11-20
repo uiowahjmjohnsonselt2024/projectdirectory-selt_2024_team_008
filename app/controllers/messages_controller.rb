@@ -1,6 +1,8 @@
 class MessagesController < ApplicationController
   def create
     @server = Server.find(params[:server_id])
+    raise ActiveRecord::RecordNotFound unless @server.memberships.exists?(user: current_user)
+
     @message = @server.messages.new(message_params)
     @message.user = current_user
     if @message.save
