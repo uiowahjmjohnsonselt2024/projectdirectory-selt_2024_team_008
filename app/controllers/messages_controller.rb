@@ -6,7 +6,10 @@ class MessagesController < ApplicationController
     if @message.save
       broadcast_message = render_message(@message)
       Rails.logger.info("Broadcasting message: #{broadcast_message}")
-      ActionCable.server.broadcast "server_#{@server.id}", broadcast_message
+      ActionCable.server.broadcast(
+        "server_#{@server.id}",
+        { message: broadcast_message }
+      )
       head :no_content
     else
       Rails.logger.error("Message could not be saved: #{@message.errors.full_messages}")
