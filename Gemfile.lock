@@ -115,8 +115,6 @@ GEM
       cucumber (>= 5, < 10)
       railties (>= 5.2, < 8)
     cucumber-tag-expressions (6.1.1)
-    database_cleaner (2.1.0)
-      database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.0)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
@@ -136,6 +134,11 @@ GEM
       railties (>= 6.1)
     erubi (1.13.0)
     execjs (2.10.0)
+    factory_bot (6.5.0)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.4.4)
+      factory_bot (~> 6.5)
+      railties (>= 5.0.0)
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
@@ -348,10 +351,11 @@ DEPENDENCIES
   byebug
   capybara
   cucumber-rails
-  database_cleaner
+  database_cleaner-active_record
   devise (~> 4.9)
   dotenv-rails
   execjs (>= 2.9)
+  factory_bot_rails
   jbuilder (~> 2.0)
   jquery-rails
   pg (>= 1.1, < 2.0)
