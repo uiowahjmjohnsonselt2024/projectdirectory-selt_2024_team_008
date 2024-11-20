@@ -6,6 +6,8 @@ class Server < ApplicationRecord
   has_many :users, through: :memberships
   has_many :messages, dependent: :destroy
 
+  validates :name, presence: true
+
   after_create :add_creator_to_memberships
 
   def user_can_access?(user)
