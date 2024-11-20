@@ -31,5 +31,8 @@ module ShardsOfTheGrid
 
     # config.active_storage.service = :local  # not using any cloud services
 
+    # Explicitly set legacy_connection_handling to false
+    config.active_record.legacy_connection_handling = false
+
   end
 end
