@@ -17,7 +17,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_20_222616) do
   create_table "items", force: :cascade do |t|
     t.string "item_name", null: false
     t.string "item_type", null: false
-    t.json "attributes"
+    t.json "item_attributes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
