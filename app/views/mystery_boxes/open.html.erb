@@ -1,6 +1,6 @@
 <div class="mystery-box-container">
   <div class="top-navigation">
-    <%= button_to "Return to Shop", shop_index_path, class: "btn return-btn" %>
+    <%= button_to "Return to Shop", shop_index_path, class: "btn return-btn", method: :get %>
     <div class="shard-balance-display">
       <p><strong id="mystery-box-count"><%= @mystery_box_count %></strong> Mystery Boxes</p>
     </div>
