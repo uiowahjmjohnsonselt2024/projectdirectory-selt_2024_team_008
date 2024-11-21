@@ -11,7 +11,8 @@ class Server < ApplicationRecord
   after_create :add_creator_to_memberships
 
   def user_can_access?(user)
-    has_access = users.exists?(user.id)
+    return false unless user
+    has_access = users.where(id: user.id).exists?
     Rails.logger.info("Checking access for user #{user.id} on server #{id}: #{has_access}")
     has_access
   end

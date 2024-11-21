@@ -4,6 +4,8 @@ class ServerChannel < ApplicationCable::Channel
     server = Server.find_by(id: params[:server_id])
 
     if server && current_user
+      Membership.find_or_create_by!(user: current_user, server: server)
+
       stop_all_streams
       stream_from "server_#{params[:server_id]}"
 
