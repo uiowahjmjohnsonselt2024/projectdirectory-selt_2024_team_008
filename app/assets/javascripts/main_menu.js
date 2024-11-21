@@ -4,11 +4,6 @@ document.getElementById('playButton').addEventListener('click', () => {
     // Add navigation or game start logic here
 });
 
-document.getElementById('settingsButton').addEventListener('click', () => {
-    alert('Opening Settings!');
-    // Add settings navigation logic here
-});
-
 document.getElementById('shopButton').addEventListener('click', () => {
     alert('Opening Shop!');
     // Add shop navigation logic here
