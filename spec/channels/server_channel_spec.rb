@@ -99,4 +99,34 @@ RSpec.describe ServerChannel, type: :channel do
              .with(type: 'message', message: "<p><strong>testuser:</strong> Hello, World!</p>")
     end
   end
+
+  describe 'broadcast_status' do
+    before do
+      Membership.find_or_create_by!(user: user, server: server)
+      subscribe(server_id: server.id)
+    end
+
+    let(:invalid_status) { 'busy' }
+
+    it 'logs a warning and does not broadcast when the status is invalid' do
+      expect(Rails.logger).to receive(:warn).at_least(:once).with("Invalid status '#{invalid_status}' for user #{user.id} in server #{server.id}")
+
+      # Call the method directly
+      subscription.broadcast_status(user.id, invalid_status, server.id)
+
+      expect {
+        subscription.broadcast_status(user.id, invalid_status, server.id)
+      }.not_to have_broadcasted_to("server_#{server.id}")
+    end
+
+    it 'broadcasts status when the status is valid' do
+      valid_status = 'online'
+
+      expect {
+        subscription.broadcast_status(user.id, valid_status, server.id)
+      }.to have_broadcasted_to("server_#{server.id}")
+             .with(type: 'status', user_id: user.id, status: valid_status)
+    end
+  end
+
 end
