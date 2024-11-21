@@ -31,6 +31,10 @@ Rails.application.routes.draw do
   get '/mystery_box', to: 'mystery_boxes#open'
   post 'mystery_boxes/open_box', to: 'mystery_boxes#open_box', as: 'open_mystery_box'
 
+  resources :mystery_boxes, only: [:open] do
+    post :open_box, on: :collection
+  end
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
