@@ -1,6 +1,7 @@
 class ServersController < ApplicationController
 
   before_action :ensure_membership, only: :show
+  skip_before_action :verify_authenticity_token, only: [:update_status]
   def index
     @servers = current_user.joined_servers
     respond_to do |format|
@@ -22,12 +23,6 @@ class ServersController < ApplicationController
     @messages = @server.messages
   end
 
-  private
-
-  def server_params
-    params.require(:server).permit(:name)
-  end
-
   def ensure_membership
     @server = Server.find(params[:id])
 
@@ -42,6 +37,39 @@ class ServersController < ApplicationController
     Rails.logger.info("Added user #{current_user.id} to server #{params[:id]}")
   rescue StandardError => e
     Rails.logger.error("Failed to add user #{current_user.id} to server #{params[:id]}: #{e.message}")
+  end
+
+  def update_status
+    server = Server.find_by(id: params[:id])
+    return render json: { error: 'Server not found' }, status: :not_found unless server
+
+    if current_user
+      # Broadcast the status update to all users in the server
+      ActionCable.server.broadcast(
+        "server_#{server.id}_users",
+        {
+          user_id: current_user.id,
+          status: params[:status]
+        }
+      )
+
+      # Update user's `last_seen_at` for tracking status
+      if params[:status] == 'online'
+        current_user.update!(last_seen_at: Time.current)
+      else
+        current_user.update!(last_seen_at: nil)
+      end
+
+      render json: { message: "Status updated to #{params[:status]}" }, status: :ok
+    else
+      render json: { error: 'User not authenticated' }, status: :unauthorized
+    end
+  end
+
+  private
+
+  def server_params
+    params.require(:server).permit(:name)
   end
 
 end
