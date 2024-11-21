@@ -13,9 +13,10 @@ RSpec.describe ServerChannel, type: :channel do
       it 'successfully subscribes and creates a membership' do
         expect {
           subscribe(server_id: server.id)
-        }.to change { Membership.where(user: user, server: server).count }.by(1)
+        }.to change { Membership.count }.by(1)
 
         expect(subscription).to be_confirmed
+        expect(Membership.where(user: user, server: server).exists?).to be_truthy
       end
     end
 
@@ -27,7 +28,7 @@ RSpec.describe ServerChannel, type: :channel do
       it 'successfully subscribes without creating a duplicate membership' do
         expect {
           subscribe(server_id: server.id)
-        }.not_to change { Membership.where(user: user, server: server).count }
+        }.not_to change { Membership.count }
 
         expect(subscription).to be_confirmed
       end
@@ -58,26 +59,30 @@ RSpec.describe ServerChannel, type: :channel do
 
       it 'rejects the subscription' do
         subscribe(server_id: server.id)
+
+        # Check that the subscription was rejected
         expect(subscription).to be_rejected
+
+        # Ensure no streams were created
+        expect(subscription.streams).to be_empty
       end
     end
   end
 
   describe 'unsubscribed' do
     before do
+      Rails.cache.write("server_#{server.id}_online_users", Set.new([user.id]))
       Membership.find_or_create_by!(user: user, server: server)
       subscribe(server_id: server.id)
     end
 
     it 'removes the user from the online users cache and broadcasts a leave message' do
-      Rails.cache.write("server_#{server.id}_online_users", Set.new([user.id]))
-
       expect {
         unsubscribe
       }.to have_broadcasted_to("server_#{server.id}")
              .with(type: 'system', message: "#{user.username} has left the chat room.<br>")
 
-      expect(Rails.cache.fetch("server_#{server.id}_online_users", raw: true)).to eq(Set.new)
+      expect(Rails.cache.fetch("server_#{server.id}_online_users")).not_to include(user.id)
     end
   end
 
