@@ -2,32 +2,25 @@
 // = require actioncable
 
 let channelInitialized = false;
+let chatSubscription = null;
 
 const initializeChannel = () => {
     if (channelInitialized) {
         console.log("Channel already initialized. Skipping...");
         return;
     }
-    channelInitialized = true;
 
     console.log("Initializing ServerChannel");
+    channelInitialized = true;
 
     const serverElement = document.getElementById("server-id");
     const messagesContainer = document.getElementById("messages");
 
-    if (serverElement && messagesContainer) {
+    if (serverElement) {
         const serverId = serverElement.dataset.serverId;
 
-        // Unsubscribe from existing subscriptions for the same server
-        App.cable.subscriptions.subscriptions.forEach((subscription) => {
-            if (subscription.identifier.includes(`"server_id":"${serverId}"`)) {
-                console.warn(`Unsubscribing duplicate subscription for server_${serverId}`);
-                subscription.unsubscribe();
-            }
-        });
-
-        // Create a new subscription
-        const subscription = App.cable.subscriptions.create(
+        // Subscribe to the server channel
+        chatSubscription = App.cable.subscriptions.create(
             { channel: "ServerChannel", server_id: serverId },
             {
                 connected() {
@@ -37,27 +30,71 @@ const initializeChannel = () => {
                     console.log(`Disconnected from ServerChannel for server_${serverId}`);
                 },
                 received(data) {
-                    console.log("Message received:", data);
-
-                    if (data.message) {
-                        messagesContainer.insertAdjacentHTML("beforeend", data.message);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    if (data.type === 'message') {
+                        // Handle normal chat messages
+                        console.log("New chat message received:", data.message);
+                        if (messagesContainer) {
+                            messagesContainer.insertAdjacentHTML("beforeend", data.message);
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    } else if (data.type === 'system') {
+                        // Handle system messages (e.g., user join/leave)
+                        console.log("System message received:", data.message);
+                        if (messagesContainer) {
+                            messagesContainer.insertAdjacentHTML("beforeend", `<em>${data.message}</em>`);
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    } else if (data.type === 'status' && data.user_id) {
+                        // Handle status updates
+                        console.log(`Status update received for user ${data.user_id}: ${data.status}`);
+                        updateUserStatus(data);
                     } else {
-                        console.error("Received invalid data:", data);
+                        console.warn("Unexpected data received:", JSON.stringify(data, null, 2));
                     }
                 },
             }
         );
 
-        console.log("Subscription created:", subscription);
+        // Event listener to the message form for sending messages
+        const messageForm = document.getElementById("message-form");
+        if (messageForm) {
+            console.log(">>> Inside messageForm");
+            messageForm.addEventListener("submit", (event) => {
+                event.preventDefault();
+                const input = document.getElementById("message-input");
+                if (input.value.trim() !== "") {
+                    chatSubscription.perform("send_message", { message: input.value }); // Calls send_message
+                    input.value = ""; // Clear input field after sending
+                }
+            });
+        } else {
+            console.warn("Message form not found. Skipping message submission setup.");
+        }
     } else {
-        console.warn("Server ID or messages container not found. Skipping setup.");
+        console.warn("Server ID element not found. Skipping channel initialization.");
     }
 };
 
-// Compatibility for both DOMContentLoaded and Turbolinks
-document.addEventListener("DOMContentLoaded", initializeChannel);
+// Function to update user status dynamically
+const updateUserStatus = (data) => {
+    const userElement = document.querySelector(`.user[data-user-id='${data.user_id}']`);
+    if (userElement) {
+        console.log(`Updating user ${data.user_id} status to ${data.status}`);
+        userElement.classList.remove("online", "offline");
+        userElement.classList.add(data.status);
+    } else {
+        console.warn(`User element with ID ${data.user_id} not found.`);
+    }
+};
+
+// Attach initialization to Turbolinks and DOM events
+document.addEventListener("DOMContentLoaded", () => {
+    if (!channelInitialized) {
+        initializeChannel();
+    }
+});
 document.addEventListener("turbolinks:load", () => {
-    channelInitialized = false; // Reset flag for Turbolinks navigation
-    initializeChannel();
+    if (!channelInitialized) {
+        initializeChannel();
+    }
 });
