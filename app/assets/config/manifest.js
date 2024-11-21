@@ -3,3 +3,4 @@
 //= link application.js
 //= link sessions.css
 //= link shop.css
+//= link shop.js
