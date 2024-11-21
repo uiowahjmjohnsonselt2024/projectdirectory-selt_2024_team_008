@@ -1,4 +1,4 @@
-git class ShardAccountsController < ApplicationController
+class ShardAccountsController < ApplicationController
   before_action :set_shard_account, only: [:show, :edit, :update, :destroy]
 
   def new_add_funds
