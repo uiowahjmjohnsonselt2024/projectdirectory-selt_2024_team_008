@@ -40,6 +40,10 @@ class ServersController < ApplicationController
   end
 
   def update_status
+    unless user_signed_in?
+      return render json: { error: 'User not authenticated' }, status: :unauthorized
+    end
+
     server = Server.find_by(id: params[:id])
     return render json: { error: 'Server not found' }, status: :not_found unless server
 
@@ -61,8 +65,6 @@ class ServersController < ApplicationController
       end
 
       render json: { message: "Status updated to #{params[:status]}" }, status: :ok
-    else
-      render json: { error: 'User not authenticated' }, status: :unauthorized
     end
   end
 
