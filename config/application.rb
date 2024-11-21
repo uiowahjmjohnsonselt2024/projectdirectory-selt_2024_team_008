@@ -29,6 +29,9 @@ module ShardsOfTheGrid
     # config.active_record.raise_in_transactional_callbacks = true.      Removed in Rails 5
 
     # config.active_storage.service = :local  # not using any cloud services
+    config.assets.enabled = true
+    config.assets.paths << Rails.root.join("app", "assets", "javascripts")
+
 
   end
 end

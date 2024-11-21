@@ -14,6 +14,8 @@ Rails.application.routes.draw do
       get :new_add_funds # To display the form
       post :add_funds    # To handle the form submission
       post :buy_item
+      get :buy_shards
+      post :convert_currency
     end
   end
 
@@ -29,6 +31,7 @@ Rails.application.routes.draw do
   end
 
 
+  post '/shard_accounts/convert', to: 'shard_accounts#convert', as: 'convert_shards'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

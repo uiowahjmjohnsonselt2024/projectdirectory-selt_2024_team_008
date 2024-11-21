@@ -2,6 +2,8 @@
 //= require turbolinks
 //= require_tree .
 //= require mystery_boxes
+//= require shop
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const tabs = document.querySelectorAll('.shop-tab');

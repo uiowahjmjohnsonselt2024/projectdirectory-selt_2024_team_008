@@ -1,16 +1,10 @@
 <div class="top-navigation">
-  <%= button_to "Return to Menu", root_path, class: "btn return-btn" %>
+  <%= button_to "Return to Menu", root_path, class: "btn return-btn", method: :get %>
   <div class="shard-balance-display">
     <p><strong>Shard Balance:</strong> <%= current_user.shard_account.balance %> Shards</p>
   </div>
-  <%= button_to "Add Funds", new_add_funds_shard_accounts_path, class: "btn add-funds-btn", method: :get %>
+  <%= button_to "Add Funds", buy_shards_shard_accounts_path, class: "btn add-funds-btn", method: :get %>
 </div>
-
-
-<!--<h2>Your Shard Balance</h2>-->
-<!--<div class="shard-balance">-->
-<!--  <p><strong>Current Balance:</strong> <%#= current_user.shard_account.balance %> Shards</p>-->
-<!--</div>-->
 
 <div class="shop-tabs">
   <a href="#shop-items-section" class="shop-tab">Shop Items</a>

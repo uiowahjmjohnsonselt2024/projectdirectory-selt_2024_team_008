@@ -162,3 +162,4 @@ h2 {
     text-align: center;
     margin-bottom: 20px; /* Optional: Adds spacing below the headers */
 }
+@import url("shop.css");

@@ -11,6 +11,8 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2024_11_20_222616) do
+  enable_extension "plpgsql"
+  
   create_table "items", force: :cascade do |t|
     t.string "item_name", null: false
     t.string "item_type", null: false
@@ -65,6 +67,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_20_222616) do
   end
 
   add_foreign_key "shard_accounts", "users"
+
   add_foreign_key "user_items", "items"
   add_foreign_key "user_items", "users"
+
 end

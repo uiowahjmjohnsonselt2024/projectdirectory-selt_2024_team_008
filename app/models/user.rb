@@ -8,16 +8,16 @@ class User < ApplicationRecord
 
   # Virtual attribute for authenticating by either username or email
   attr_accessor :login
-
+  
   validates :username, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
 
   has_one :shard_account, dependent: :destroy
   after_create :initialize_shard_account
 
-
   has_many :user_items
   has_many :items, through: :user_items
+
 
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
@@ -35,6 +35,5 @@ class User < ApplicationRecord
   def initialize_shard_account
     create_shard_account(balance: 0) # Start with 0 balance
   end
-
 
 end
