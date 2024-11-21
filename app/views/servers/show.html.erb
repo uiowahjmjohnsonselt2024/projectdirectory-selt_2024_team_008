@@ -1,15 +1,36 @@
-<h1><%= @server.name %></h1>
-
-<!-- Messages Container -->
-<div id="messages">
-  <%= render @messages %>
+<div class="server-header">
+  <h1><%= @server.name %></h1>
+  <p class="subtitle">Welcome to the server chat room</p>
 </div>
 
-<!-- New Message Form -->
-<%= form_with(model: [@server, Message.new], remote: true, id: 'new_message') do |f| %>
-  <%= f.text_area :content, placeholder: "Type a message", id: 'message_content' %>
-  <%= f.submit "Send", id: 'send_button' %>
-<% end %>
+<div class="server-container">
+  <!-- Chat Section -->
+  <div class="chat-section">
+    <!-- Messages Container -->
+    <div class="message-list" id="messages">
+      <%= render @messages %>
+    </div>
 
-<!-- Server Metadata -->
+    <!-- New Message Form -->
+    <div class="message-input">
+      <form id="message-form">
+        <textarea id="message-input" placeholder="Type a message"></textarea>
+        <button type="submit" id="send_button">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- User List Section -->
+  <div class="user-list">
+    <h2>Users</h2>
+    <% @server.users.each do |user| %>
+      <div class="user offline" data-user-id="<%= user.id %>">
+        <span class="username"><%= user.username %></span>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+  <!-- Server Metadata -->
 <div id="server-id" data-server-id="<%= @server.id %>"></div>
+<meta name="csrf-token" content="<%= csrf_meta_tags %>
