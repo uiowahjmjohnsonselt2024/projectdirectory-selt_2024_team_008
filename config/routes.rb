@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
-  root 'main_menu#index'
+  root 'multiplayer_sessions#index'
 
   resources :servers do
     resources :messages, only: [:create]
