@@ -57,4 +57,38 @@ RSpec.describe User, type: :model do
       expect(valid_user).to be_valid
     end
   end
+
+  describe "#online?" do
+    let(:user) { create(:user) }
+
+    context "when the user is online" do
+      before do
+        Rails.cache.write("user_#{user.id}_online", true, raw: true)
+      end
+
+      it "returns true" do
+        expect(user.online?).to be true
+      end
+    end
+
+    context "when the user is offline" do
+      before do
+        Rails.cache.write("user_#{user.id}_online", false, raw: true)
+      end
+
+      it "returns false" do
+        expect(user.online?).to be false
+      end
+    end
+
+    context "when there is no cache entry for the user" do
+      before do
+        Rails.cache.delete("user_#{user.id}_online")
+      end
+
+      it "returns false" do
+        expect(user.online?).to be false
+      end
+    end
+  end
 end
