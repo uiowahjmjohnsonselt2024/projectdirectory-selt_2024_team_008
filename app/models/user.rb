@@ -27,4 +27,9 @@ class User < ApplicationRecord
       where(conditions.to_h).first
     end
   end
+
+  def online?
+    Rails.cache.fetch("user_#{id}_online", raw: true) || false
+  end
+
 end
