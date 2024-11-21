@@ -95,4 +95,59 @@ RSpec.describe ServersController, type: :request do
     end
   end
 
+  describe "POST /servers/:id/update_status" do
+    context "when the server exists and user is authenticated" do
+      before do
+        Membership.find_or_create_by!(user: user, server: server)
+      end
+
+      it "updates the status to 'online' and broadcasts the status update" do
+        expect(ActionCable.server).to receive(:broadcast).with(
+          "server_#{server.id}_users",
+          hash_including(user_id: user.id, status: 'online')
+        )
+
+        post update_status_server_path(server), params: { status: 'online' }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['message']).to eq("Status updated to online")
+        expect(user.reload.last_seen_at).not_to be_nil
+      end
+
+      it "updates the status to 'offline' and clears the last_seen_at" do
+        user.update!(last_seen_at: Time.current)
+
+        expect(ActionCable.server).to receive(:broadcast).with(
+          "server_#{server.id}_users",
+          hash_including(user_id: user.id, status: 'offline')
+        )
+
+        post update_status_server_path(server), params: { status: 'offline' }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['message']).to eq("Status updated to offline")
+        expect(user.reload.last_seen_at).to be_nil
+      end
+    end
+
+    context "when the server does not exist" do
+      it "returns a not found error" do
+        post update_status_server_path(id: 0), params: { status: 'online' }
+        expect(response).to have_http_status(:not_found)
+        expect(JSON.parse(response.body)['error']).to eq('Server not found')
+      end
+    end
+
+    context "when the user is not authenticated" do
+      before do
+        allow_any_instance_of(ApplicationController).to receive(:user_signed_in?).and_return(false)
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(nil)
+      end
+
+      it "returns an unauthorized error" do
+        post update_status_server_path(server), params: { status: 'online' }
+        expect(response).to have_http_status(:unauthorized)
+        expect(JSON.parse(response.body)['error']).to eq('User not authenticated')
+      end
+    end
+  end
+
 end
