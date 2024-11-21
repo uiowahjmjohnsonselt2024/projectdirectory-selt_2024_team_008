@@ -15,3 +15,4 @@
 //= link box-opening.mp4
 
 //= link shop.css
+//= link shop.js
