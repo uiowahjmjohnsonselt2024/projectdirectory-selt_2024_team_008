@@ -5,6 +5,8 @@ class MessagesController < ApplicationController
 
     @message = @server.messages.new(message_params)
     @message.user = current_user
+    current_user.update(last_seen_at: Time.current)
+
     if @message.save
       broadcast_message = render_message(@message)
       Rails.logger.info("Broadcasting message: #{broadcast_message}")
