@@ -13,6 +13,9 @@ Rails.application.routes.draw do
 
   resources :servers do
     resources :messages, only: [:create]
+    member do
+      post :update_status
+    end
   end
 
   # Example of regular route:
