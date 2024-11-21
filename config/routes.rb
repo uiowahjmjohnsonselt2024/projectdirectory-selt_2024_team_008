@@ -22,9 +22,12 @@ Rails.application.routes.draw do
   get '/mystery_box', to: 'mystery_boxes#open'
   post 'mystery_boxes/open_box', to: 'mystery_boxes#open_box', as: 'open_mystery_box'
 
-  resources :mystery_boxes, only: [:open] do
-    post :open_box, on: :collection
+  resources :mystery_boxes, only: [] do
+    collection do
+      get 'open', to: 'mystery_boxes#open'
+    end
   end
+
 
 
   # Example of regular route:
