@@ -54,7 +54,7 @@ class ServerChannel < ApplicationCable::Channel
       end
     end
   end
-  
+
   # Handle normal chat messages
   def send_message(data)
     server_id = params[:server_id]
