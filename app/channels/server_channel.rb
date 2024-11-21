@@ -4,6 +4,10 @@ class ServerChannel < ApplicationCable::Channel
     server = Server.find_by(id: params[:server_id])
 
     if server && current_user
+      if !server.user_can_access?(current_user)
+        Rails.logger.warn("USER DOES NOT HAVE ACCESS")
+        reject
+      end
       Membership.find_or_create_by!(user: current_user, server: server)
 
       stop_all_streams
