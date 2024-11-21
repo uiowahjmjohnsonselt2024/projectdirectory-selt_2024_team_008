@@ -5,3 +5,4 @@
 //= require_tree .
 //= require rails-ujs
 //= require turbolinks
+//= link server.css
