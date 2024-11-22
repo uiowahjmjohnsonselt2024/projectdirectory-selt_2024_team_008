@@ -22,7 +22,7 @@ class ServerChannel < ApplicationCable::Channel
         # Broadcast join message
         ActionCable.server.broadcast(
           "server_#{params[:server_id]}",
-          { type: 'system', message: "#{current_user.username} has joined the chat room.<br>" }
+          { type: 'system', message: "#{current_user.username} has joined the server.<br>" }
         )
 
         # Use broadcast_status to send online status
@@ -52,7 +52,7 @@ class ServerChannel < ApplicationCable::Channel
         # Broadcast leave message
         ActionCable.server.broadcast(
           "server_#{params[:server_id]}",
-          { type: 'system', message: "#{current_user.username} has left the chat room.<br>" }
+          { type: 'system', message: "#{current_user.username} has left the server.<br>" }
         )
 
         # Use broadcast_status to send offline status
