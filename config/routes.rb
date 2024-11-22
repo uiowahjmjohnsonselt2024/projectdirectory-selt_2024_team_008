@@ -29,7 +29,6 @@ Rails.application.routes.draw do
 
   resources :shop, only: [:index, :show]
 
-  post '/shard_accounts/convert', to: 'shard_accounts#convert', as: 'convert_shards'
   get '/mystery_box', to: 'mystery_boxes#open'
   post 'mystery_boxes/open_box', to: 'mystery_boxes#open_box', as: 'open_mystery_box'
 

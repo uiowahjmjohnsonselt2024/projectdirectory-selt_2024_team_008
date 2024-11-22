@@ -64,33 +64,6 @@ class ShardAccountsController < ApplicationController
     end
   end
 
-
-  def convert
-    shards = params[:shards].to_i
-    target_currency = params[:currency]
-
-    if shards <= 0 || target_currency.blank?
-      render json: { error: 'Invalid input' }, status: :unprocessable_entity
-      return
-    end
-
-    if target_currency != "USD"
-      exchange_rate = fetch_exchange_rate(target_currency)
-    else
-      exchange_rate = 1
-    end
-    if exchange_rate.nil?
-      render json: { error: 'Unable to fetch exchange rate' }, status: :service_unavailable
-      return
-    end
-
-    shard_to_usd = 1 / 0.75
-    cost_in_usd = shards * shard_to_usd
-    calculated_value = (cost_in_usd * exchange_rate).ceil
-
-    render json: { calculated_value: calculated_value }
-  end
-
   def buy_item
     item = ShopItem.find(params[:item_id])
     if current_user.shard_account.balance >= item.price_in_shards
