@@ -10,7 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema[7.0].define(version: 2024_11_20_223258) do
+# These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "username"
+    t.datetime "last_seen_at"
+    t.index "LOWER(username)", name: "index_users_on_lower_username", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+  
   create_table "memberships", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "server_id", null: false
@@ -37,26 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_20_223258) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_servers_on_creator_id"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at", precision: nil
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at", precision: nil
-    t.datetime "last_sign_in_at", precision: nil
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "username"
-    t.datetime "last_seen_at"
-    t.index "LOWER(username)", name: "index_users_on_lower_username", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "memberships", "servers"
