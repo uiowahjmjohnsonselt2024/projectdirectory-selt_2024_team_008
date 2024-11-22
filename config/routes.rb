@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   root 'game#index'
 
   resources :servers do
-    resources :messages, only: [:create]
+    resources :messages, only: [:index, :create]
     member do
       post :update_status
     end
