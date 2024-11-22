@@ -1,8 +1,9 @@
 //= require rails-ujs
-// = require turbolinks
+//= require turbolinks
 //= require actioncable
 //= require servers
 //= require_tree .
+//= require multiplayer_sessions
 
 console.log(">>> application.js loaded <<<");
 
