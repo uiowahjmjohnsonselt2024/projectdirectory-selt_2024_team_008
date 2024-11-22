@@ -17,8 +17,7 @@ Rails.application.routes.draw do
       post :update_status
     end
   end
-  
-  root 'multiplayer_sessions#index'
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
