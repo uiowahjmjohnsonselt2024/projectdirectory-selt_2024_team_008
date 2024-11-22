@@ -16,4 +16,5 @@
 //= link multiplayer_sessions.css
 
 //= link game.js
-//= link game.cssS
+//= link game.css
+

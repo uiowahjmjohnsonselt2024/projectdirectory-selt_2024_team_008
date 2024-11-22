@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       post :update_status
     end
   end
-
+ 
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
