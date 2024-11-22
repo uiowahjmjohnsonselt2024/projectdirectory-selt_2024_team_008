@@ -27,26 +27,43 @@ class ShardAccountsController < ApplicationController
 
 
   def add_funds
-    currency = params[:currency]
     deposit_amount = params[:amount].to_i
-    card_number = params[:card_number]
-    expiry_date = params[:expiry_date]
-    cvv = params[:cvv]
-    if valid_card?(card_number, expiry_date, cvv)
-      shards = ShardAccount.usd_to_shards(deposit_amount)
+    currency = params[:currency] || 'USD'
+
+    Rails.logger.info "Deposit amount: #{deposit_amount}, Currency: #{currency}"
+
+    if deposit_amount.positive?
+      # shards = ShardAccount.usd_to_shards(deposit_amount)
+      shards = deposit_amount
+      Rails.logger.info "Calculated Shards: #{shards}"
       shard_account = current_user.shard_account
       shard_account.balance += shards
-      if shard_account.save
-        flash[:success] = "Successfully added #{shards} shards to your account."
-      else
-        flash[:error] = "Failed to add shards to your account."
-      end
-      redirect_to shop_index_path
-    else
-      flash[:error] = "Card is not valid. Please try again."
-    end
 
+      if shard_account.save
+        if request.format.json? || request.headers['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
+          render json: { success: true, new_balance: shard_account.balance }, status: :ok
+        else
+          flash[:success] = "Successfully added #{shards} shards to your account."
+          redirect_to shop_index_path
+        end
+      else
+        if request.format.json? || request.headers['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
+          render json: { success: false, error: 'Failed to update shard balance.' }, status: :unprocessable_entity
+        else
+          flash[:error] = "Failed to add shards to your account."
+          redirect_to shop_index_path
+        end
+      end
+    else
+      if request.format.json? || request.headers['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
+        render json: { success: false, error: 'Invalid deposit amount.' }, status: :unprocessable_entity
+      else
+        flash[:error] = "Invalid deposit amount."
+        redirect_to shop_index_path
+      end
+    end
   end
+
 
   def convert
     shards = params[:shards].to_i
