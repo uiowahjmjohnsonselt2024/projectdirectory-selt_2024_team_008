@@ -1,4 +1,4 @@
-/* General styles */
+/* General Styling */
 body {
     margin: 0;
     padding: 0;
@@ -99,4 +99,84 @@ body {
 
 .chat-room-button:hover {
     background-color: darkblue;
+}
+
+/* Chat Section */
+.chat-section {
+    flex: 2;
+    margin-right: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 80vh; /* Ensures consistent height for the chat area */
+}
+
+/* Messages */
+.message-list {
+    overflow-y: auto;
+    padding: 10px;
+    flex: 1; /* Ensures it grows to fill available space */
+    background-color: #fff;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.message.user-message {
+    background-color: #d9fdd3;
+    text-align: right;
+}
+
+.message.server-message {
+    background-color: #f0f0f0;
+    text-align: left;
+}
+
+.message .username {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.message .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    text-align: right;
+}
+
+/* Message Input */
+.message-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+    position: sticky; /* Keeps it pinned to the bottom */
+    bottom: 0; /* Ensures it's at the bottom of the chat section */
+}
+
+.message-input textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    resize: none; /* Prevent resizing of the textarea */
+}
+
+.message-input button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.message-input button:hover {
+    background-color: #555;
 }
