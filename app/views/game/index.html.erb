@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Multiplayer</title>
-  <link rel="stylesheet" href="multiplayer_sessions.css">
+  <%= stylesheet_link_tag "multiplayer_sessions", media: "all" %>
 </head>
-<body> <!-- Added the class here -->
+<body>
 <!-- Moving background -->
 <div class="background-container">
   <div class="background-scene"></div>
@@ -15,8 +15,27 @@
 <!-- Title -->
 <div class="title">Playing...</div>
 
+<!-- Chat Room Dropdown -->
+<div class="chat-rooms">
+  <h2>Testing Chat Room</h2>
+  <% server = Server.find_by(id: 1) %>
+  <% if server %>
+    <button class="chat-room-button" id="chatRoomToggle">Open Chat Room</button>
+    <div class="chat-room" id="chatRoom">
+      <div class="chat-room-header">
+        <span><%= server.name %></span>
+        <button class="chat-room-close" id="chatRoomClose">Close</button>
+      </div>
+      <iframe
+        src="<%= server_path(server) %>"
+        title="Chat Room for <%= server.name %>">
+      </iframe>
+    </div>
+  <% else %>
+    <p>Server with ID 1 not found. Please ensure it exists in the database.</p>
+  <% end %>
+</div>
 
-
-<script src="multiplayer_sessions.js"></script>
+<%= javascript_include_tag "multiplayer_sessions" %>
 </body>
 </html>
