@@ -20,7 +20,7 @@ class ServersController < ApplicationController
 
   def show
     @server = Server.includes(:memberships, :messages).find(params[:id])
-    @messages = @server.messages
+    @messages = @server.messages.order(:created_at)
   end
 
   def ensure_membership
