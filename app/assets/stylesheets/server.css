@@ -104,18 +104,20 @@ body {
 
 .message-input button {
     padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
     margin-left: 10px;
     border: none;
-    background-color: #333;
+    background-color: blue;
     color: white;
     border-radius: 5px;
     cursor: pointer;
-    height: 40px; /* Matches the textarea height */
+    height: 40px; 
     transition: background-color 0.3s ease;
 }
 
 .message-input button:hover {
-    background-color: #555;
+    background-color: darkblue;
 }
 
 /* User List Section */
