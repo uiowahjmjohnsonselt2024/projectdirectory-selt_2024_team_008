@@ -22,6 +22,12 @@ class MessagesController < ApplicationController
 
   end
 
+  def index
+    @server = Server.find(params[:server_id])
+    @messages = @server.messages.order(:created_at)
+    render partial: 'messages/message', collection: @messages
+  end
+
   private
 
   def message_params
