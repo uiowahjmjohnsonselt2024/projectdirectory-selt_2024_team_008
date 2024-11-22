@@ -1,0 +1,20 @@
+<h1>Create a New Server</h1>
+
+<%= form_with model: @server, local: true do |form| %>
+  <% if @server.errors.any? %>
+    <ul>
+      <% @server.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.submit "Create Server" %>
+  </div>
+<% end %>

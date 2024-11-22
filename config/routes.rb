@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
+
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -8,6 +10,13 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
   root 'main_menu#index'
+
+  resources :servers do
+    resources :messages, only: [:create]
+    member do
+      post :update_status
+    end
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

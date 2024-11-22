@@ -115,8 +115,6 @@ GEM
       cucumber (>= 5, < 10)
       railties (>= 5.2, < 8)
     cucumber-tag-expressions (6.1.1)
-    database_cleaner (2.1.0)
-      database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.0)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
@@ -136,6 +134,11 @@ GEM
       railties (>= 6.1)
     erubi (1.13.0)
     execjs (2.10.0)
+    factory_bot (6.5.0)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.4.4)
+      factory_bot (~> 6.5)
+      railties (>= 5.0.0)
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
@@ -217,6 +220,10 @@ GEM
       activesupport (= 7.0.8.6)
       bundler (>= 1.15.0)
       railties (= 7.0.8.6)
+    rails-controller-testing (1.0.5)
+      actionpack (>= 5.0.1.rc1)
+      actionview (>= 5.0.1.rc1)
+      activesupport (>= 5.0.1.rc1)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
@@ -290,6 +297,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    shoulda-matchers (5.3.0)
+      activesupport (>= 5.2.0)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -348,22 +357,25 @@ DEPENDENCIES
   byebug
   capybara
   cucumber-rails
-  database_cleaner
+  database_cleaner-active_record
   devise (~> 4.9)
   dotenv-rails
   execjs (>= 2.9)
+  factory_bot_rails
   jbuilder (~> 2.0)
   jquery-rails
   pg (>= 1.1, < 2.0)
   pry-rails
   puma (~> 6.0)
   rails (~> 7.0)
+  rails-controller-testing
   rspec-rails (~> 5.0)
   rubocop
   rubocop-rails
   rubocop-rspec
   rubocop-rspec_rails
   sass-rails (>= 6)
+  shoulda-matchers (~> 5.0)
   simplecov
   spring
   spring-watcher-listen (~> 2.0.1)

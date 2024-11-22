@@ -8,9 +8,14 @@ class User < ApplicationRecord
 
   # Virtual attribute for authenticating by either username or email
   attr_accessor :login
-  
-  validates :username, presence: true, uniqueness: true
+
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates :email, presence: true, uniqueness: true
+
+  has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id'
+  has_many :memberships
+  has_many :joined_servers, through: :memberships, source: :server
+  has_many :messages
 
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
@@ -22,4 +27,9 @@ class User < ApplicationRecord
       where(conditions.to_h).first
     end
   end
+
+  def online?
+    Rails.cache.fetch("user_#{id}_online", raw: true) || false
+  end
+
 end

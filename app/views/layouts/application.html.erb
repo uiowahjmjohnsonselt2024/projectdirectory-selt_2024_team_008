@@ -7,9 +7,15 @@
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag 'server', media: 'all' %>
+
+  <script>
+      console.log(">>> Inline script in application.html.erb loaded <<<");
+  </script>
+
 
   <!-- Conditional Stylesheet for Sessions Controller -->
-  <% if controller_name == 'sessions' || controller_name = 'registrations'%>
+  <% if controller_name == 'sessions' || controller_name == 'registrations'%>
     <%= stylesheet_link_tag 'sessions' %>
   <% end %>
 </head>
