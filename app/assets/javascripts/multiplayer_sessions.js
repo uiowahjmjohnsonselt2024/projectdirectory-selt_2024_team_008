@@ -35,8 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        // Close chat room when clicking the close button
         chatRoomClose.addEventListener("click", () => {
             chatRoom.style.display = "none";
+        });
+
+        // Close chat room when clicking outside of it
+        document.addEventListener("click", (event) => {
+            const isClickInside = chatRoom.contains(event.target) || chatRoomToggle.contains(event.target);
+
+            if (!isClickInside && chatRoom.style.display === "block") {
+                chatRoom.style.display = "none";
+                console.log("Chat room closed by clicking outside.");
+            }
         });
     } else {
         console.warn("Chat room elements not found. Skipping toggle functionality.");
