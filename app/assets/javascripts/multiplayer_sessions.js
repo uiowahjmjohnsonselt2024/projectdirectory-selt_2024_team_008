@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     .then((messagesHtml) => {
                         messagesContainer.innerHTML = messagesHtml;
                         console.log("Messages loaded into chat room");
+
+                        // Scroll to the bottom of the messages container
+                        scrollToBottom(messagesContainer);
                     })
                     .catch((error) => {
                         console.error("Error loading messages:", error);
@@ -37,5 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     } else {
         console.warn("Chat room elements not found. Skipping toggle functionality.");
+    }
+
+    // Function to scroll to the bottom of the messages container
+    const scrollToBottom = (container) => {
+        container.scrollTop = container.scrollHeight;
+    };
+
+    // Observe new messages and ensure scrolling
+    if (messagesContainer) {
+        const observer = new MutationObserver(() => {
+            scrollToBottom(messagesContainer);
+        });
+
+        observer.observe(messagesContainer, { childList: true });
     }
 });
