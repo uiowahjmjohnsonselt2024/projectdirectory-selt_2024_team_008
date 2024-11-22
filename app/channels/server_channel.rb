@@ -1,13 +1,13 @@
 class ServerChannel < ApplicationCable::Channel
-
   def subscribed
     server = Server.find_by(id: params[:server_id])
 
     if server && current_user
-      if !server.user_can_access?(current_user)
+      unless server.user_can_access?(current_user)
         Rails.logger.warn("USER DOES NOT HAVE ACCESS")
         reject
       end
+
       Membership.find_or_create_by!(user: current_user, server: server)
 
       stop_all_streams
@@ -63,14 +63,26 @@ class ServerChannel < ApplicationCable::Channel
 
   # Handle normal chat messages
   def send_message(data)
-    server_id = params[:server_id]
-    broadcast_data = {
-      type: 'message', # Ensure type is included
-      message: "<p><strong>#{current_user.username}:</strong> #{data['message']}</p>"
-    }
+    server = Server.find_by(id: params[:server_id])
 
-    Rails.logger.info("Broadcasting message: #{broadcast_data}")
-    ActionCable.server.broadcast("server_#{server_id}", broadcast_data)
+    unless server
+      Rails.logger.error("Server not found for server_id: #{params[:server_id]}")
+      return
+    end
+
+    message = server.messages.new(content: data['message'], user: current_user)
+
+    if message.save
+      broadcast_data = {
+        type: 'message',
+        message: "<p><strong>#{current_user.username}:</strong> #{message.content}</p>"
+      }
+
+      Rails.logger.info("Broadcasting message: #{broadcast_data}")
+      ActionCable.server.broadcast("server_#{server.id}", broadcast_data)
+    else
+      Rails.logger.error("Failed to save message: #{message.errors.full_messages}")
+    end
   end
 
   def broadcast_status(user_id, status, server_id, extra_data = {})
@@ -86,5 +98,4 @@ class ServerChannel < ApplicationCable::Channel
     Rails.logger.info("Broadcasting status update: #{broadcast_data}")
     ActionCable.server.broadcast("server_#{server_id}", broadcast_data)
   end
-
 end
