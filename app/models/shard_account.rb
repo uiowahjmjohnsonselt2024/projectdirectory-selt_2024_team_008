@@ -47,11 +47,11 @@ class ShardAccount < ApplicationRecord
   # @CONVERSION_API_KEY
 
   def self.fetch_exchange_rate(currency)
-    if ENV['CURRENCY_CONVERSION_API_KEY'] == ''
+    if ENV['CURRENCY_CONVERSION_API_KEY'].blank?
       raise ArgumentError, 'Please Set The Conversion API key'
-    else
-      api_url = "https://v6.exchangerate-api.com/v6/#{ENV['CURRENCY_CONVERSION_API_KEY']}/latest/USD"
     end
+
+    api_url = "https://v6.exchangerate-api.com/v6/#{ENV['CURRENCY_CONVERSION_API_KEY']}/latest/USD"
     response = Net::HTTP.get(URI(api_url))
     data = JSON.parse(response)
 
