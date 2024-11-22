@@ -16,7 +16,7 @@ const initializeChannel = () => {
     const serverElement = document.getElementById("server-id");
     const messagesContainer = document.getElementById("messages");
 
-    if (serverElement) {
+    if (serverElement && messagesContainer) {
         const serverId = serverElement.dataset.serverId;
 
         // Subscribe to the server channel
@@ -30,22 +30,19 @@ const initializeChannel = () => {
                     console.log(`Disconnected from ServerChannel for server_${serverId}`);
                 },
                 received(data) {
-                    if (data.type === 'message') {
-                        // Handle normal chat messages
+                    if (data.type === "message") {
                         console.log("New chat message received:", data.message);
                         if (messagesContainer) {
                             messagesContainer.insertAdjacentHTML("beforeend", data.message);
                             messagesContainer.scrollTop = messagesContainer.scrollHeight;
                         }
-                    } else if (data.type === 'system') {
-                        // Handle system messages (e.g., user join/leave)
+                    } else if (data.type === "system") {
                         console.log("System message received:", data.message);
                         if (messagesContainer) {
                             messagesContainer.insertAdjacentHTML("beforeend", `<em>${data.message}</em>`);
                             messagesContainer.scrollTop = messagesContainer.scrollHeight;
                         }
-                    } else if (data.type === 'status' && data.user_id) {
-                        // Handle status updates
+                    } else if (data.type === "status" && data.user_id) {
                         console.log(`Status update received for user ${data.user_id}: ${data.status}`);
                         updateUserStatus(data);
                     } else {
@@ -55,15 +52,21 @@ const initializeChannel = () => {
             }
         );
 
-        // Event listener to the message form for sending messages
+        // Attach event listener to the message form
         const messageForm = document.getElementById("message-form");
         if (messageForm) {
             console.log(">>> Inside messageForm");
+            const csrfToken = document
+                .querySelector("meta[name='csrf-token']")
+                .getAttribute("content");
             messageForm.addEventListener("submit", (event) => {
                 event.preventDefault();
                 const input = document.getElementById("message-input");
                 if (input.value.trim() !== "") {
-                    chatSubscription.perform("send_message", { message: input.value }); // Calls send_message
+                    chatSubscription.perform("send_message", {
+                        message: input.value,
+                        authenticity_token: csrfToken,
+                    });
                     input.value = ""; // Clear input field after sending
                 }
             });
@@ -71,7 +74,7 @@ const initializeChannel = () => {
             console.warn("Message form not found. Skipping message submission setup.");
         }
     } else {
-        console.warn("Server ID element not found. Skipping channel initialization.");
+        console.warn("Required elements not found. Skipping channel initialization.");
     }
 };
 
@@ -93,8 +96,18 @@ document.addEventListener("DOMContentLoaded", () => {
         initializeChannel();
     }
 });
+
 document.addEventListener("turbolinks:load", () => {
     if (!channelInitialized) {
         initializeChannel();
     }
 });
+
+// For iframe-specific load events
+if (window !== window.parent) {
+    window.addEventListener("load", () => {
+        if (!channelInitialized) {
+            initializeChannel();
+        }
+    });
+}
