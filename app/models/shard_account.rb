@@ -1,3 +1,6 @@
+require 'net/http'
+require 'json'
+
 class ShardAccount < ApplicationRecord
   belongs_to :user
 
@@ -41,12 +44,14 @@ class ShardAccount < ApplicationRecord
 
   protected
 
-  @CONVERSION_API_KEY
+  # @CONVERSION_API_KEY
 
   def self.fetch_exchange_rate(currency)
-      api_url = "https://v6.exchangerate-api.com/v6/#{@CONVERION_API_KEY}/latest/USD"
-    rescue
-      raise ArgumentError, 'Problem in conversion, is API key set?'
+    if ENV['CURRENCY_CONVERSION_API_KEY'] == ''
+      raise ArgumentError, 'Please Set The Conversion API key'
+    else
+      api_url = "https://v6.exchangerate-api.com/v6/#{ENV['CURRENCY_CONVERSION_API_KEY']}/latest/USD"
+    end
     response = Net::HTTP.get(URI(api_url))
     data = JSON.parse(response)
 
