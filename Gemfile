@@ -71,8 +71,11 @@ group :development do
 end
 
 # For production deployment
-# group :production do
-# end
+group :production do
+  gem 'redis', '~> 5.0'
+  gem 'redis-rails', '~> 5.0'
+  gem 'rails_12factor'
+end
 
 gem 'devise', '~> 4.9'
 gem 'dotenv-rails'

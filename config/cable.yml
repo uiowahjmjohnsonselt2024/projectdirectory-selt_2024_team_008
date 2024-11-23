@@ -1,12 +1,12 @@
 development:
   adapter: async
-  channel_prefix: shards_of_the_grid_development
+  channel_prefix: development_shards_of_the_grid
 
 test:
   adapter: async
-  channel_prefix: shards_of_the_grid_test
+  channel_prefix: test_shards_of_the_grid
 
 production:
-  adapter: postgresql
-  url: <%= ENV['DATABASE_URL'] %>
-  channel_prefix: shards_of_the_grid_production
+  adapter: redis
+  url: redis://:UHzNeR54oeg5JCw9Gr5S8hJ97TDEp0Wk@redis-18669.c81.us-east-1-2.ec2.redns.redis-cloud.com:18669
+  channel_prefix: production_shards_of_the_grid
