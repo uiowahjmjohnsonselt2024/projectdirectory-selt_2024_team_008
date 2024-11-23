@@ -20,6 +20,7 @@ class User < ApplicationRecord
 
   has_one :shard_account, dependent: :destroy
   after_create :initialize_shard_account
+  after_create :assign_starting_mystery_boxes
 
 
   has_many :user_items
@@ -46,4 +47,11 @@ class User < ApplicationRecord
     create_shard_account(balance: 0) # Start with 0 balance
   end
 
+  def assign_starting_mystery_boxes
+    mystery_box = Item.find_by(item_name: "Mystery Box")
+    user_item = self.user_items.find_or_initialize_by(item: mystery_box)
+    user_item.quantity ||= 0
+    user_item.quantity += 5
+    user_item.save
+  end
 end
