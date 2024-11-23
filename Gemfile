@@ -2,6 +2,8 @@
 
 source 'https://rubygems.org'
 
+ruby "3.2.2"
+
 gem 'rails', '~> 7.0' # Ensure compatibility with Railties and Rails components
 
 # Use PostgreSQL as the database for Active Record (recommended over sqlite3 for production)
