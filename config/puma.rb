@@ -13,7 +13,12 @@ preload_app!
 port ENV.fetch("PORT") { 3000 }
 
 # Specifies the environment
-environment ENV.fetch("RACK_ENV") { "production" }
+if Rails.env.production?
+  environment ENV.fetch("RACK_ENV") { "production" }
+else
+  environment ENV.fetch("RACK_ENV") { "development" }
+end
+
 
 # On worker boot, reconnect to the database
 on_worker_boot do
