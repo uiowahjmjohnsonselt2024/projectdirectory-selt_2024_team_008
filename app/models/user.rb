@@ -48,6 +48,7 @@ class User < ApplicationRecord
   end
 
   def assign_starting_mystery_boxes
+    Rails.logger.debug "assign_starting_mystery_boxes called for user #{id}"
     mystery_box = Item.find_by(item_name: "Mystery Box")
     user_item = self.user_items.find_or_initialize_by(item: mystery_box)
     user_item.quantity ||= 0

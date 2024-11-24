@@ -4,6 +4,7 @@ require 'webmock/rspec'
 RSpec.describe ShardAccountsController, type: :controller do
   include Devise::Test::ControllerHelpers
 
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
   let(:user) { User.create!(username: 'test', email: "test@example.com", password: "password") }
   let(:shard_account) { ShardAccount.create!(user: user, balance: 100) }
   let(:valid_session) { { user_id: user.id } }

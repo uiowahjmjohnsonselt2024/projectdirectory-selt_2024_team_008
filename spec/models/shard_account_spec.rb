@@ -2,6 +2,7 @@ require 'rails_helper'
 require 'webmock/rspec'
 
 RSpec.describe ShardAccount, type: :model do
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
   let(:user) { User.create!(username: 'test', email: "test@example.com", password: "password") }
   let(:shard_account) { described_class.create!(user: user, balance: 50) }
 
