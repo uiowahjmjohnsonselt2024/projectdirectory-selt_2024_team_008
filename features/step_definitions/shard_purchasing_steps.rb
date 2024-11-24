@@ -4,6 +4,10 @@ Given("I am on the shard purchasing page") do
   visit buy_shards_shard_accounts_path # Replace `shard_purchasing_path` with your actual route helper
 end
 
+Given('a "Mystery Box" item exists') do
+  Item.find_or_create_by!(item_name: "Mystery Box", item_type: "box", item_attributes: {})
+end
+
 Given("I am logged in as a user with a shard balance of {int} shards") do |shard_balance|
   @user = User.create!(username: "test", email: "test@example.com", password: "password")
   @user.shard_account.balance = shard_balance

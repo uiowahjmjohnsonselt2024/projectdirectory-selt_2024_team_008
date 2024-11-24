@@ -6,6 +6,7 @@ Feature: Shard Purchasing Interface
   So that I can add shards to my balance
 
   Background:
+    Given a "Mystery Box" item exists
     Given I am logged in as a user with a shard balance of 50 shards
 
   Scenario: User views the shard purchasing page
