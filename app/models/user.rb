@@ -11,6 +11,7 @@ class User < ApplicationRecord
 
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates :email, presence: true, uniqueness: true
+  validates :role, inclusion: { in: %w[admin user guest], message: "%{value} is not a valid role" }
 
   has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id'
   has_many :memberships
