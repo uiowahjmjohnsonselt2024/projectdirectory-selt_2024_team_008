@@ -1,4 +1,4 @@
-<div class="mystery-box-container">
+<div class="Inventory">
   <div class="top-navigation">
     <%= button_to "Return to Shop", shop_index_path, class: "btn return-btn", method: :get %>
     <div class="shard-balance-display">
@@ -7,4 +7,13 @@
 
     <%= button_to "Go Somewhere", "#", class: "btn add-funds-btn", method: :get %>
   </div>
+</div>
+
+<div class="inventory-grid">
+  <% @user_items.each do |user_item| %>
+    <div class="shop-item">
+      <h3><%= user_item.item.item_name %></h3>
+      <p>Quantity: <%= user_item.quantity %></p>
+    </div>
+  <% end %>
 </div>

@@ -8,7 +8,7 @@ class MysteryBoxesController < ApplicationController
   end
 
   def open_box
-    # Fetch the mystery box item from the user's inventory
+    # Fetch the mystery box item from the user's inventory.css
     mystery_box = current_user.user_items.find_by(item: Item.find_by(item_name: "Mystery Box"))
 
     if mystery_box && mystery_box.quantity > 0
