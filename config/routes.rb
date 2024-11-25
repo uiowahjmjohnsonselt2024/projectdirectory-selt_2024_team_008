@@ -38,6 +38,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'inventory', to: 'inventory#show', as: 'inventory'
 
 
   # Example of regular route:
