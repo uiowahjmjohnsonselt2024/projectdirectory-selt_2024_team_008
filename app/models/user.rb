@@ -50,9 +50,13 @@ class User < ApplicationRecord
   def assign_starting_mystery_boxes
     Rails.logger.debug "assign_starting_mystery_boxes called for user #{id}"
     mystery_box = Item.find_by(item_name: "Mystery Box")
-    user_item = self.user_items.find_or_initialize_by(item: mystery_box)
-    user_item.quantity ||= 0
-    user_item.quantity += 5
-    user_item.save
+    if mystery_box
+      user_item = self.user_items.find_or_initialize_by(item: mystery_box)
+      user_item.quantity ||= 0
+      user_item.quantity += 5
+      user_item.save!
+    else
+      Rails.logger.error("Failed to find or create Mystery Box item")
+    end
   end
 end
