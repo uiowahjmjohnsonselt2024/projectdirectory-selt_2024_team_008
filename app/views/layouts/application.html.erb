@@ -37,7 +37,7 @@
   </div>
 <% end %>
 
-<% if user_signed_in? %>
+<% if user_signed_in? && !(controller_name == 'servers' && action_name == 'show') %>
   <%= render "shared/logout" %>
 <% end %>
 
