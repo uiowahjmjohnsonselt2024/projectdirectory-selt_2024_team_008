@@ -25,7 +25,18 @@ class MessagesController < ApplicationController
   def index
     @server = Server.find(params[:server_id])
     @messages = @server.messages.order(:created_at)
-    render partial: 'messages/message', collection: @messages
+
+    respond_to do |format|
+      format.html do
+        render partial: 'messages/message', collection: @messages
+      end
+      format.json do
+        render json: @messages.as_json(
+          only: [:id, :content, :created_at],
+          include: { user: { only: [:id, :username] } }
+        )
+      end
+    end
   end
 
   private

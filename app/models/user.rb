@@ -13,10 +13,11 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :role, inclusion: { in: %w[admin user guest], message: "%{value} is not a valid role" }
 
-  has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id'
-  has_many :memberships
+  has_many :created_games, class_name: 'Game', foreign_key: 'creator_id', dependent: :nullify
+  has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id', dependent: :nullify
+  has_many :messages, dependent: :destroy
+  has_many :memberships, dependent: :destroy
   has_many :joined_servers, through: :memberships, source: :server
-  has_many :messages
 
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
@@ -30,7 +31,7 @@ class User < ApplicationRecord
   end
 
   def online?
-    Rails.cache.fetch("user_#{id}_online", raw: true) || false
+    Rails.cache.read("user_#{id}_online") || (last_seen_at.present? && last_seen_at > 3.minutes.ago)
   end
 
 end

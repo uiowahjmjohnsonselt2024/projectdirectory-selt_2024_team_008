@@ -1,9 +1,10 @@
 <div class="server-container">
+
   <!-- Chat Section -->
   <div class="chat-section">
     <!-- Messages Container -->
     <div class="message-list" id="messages">
-      <%= render @messages %>
+      <%= render partial: "messages/message", collection: @messages, as: :message %>
     </div>
 
     <!-- New Message Form -->
@@ -24,17 +25,11 @@
   <!-- User List Section -->
   <div class="user-list">
     <h2>Users</h2>
-    <% @server.users.each do |user| %>
-      <div
-        class="user <%= user.online? ? 'online' : 'offline' %>"
-        data-user-id="<%= user.id %>"
-      >
-        <span class="username"><%= user.username %></span>
-      </div>
-    <% end %>
+    <%= render partial: "users/user", collection: @server.users, as: :user %>
   </div>
+
 </div>
 
 <!-- Server Metadata -->
 <div id="server-id" data-server-id="<%= @server.id %>"></div>
-<meta name="csrf-token" content="<%= csrf_meta_tags %>
+<meta name="csrf-token" content="<%= form_authenticity_token %>">

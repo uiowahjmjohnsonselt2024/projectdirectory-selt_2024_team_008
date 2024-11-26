@@ -10,7 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_23_115056) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_25_103646) do
+  create_table "games", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "creator_id", null: false
+    t.integer "status", default: 0, null: false
+    t.string "external_server_url"
+    t.integer "server_id", null: false
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "item_name", null: false
+    t.string "item_type", null: false
+    t.json "item_attributes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "memberships", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "server_id", null: false
@@ -36,7 +56,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_115056) do
     t.integer "creator_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["creator_id"], name: "index_servers_on_creator_id"
+    t.integer "game_id"
   end
 
   create_table "shard_accounts", force: :cascade do |t|
@@ -53,6 +73,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_115056) do
     t.integer "price_in_shards"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_items", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "item_id", null: false
+    t.integer "quantity", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_user_items_on_item_id"
+    t.index ["user_id"], name: "index_user_items_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -76,10 +106,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_115056) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "memberships", "servers"
-  add_foreign_key "memberships", "users"
-  add_foreign_key "messages", "servers"
-  add_foreign_key "messages", "users"
-  add_foreign_key "servers", "users", column: "creator_id"
+  add_foreign_key "games", "servers", on_delete: :cascade
+  add_foreign_key "memberships", "servers", on_delete: :cascade
+  add_foreign_key "memberships", "users", on_delete: :cascade
+  add_foreign_key "messages", "servers", on_delete: :cascade
+  add_foreign_key "messages", "users", on_delete: :cascade
+  add_foreign_key "servers", "users", column: "creator_id", on_delete: :cascade
   add_foreign_key "shard_accounts", "users"
+  add_foreign_key "user_items", "items"
+  add_foreign_key "user_items", "users"
 end

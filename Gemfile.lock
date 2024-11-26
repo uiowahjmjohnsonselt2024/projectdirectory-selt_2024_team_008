@@ -392,6 +392,7 @@ DEPENDENCIES
   factory_bot_rails
   jbuilder (~> 2.0)
   jquery-rails
+  listen (~> 3.5)
   pg (>= 1.1, < 2.0)
   pry-rails
   puma (~> 6.0)

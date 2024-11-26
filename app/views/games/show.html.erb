@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game: <%= @game.name %></title>
+  <%= stylesheet_link_tag "multiplayer_sessions", media: "all" %>
+</head>
+<body>
+<!-- Title -->
+<div class="title">Playing...</div>
+
+<div id="server-id" data-server-id="<%= @server.id %>" data-user-id="<%= current_user.id %>"></div>
+
+<div class="game-container">
+  <h1>Game: <%= @game.name %></h1>
+  <p>Status: <%= @game.game_status %></p>
+
+  <!-- Button to Open/Close Chat Room -->
+  <div class="chat-room-toggle">
+    <button class="chat-room-button" id="chatRoomToggle">Open Chat Room</button>
+  </div>
+
+  <!-- Chat Room Embedded -->
+  <div class="chat-room" id="chatRoom" style="display: none;">
+    <div class="chat-room-header">
+      <span><%= @server.name %></span>
+      <button class="chat-room-close" id="chatRoomClose">Close</button>
+    </div>
+    <iframe
+      src="<%= server_path(@server) %>"
+      title="Chat Room for <%= @server.name %>"
+      style="width: 100%; height: 95%; border: 1px solid #111111;">
+    </iframe>
+  </div>
+</div>
+
+</body>
+<%= javascript_include_tag "multiplayer_sessions" %>
+</html>

@@ -69,6 +69,7 @@ group :development do
   # Spring for faster Rails command execution
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'
+  gem 'listen', '~> 3.5'
   gem 'simplecov', require: false
 end
 

@@ -1,1 +1,4 @@
-<p><strong><%= message.user.username %>:</strong> <%= message.content %></p>
+<div class="message">
+  <strong><%= message.user.username %>:</strong>
+  <%= sanitize(message.content) %>
+</div>
