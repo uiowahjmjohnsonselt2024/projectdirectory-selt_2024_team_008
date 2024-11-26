@@ -39,22 +39,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_115056) do
     t.index ["creator_id"], name: "index_servers_on_creator_id"
   end
 
-  create_table "shard_accounts", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "balance"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_shard_accounts_on_user_id"
-  end
-
-  create_table "shop_items", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.integer "price_in_shards"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -81,5 +65,4 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_115056) do
   add_foreign_key "messages", "servers"
   add_foreign_key "messages", "users"
   add_foreign_key "servers", "users", column: "creator_id"
-  add_foreign_key "shard_accounts", "users"
 end

@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
-  root 'game#index'
+  root 'main_menu#index'
 
   resources :servers do
     resources :messages, only: [:index, :create]
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       post :update_status
     end
   end
- 
+  resources :multiplayer_sessions, only: [:index, :show]
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
