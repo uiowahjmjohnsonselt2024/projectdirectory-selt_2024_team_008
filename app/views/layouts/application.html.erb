@@ -4,24 +4,21 @@
   <title>Shards Of The Grid</title>
 
   <!-- Main Stylesheets -->
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= csrf_meta_tags %>
   <meta name="rails-env" content="<%= Rails.env %>">
-  <%= stylesheet_link_tag 'server', media: 'all' %>
+
+  <!-- Additional Page-Specific Stylesheets/Scripts -->
+  <%= yield :stylesheets %>
+  <%= yield :javascripts %>
 
   <script>
       console.log(">>> Inline script in application.html.erb loaded <<<");
   </script>
-
-  <!-- Conditional Stylesheet for Sessions Controller -->
-  <% if controller_name == 'sessions' || controller_name == 'registrations'%>
-    <%= stylesheet_link_tag 'sessions' %>
-  <% end %>
 </head>
 
 <body>
-
 <!-- Flash Messages -->
 <% if flash[:notice].present? %>
   <div class="notice">
@@ -43,6 +40,5 @@
 
 <!-- Main Content -->
 <%= yield %>
-
 </body>
 </html>
