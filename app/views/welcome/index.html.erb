@@ -17,7 +17,7 @@
 
 <!-- Buttons -->
 <div class="button-container">
-  <button class="button" id="loginButton">Login</button>
+  <%= button_to "Login", new_user_session_path, method: :get, class: "button"%>
 </div>
 
 <script src="welcome.js"></script>

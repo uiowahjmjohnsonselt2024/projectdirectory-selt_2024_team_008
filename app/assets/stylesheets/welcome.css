@@ -48,41 +48,30 @@ body.welcome .title{
 .button-container {
     position: relative;
     display: flex;
+    flex-direction: column; /* Stack buttons vertically */
     justify-content: center;
-    gap: 20px;
+    align-items: center;
+    gap: 20px; /* Space between buttons */
 }
 
 /* Buttons */
 .button {
     display: flex;
-    align-items: center; /*Center text alignment*/
-    justify-content: center; /*vertical alignment*/
-    padding: 15px 30px;
-    font-size: 1.5rem;
+    align-items: center; /* Center text alignment */
+    justify-content: center; /* Vertical alignment */
+    padding: 25px 50px; /* Larger padding for bigger buttons */
+    font-size: 2rem; /* Increase font size for button text */
     font-weight: bold;
     text-align: center;
-    color: white;
-    background-color: green;
+    color: white; /* Text color */
+    background-color: green; /* Button background */
     border: none;
-    border-radius: 8px;
+    border-radius: 12px; /* Slightly rounded corners */
     cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-#loginButton{
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
-    background-color: green;
-    padding: 15px 30px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s; /* tells which part of the box to animate*/
-    background-color: green; /* Default button color */
+    transition: background-color 0.2s ease, transform 0.2s ease; /* Add smooth animations */
 }
 
-#loginButton:hover {
-    background-color: gray; /* Change to gray on hover */
-    color: white; /* Ensure text remains white */
+.button:hover {
+    background-color: darkgreen; /* Darken the green background on hover */
+    transform: scale(1.1); /* Slightly enlarge button on hover */
 }
