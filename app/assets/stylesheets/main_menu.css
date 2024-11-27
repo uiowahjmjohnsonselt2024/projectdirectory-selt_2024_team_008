@@ -39,6 +39,7 @@ body {
     color: white;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
+    font-size: 60px;
 }
 body.main-menu .title{
     font-size: 6rem;
