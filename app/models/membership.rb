@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Membership < ApplicationRecord
-  belongs_to :user, dependent: :destroy
+  belongs_to :user
   belongs_to :server, optional: true
 
   # Validation to ensure a user can only join a server once
