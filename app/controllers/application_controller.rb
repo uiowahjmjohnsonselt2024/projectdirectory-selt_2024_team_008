@@ -21,11 +21,11 @@ class ApplicationController < ActionController::Base
                                       keys: %i[email password password_confirmation current_password])
   end
 
-  # def after_sign_in_path_for(resource)
-  #   # Redirect to the desired page, e.g., user profile or dashboard
-  #   # user_dashboard_path # or any other path you want
-  # end
-  #
+   def after_sign_in_path_for(resource)
+     # Redirect to the desired page, e.g., user profile or dashboard
+     main_menu_path
+   end
+  
   def after_sign_out_path_for(_resource_or_scope)
     root_path
   end
