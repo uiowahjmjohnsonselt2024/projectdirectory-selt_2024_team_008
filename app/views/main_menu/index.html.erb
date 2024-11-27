@@ -18,8 +18,7 @@
 
   <!-- Buttons -->
     <div class="button-container">
-      <button class="button" id="playButton">Play</button>
-      <button class="button" id="shopButton">Shop</button>
+      <%= button_to "Play", games_path, method: :get, class: "button" %>
     </div>
 
     <script src="main_menu.js"></script>
