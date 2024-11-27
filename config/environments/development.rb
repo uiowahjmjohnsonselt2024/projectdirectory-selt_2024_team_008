@@ -75,4 +75,6 @@ Rails.application.configure do
   config.logger = Logger.new(STDOUT)
   config.log_level = :debug
 
+  config.active_record.verbose_query_logs = true
+
 end
