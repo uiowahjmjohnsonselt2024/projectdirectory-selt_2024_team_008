@@ -1,0 +1,32 @@
+<div class="top-navigation">
+  <%= button_to "Return to Shop", shop_index_path, class: "btn return-btn", method: :get %>
+  <div class="shard-balance-display">
+    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
+  </div>
+</div>
+
+<h1 class="title">Buy Shards</h1>
+
+<div id="shard-form" data-turbo="true">
+  <div class="form-group">
+    <label for="shard-amount">Enter Amount of Shards:</label>
+    <input type="number" id="shard-amount" name="shard_amount" min="1" required>
+  </div>
+
+  <div class="form-group">
+    <label for="currency-selector">Select Currency:</label>
+    <select id="currency-selector" name="currency">
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+      <option value="JPY">JPY</option>
+      <option value="CAD">CAD</option>
+      <option value="AUD">AUD</option>
+    </select>
+  </div>
+
+  <button id="convert-button" class="button">Convert</button>
+  <p id="conversion-result"></p>
+
+  <button id="buy-button" class="button">Buy</button>
+</div>

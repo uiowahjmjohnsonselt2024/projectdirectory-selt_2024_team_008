@@ -1,0 +1,32 @@
+<div class="mystery-box-container">
+  <div class="top-navigation">
+    <%= button_to "Return to Shop", shop_index_path, class: "btn return-btn", method: :get %>
+    <div class="shard-balance-display">
+      <p><strong id="mystery-box-count"><%= @mystery_box_count %></strong> Mystery Boxes</p>
+    </div>
+
+    <%= button_to "View Inventory", inventory_path, class: "btn add-funds-btn", method: :get %>
+  </div>
+</div>
+
+<div class="shop-tabs">
+  <a href="#purchase-boxes-section" class="shop-tab">Purchase Boxes</a>
+</div>
+
+<div class="box-body">
+  <h2></h2>
+  <div class="box-image">
+    <img id="box-image" src="<%= asset_path('item1.png') %>" alt="Mystery Box" style="width: 200px; height: auto;" />
+    <video id="box-opening-video" style="display: none; width: 200px; height: auto;" controls>
+      <source src="<%= asset_path('box-opening.mp4') %>" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  <div id="item-reveal" style="display: none; text-align: center; margin-top: 20px;">
+    <p id="item-name" style="font-size: 18px; font-weight: bold;"></p>
+  </div>
+</div>
+
+<div class="open-box-container">
+  <button id="open-case-btn" class="btn-tile">Open Box</button>
+</div>

@@ -1,0 +1,41 @@
+<div class="top-navigation">
+  <%= button_to "Return to Menu", root_path, class: "btn return-btn", method: :get %>
+  <div class="shard-balance-display">
+    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
+  </div>
+  <%= button_to "Add Funds", buy_shards_shard_accounts_path, class: "btn add-funds-btn", method: :get %>
+</div>
+
+<div class="shop-item">
+<!--  <a href="#shop-items-section" class="shop-tab">Shop Items</a>-->
+<!--  <a href="#shard-purchase-section" class="shop-tab">Purchase Shards</a>-->
+  <%= button_to "Go Here For Mystery Boxes", open_mystery_boxes_path, class: "btn add-funds-btn", method: :get %>
+</div>
+
+
+
+<!--<div id="shop-items-section">-->
+<!--  <h2>Shop Items</h2>-->
+<!--  <div class="shop-items">-->
+    <%# @shop_items.each do |item| %>
+<!--      <div class="shop-item">-->
+<!--        <h3><%#= item.name %></h3>-->
+<!--        <p><%#= item.price_in_shards %> Shards</p>-->
+        <%#= button_to "Buy Now", buy_item_shard_accounts_path(item_id: item.id), method: :post, class: "btn-buy" %>
+<!--      </div>-->
+    <%# end %>
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div id="shard-purchase-section">-->
+<!--  <h2>Choose Your Shards Package</h2>-->
+<!--  <div class="shard-options">-->
+    <%# ShardAccount::SHARD_PACKAGES.each do |package| %>
+<!--      <div class="shard-tile">-->
+<!--        <h3><%#= package[:shards] %> Shards</h3>-->
+<!--        <p>$<%#= '%.2f' % package[:price] %></p>-->
+        <%#= button_to "Buy Now", add_funds_shard_accounts_path(price: package[:price], shards: package[:shards]), method: :post, class: "btn-tile" %>
+<!--      </div>-->
+    <%# end %>
+<!--  </div>-->
+<!--</div>-->

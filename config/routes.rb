@@ -18,6 +18,29 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :shard_accounts, only: [] do
+    collection do
+      post :add_funds    # To handle adding funds
+      post :buy_item
+      get :buy_shards
+      post :convert_currency
+    end
+  end
+
+  resources :shop, only: [:index, :show]
+
+  get '/mystery_box', to: 'mystery_boxes#open'
+  post 'mystery_boxes/open_box', to: 'mystery_boxes#open_box', as: 'open_mystery_box'
+
+  resources :mystery_boxes, only: [] do
+    collection do
+      get 'open', to: 'mystery_boxes#open'
+    end
+  end
+
+  get 'inventory', to: 'inventory#show', as: 'inventory'
+
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

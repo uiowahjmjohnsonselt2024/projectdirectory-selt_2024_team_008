@@ -49,13 +49,14 @@ group :development, :test do
   gem 'pry-rails'
 
   gem 'sqlite3', '~> 1.4'
+  gem 'factory_bot_rails'
 end
 
 group :test do
   gem 'capybara'
+  gem 'webmock'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner-active_record'
-  gem 'factory_bot_rails'
   gem 'shoulda-matchers', '~> 5.0'
   gem 'rails-controller-testing'
 end

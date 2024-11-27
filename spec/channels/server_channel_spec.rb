@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ServerChannel, type: :channel do
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
   let(:user) { create(:user, username: 'testuser', email: 'test_user@example.com') }
   let(:server) { create(:server, name: 'Test Server', creator: user) }
 

@@ -2,6 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe "User Login", type: :request do
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
+
   before do
     User.create(username: "testuser", login: "test@example.com", password: "password", email: "test@example.com")
   end
