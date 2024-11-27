@@ -1,6 +1,8 @@
 class ServersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:update_status]
 
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
   def index
     @servers = current_user.joined_servers
     respond_to do |format|
@@ -74,5 +76,9 @@ class ServersController < ApplicationController
 
   def server_params
     params.require(:server).permit(:name)
+  end
+
+  def record_not_found
+    render json: { error: 'Record not found' }, status: :not_found
   end
 end
