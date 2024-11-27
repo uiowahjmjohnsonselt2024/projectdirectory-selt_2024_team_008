@@ -8,7 +8,6 @@
 //= require actioncable
 
 // Include specific JavaScript files
-//= require multiplayer_sessions
 //= require servers
 //= require game
 
