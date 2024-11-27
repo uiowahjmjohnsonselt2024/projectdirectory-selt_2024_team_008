@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ApplicationCable::Connection, type: :channel do
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
   let(:user) { create(:user) }
 
   context "when a valid user_id is in cookies" do

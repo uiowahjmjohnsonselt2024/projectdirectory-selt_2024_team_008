@@ -1,5 +1,6 @@
 
 Given('a user with email {string} and password {string} exists') do |email, password|
+  Item.find_or_create_by!(item_name: "Mystery Box", item_type: "box", item_attributes: {})
   User.create!(email: email, password: password, username: 'testuser')
 end
 

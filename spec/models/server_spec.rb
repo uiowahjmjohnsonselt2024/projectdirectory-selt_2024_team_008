@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Server, type: :model do
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
   let(:creator) { create(:user) }
   let(:server) { create(:server, creator: creator) }
   let(:user) { create(:user) }

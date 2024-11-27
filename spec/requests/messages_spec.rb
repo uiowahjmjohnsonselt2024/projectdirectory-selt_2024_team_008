@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "MessagesController", type: :request do
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
   let(:user) { create(:user) }
   let(:server) { create(:server, creator: user) }
   let!(:membership) { Membership.find_or_create_by!(user: user, server: server) } # Prevent duplicates

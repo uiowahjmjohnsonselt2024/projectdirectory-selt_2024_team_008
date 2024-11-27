@@ -1,8 +1,8 @@
-//= require rails-ujs
-//= require turbolinks
-//= require_tree .
-
 //= link_tree ../images
+//= link application.css
+//= link application.js
+//= link sessions.css
+//= require_tree .
 
 //= link application.css
 //= link application.js
@@ -20,3 +20,8 @@
 
 //= link game.js
 //= link game.css
+
+//= link box-opening.mp4
+
+//= link shop.css
+//= link shop.js

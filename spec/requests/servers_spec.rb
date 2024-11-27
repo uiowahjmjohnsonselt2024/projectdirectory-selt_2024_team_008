@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "ServersController", type: :request do
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
   let(:user) { create(:user) }
   let(:server) { create(:server, creator: user) }
   let(:valid_params) { { server: { name: "Test Server" } } }

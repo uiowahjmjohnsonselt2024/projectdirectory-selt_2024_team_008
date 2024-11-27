@@ -2,6 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  let!(:mystery_box) { create(:item, item_name: "Mystery Box", item_type: "box", item_attributes: {}) }
+
   describe "Validations" do
     it { should validate_presence_of(:username) }
     it { should validate_uniqueness_of(:username).case_insensitive }

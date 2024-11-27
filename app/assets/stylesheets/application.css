@@ -15,3 +15,10 @@
  *= require logout
  *= require devise
  */
+
+@import url("shop.css");
+@import url("main_menu.css");
+@import url("mystery_boxes.css");
+@import url("server.css");
+@import url("sessions.css");
+@import url("inventory.css");

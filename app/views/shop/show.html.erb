@@ -1,0 +1,14 @@
+<h1><%= @shop_item.name %></h1>
+
+<div>
+  <p><strong>Description:</strong></p>
+  <p><%= @shop_item.description %></p>
+</div>
+
+<div>
+  <p><strong>Price:</strong> <%= @shop_item.price_in_shards %> Shards</p>
+</div>
+
+<%= button_to "Buy Now", buy_item_shard_accounts_path(item_id: @shop_item.id), method: :post, class: "btn btn-primary" %>
+
+<%= button_to "Back to Shop", shop_index_path, class: "btn btn-secondary" %>

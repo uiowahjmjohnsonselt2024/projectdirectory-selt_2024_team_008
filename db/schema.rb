@@ -19,8 +19,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_25_103646) do
     t.integer "server_id", null: false
     t.datetime "started_at"
     t.datetime "ended_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "items", force: :cascade do |t|
@@ -112,6 +110,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_25_103646) do
   add_foreign_key "messages", "servers", on_delete: :cascade
   add_foreign_key "messages", "users", on_delete: :cascade
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :cascade
+
   add_foreign_key "shard_accounts", "users"
   add_foreign_key "user_items", "items"
   add_foreign_key "user_items", "users"
