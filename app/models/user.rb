@@ -13,11 +13,13 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :role, inclusion: { in: %w[admin user guest], message: "%{value} is not a valid role" }
 
+  has_many :memberships, dependent: :destroy
+  has_many :joined_servers, through: :memberships, source: :server
+
   has_many :created_games, class_name: 'Game', foreign_key: 'creator_id', dependent: :restrict_with_exception
   has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id', dependent: :nullify
-  has_many :joined_servers, through: :memberships, source: :server
   has_many :messages, dependent: :destroy
-  has_many :memberships, dependent: :destroy
+
   has_many :user_items
   has_many :items, through: :user_items
   
