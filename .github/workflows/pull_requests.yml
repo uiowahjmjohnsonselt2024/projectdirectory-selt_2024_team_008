@@ -23,8 +23,20 @@ jobs:
       - name: Install dependencies
         run: bundle install
 
+      - name: Set up database
+        env:
+          RAILS_ENV: test
+        run: |
+          bin/rails db:create
+          bin/rails db:schema:load
+          bin/rails db:migrate
+
       - name: Run RSpec tests
+        env:
+          CURRENCY_CONVERSION_API_KEY: ${{ secrets.CURRENCY_CONVERSION_API_KEY }}
         run: bundle exec rspec
 
       - name: Run Cucumber tests
+        env:
+          CURRENCY_CONVERSION_API_KEY: ${{ secrets.CURRENCY_CONVERSION_API_KEY }}
         run: bundle exec cucumber

@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   # Configure additional parameters for Devise
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!, except: [:home]
+  before_action :store_user_id_in_cookies
 
   protected
 
@@ -29,4 +30,13 @@ class ApplicationController < ActionController::Base
   def after_sign_out_path_for(_resource_or_scope)
     root_path
   end
+
+  private
+
+  def store_user_id_in_cookies
+    if user_signed_in?
+      cookies.signed[:user_id] = current_user.id if current_user
+    end
+  end
+
 end

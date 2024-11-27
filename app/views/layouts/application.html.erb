@@ -2,14 +2,21 @@
 <html>
 <head>
   <title>ShardsOfTheGrid</title>
-
-  <!-- Main Stylesheets -->
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <!-- Main Stylesheets -->
+  <%#= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%#= stylesheet_link_tag 'server', media: 'all' %>
+
+  <script>
+      console.log(">>> Inline script in application.html.erb loaded <<<");
+  </script>
+
 
   <!-- Conditional Stylesheet for Sessions Controller -->
-  <% if controller_name == 'sessions' || controller_name = 'registrations'%>
+  <% if controller_name == 'sessions' || controller_name == 'registrations'%>
     <%= stylesheet_link_tag 'sessions' %>
   <% end %>
 </head>
@@ -23,7 +30,7 @@
 <!-- Header Links (Conditional for Login/Signup Pages) -->
 <% if !current_page?(new_user_session_path) && !current_page?(new_user_registration_path) %>
   <% if user_signed_in? %>
-    <%= link_to "Log out", destroy_user_session_path, method: :delete %>
+    <%= link_to "Log out", destroy_user_session_path, method: :delete, id:"logoutButton" %>
   <% else %>
     <%= link_to "Log in", new_user_session_path %> |
     <%= link_to "Sign up", new_user_registration_path %>
