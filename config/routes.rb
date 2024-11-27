@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   # Root route
-  root 'games#index'
+  root 'main_menu#index'
 
   # Server routes
   resources :servers, only: [:show] do
