@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   root 'main_menu#index'
 
   # Server routes
-  resources :servers, only: [:show] do
+  resources :servers, only: [:index, :create, :show] do
     resources :messages, only: [:index, :create]
     resources :memberships, only: [:create, :destroy]
     member do
