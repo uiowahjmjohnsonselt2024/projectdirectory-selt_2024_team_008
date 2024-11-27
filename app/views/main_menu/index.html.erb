@@ -1,26 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shards of the Grid - Main Menu</title>
-    <link rel="stylesheet" href="main_menu.css">
-  </head>
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'main_menu', media: 'all' %>
+<% end %>
 
-  <body class="main-menu">
-  <!-- Moving background -->
-    <div class="background-container">
-      <div class="background-scene"></div>
-    </div>
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'main_menu' %>
+<% end %>
 
-  <!-- Title -->
-    <div class="title">Shards of the Grid</div>
+<div class="background-container">
+  <div class="background-scene"></div>
+</div>
 
-  <!-- Buttons -->
-    <div class="button-container">
-      <%= button_to "Play", games_path, method: :get, class: "button" %>
-    </div>
+<div class="title">Shards of the Grid</div>
 
-    <script src="main_menu.js"></script>
-  </body>
-</html>
+<div class="button-container">
+  <%= button_to "Play", games_path, method: :get, class: "button" %>
+</div>

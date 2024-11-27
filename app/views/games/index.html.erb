@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Multiplayer</title>
-  <%= stylesheet_link_tag "multiplayer_sessions", media: "all" %>
-</head>
-<body>
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag "game", media: "all" %>
+<% end %>
+
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "game" %>
+<% end %>
+
 <!-- Moving background -->
 <div class="background-container">
   <div class="background-scene"></div>
@@ -32,7 +31,3 @@
     <% end %>
   </ul>
 </div>
-
-<%= javascript_include_tag "multiplayer_sessions" %>
-</body>
-</html>

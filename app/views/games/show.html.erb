@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game: <%= @game.name %></title>
+<% content_for :stylesheets do %>
   <%= stylesheet_link_tag "game", media: "all" %>
-</head>
-<body>
+<% end %>
+
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "game" %>
+<% end %>
+
 <!-- Title -->
 <div class="title">Playing...</div>
 
@@ -34,7 +33,3 @@
     </iframe>
   </div>
 </div>
-
-</body>
-<%= javascript_include_tag "game" %>
-</html>
