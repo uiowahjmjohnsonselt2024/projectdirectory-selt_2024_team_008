@@ -18,9 +18,6 @@
 //= link main_menu.js
 //= link main_menu.css
 
-//= link game.js
-//= link game.css
-
 //= link box-opening.mp4
 
 //= link shop.css
