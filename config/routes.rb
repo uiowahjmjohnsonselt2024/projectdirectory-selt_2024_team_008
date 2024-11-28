@@ -9,7 +9,9 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
-  root 'main_menu#index'
+  root 'welcome#home'
+
+  get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
   resources :servers do
     resources :messages, only: [:create]

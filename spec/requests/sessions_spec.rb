@@ -15,7 +15,7 @@ RSpec.describe "User Login", type: :request do
         password: "password"
       }
     }
-    expect(response).to redirect_to(root_path)  #ROUTE NEEDS TO CHANGE
+    expect(response).to redirect_to(main_menu_path)  #ROUTE NEEDS TO CHANGE
     follow_redirect!
     expect(response.body).to include("Signed in successfully")
   end
@@ -58,7 +58,7 @@ RSpec.describe "User Login", type: :request do
         password: "password"
       }
     }
-    expect(response).to redirect_to(root_path)
+    expect(response).to redirect_to(main_menu_path)
   end
 
   it 'logs out successfully and redirects user to login page' do
