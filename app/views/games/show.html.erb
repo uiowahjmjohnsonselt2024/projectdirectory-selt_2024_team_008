@@ -1,23 +1,38 @@
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag "game", media: "all" %>
+  <%= stylesheet_link_tag "game_logic", media: "all" %>
 <% end %>
 
 <% content_for :javascripts do %>
-  <%= javascript_include_tag "game" %>
+  <%= javascript_include_tag "game_logic" %>
 <% end %>
 
 <!-- Title -->
-<div class="title">Playing...</div>
+<!--<div class="title">Playing...</div>-->
 
 <div id="server-id" data-server-id="<%= @server.id %>" data-user-id="<%= current_user.id %>"></div>
 
-<div class="game-container">
-  <h1>Game: <%= @game.name %></h1>
-  <p>Status: <%= @game.game_status %></p>
+<div class="header">
+  <!-- Left-side content -->
+  <div class="logout-container">
+    <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton", class: "logout-button" %>
+  </div>
 
+  <!-- Right-side content -->
+  <div class="chat-room-container">
+    <button id="chatRoomButton" class="chat-room-button">Open Chat Room</button>
+  </div>
+</div>
+
+
+<div class="game-details">
+  <p>Game: <%= @game.name %></p>
+  <p>Status: <%= @game.status %></p>
+</div>
+
+<div class="game-container">
   <!-- Game Grid -->
   <div class="game-grid">
-    <% JSON.parse(@game.grid).each_with_index do |row, y| %>
+    <% @game.grid.each_with_index do |row, y| %>
       <div class="grid-row">
         <% row.each_with_index do |cell, x| %>
           <div
@@ -25,7 +40,11 @@
             data-x="<%= x %>"
             data-y="<%= y %>">
             <% if cell.present? %>
+              <!-- Example: Render player or item if the cell is occupied -->
               <img src="<%= image_path('sprite.png') %>" alt="Player" class="sprite">
+            <% else %>
+              <!-- Empty cell -->
+              &nbsp;
             <% end %>
           </div>
         <% end %>
