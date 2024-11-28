@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shards of the Grid</title>
+  <link rel="stylesheet" href="welcome.css">
+</head>
+<body class="welcome"> <!-- Added the class here -->
+<!-- Moving background -->
+<div class="background-container">
+  <div class="background-scene"></div>
+</div>
+
+<!-- Title -->
+<div class="title">Shards of the Grid</div>
+
+<!-- Buttons -->
+<div class="button-container">
+  <%= button_to "Login", new_user_session_path, method: :get, class: "button"%>
+</div>
+
+<script src="welcome.js"></script>
+</body>
+</html>

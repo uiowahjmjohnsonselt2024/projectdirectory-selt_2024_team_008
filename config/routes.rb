@@ -7,8 +7,11 @@ Rails.application.routes.draw do
   # Devise routes for user authentication
   devise_for :users
 
-  # Root route
-  root 'main_menu#index'
+  # You can have the root of your site routed with "root"
+  # Only using this to start, will change later
+  root 'welcome#home'
+
+  get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
   # Server routes
   resources :servers, only: [:index, :create, :show] do

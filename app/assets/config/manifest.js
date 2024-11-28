@@ -25,3 +25,6 @@
 
 //= link shop.css
 //= link shop.js
+
+//= link welcome.js
+//= link welcome.css
