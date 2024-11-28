@@ -9,8 +9,6 @@
 
 // Include specific JavaScript files
 //= require servers
-//= require game
-
 //= require chat_room
 //= require game_logic
 
