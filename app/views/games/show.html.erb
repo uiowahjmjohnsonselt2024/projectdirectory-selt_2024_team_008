@@ -15,6 +15,24 @@
   <h1>Game: <%= @game.name %></h1>
   <p>Status: <%= @game.game_status %></p>
 
+  <!-- Game Grid -->
+  <div class="game-grid">
+    <% JSON.parse(@game.grid).each_with_index do |row, y| %>
+      <div class="grid-row">
+        <% row.each_with_index do |cell, x| %>
+          <div
+            class="grid-cell"
+            data-x="<%= x %>"
+            data-y="<%= y %>">
+            <% if cell.present? %>
+              <img src="<%= image_path('sprite.png') %>" alt="Player" class="sprite">
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
   <!-- Button to Open/Close Chat Room -->
   <div class="chat-room-toggle">
     <button class="chat-room-button" id="chatRoomToggle">Open Chat Room</button>
