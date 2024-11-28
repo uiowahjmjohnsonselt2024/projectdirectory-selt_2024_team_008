@@ -1,5 +1,5 @@
 document.addEventListener("turbolinks:load", () => {
-    console.log("multiplayer_sessions.js loaded");
+    console.log("chat_room.js loaded");
 
     const chatRoom = document.getElementById("chatRoom");
     const chatRoomToggle = document.getElementById("chatRoomToggle");
@@ -10,18 +10,33 @@ document.addEventListener("turbolinks:load", () => {
         return;
     }
 
-    chatRoomToggle.addEventListener("click", () => {
-        chatRoom.style.display = "block"; // Show chat room
+    // Remove existing event listeners to prevent stacking
+    chatRoomToggle.replaceWith(chatRoomToggle.cloneNode(true));
+    chatRoomClose.replaceWith(chatRoomClose.cloneNode(true));
+
+    // Re-fetch elements after cloning
+    const newChatRoomToggle = document.getElementById("chatRoomToggle");
+    const newChatRoomClose = document.getElementById("chatRoomClose");
+
+    // Show chat room and hide button
+    newChatRoomToggle.addEventListener("click", () => {
+        chatRoom.style.display = "block";
+        newChatRoomToggle.style.display = "none";
     });
 
-    chatRoomClose.addEventListener("click", () => {
-        chatRoom.style.display = "none"; // Hide chat room
+    // Hide chat room and show button
+    newChatRoomClose.addEventListener("click", () => {
+        chatRoom.style.display = "none";
+        newChatRoomToggle.style.display = "block";
     });
 
+    // Close chat room by clicking outside
     document.addEventListener("click", (event) => {
-        const isClickInside = chatRoom.contains(event.target) || chatRoomToggle.contains(event.target);
+        const isClickInside =
+            chatRoom.contains(event.target) || newChatRoomToggle.contains(event.target);
         if (!isClickInside && chatRoom.style.display === "block") {
             chatRoom.style.display = "none";
+            newChatRoomToggle.style.display = "block";
             console.log("Chat room closed by clicking outside.");
         }
     });
