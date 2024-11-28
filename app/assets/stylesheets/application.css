@@ -14,6 +14,8 @@
  *= require_self
  *= require logout
  *= require devise
+ *= require chat_room
+ *= require game_logic
  */
 
 @import url("shop.css");

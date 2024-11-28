@@ -18,8 +18,11 @@
 //= link main_menu.js
 //= link main_menu.css
 
-//= link game.js
-//= link game.css
+//= chat_room.js
+//= chat_room.css
+
+//= link game_logic.js
+//= link game_logic.css
 
 //= link box-opening.mp4
 

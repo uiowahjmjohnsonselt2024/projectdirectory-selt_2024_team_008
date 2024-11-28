@@ -11,6 +11,9 @@
 //= require servers
 //= require game
 
+//= require chat_room
+//= require game_logic
+
 // Include all other JavaScript files in the directory tree
 //= require_tree .
 //= require mystery_boxes
