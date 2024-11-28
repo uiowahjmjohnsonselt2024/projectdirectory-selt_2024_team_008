@@ -15,16 +15,19 @@
 
 //= link sessions.css
 
-//= link main_menu.js
-//= link main_menu.css
-
 //= chat_room.js
 //= chat_room.css
 
 //= link game_logic.js
 //= link game_logic.css
 
+//= link main_menu.js
+//= link main_menu.css
+
 //= link box-opening.mp4
 
 //= link shop.css
 //= link shop.js
+
+//= link welcome.js
+//= link welcome.css
