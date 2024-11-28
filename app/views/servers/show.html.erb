@@ -1,3 +1,13 @@
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag "chat_room", media: "all" %>
+  <%= stylesheet_link_tag "server", media: "all" %>
+<% end %>
+
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "chat_room" %>
+  <%= javascript_include_tag "servers" %>
+<% end %>
+
 <div class="server-container">
 
   <!-- Chat Section -->
