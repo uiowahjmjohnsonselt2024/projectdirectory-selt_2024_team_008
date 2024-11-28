@@ -21,6 +21,9 @@
 //= link game_logic.js
 //= link game_logic.css
 
+//= link chat_room.js
+//= link chat_room.css
+
 //= link main_menu.js
 //= link main_menu.css
 
