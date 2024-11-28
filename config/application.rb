@@ -3,6 +3,7 @@
 require File.expand_path('boot', __dir__)
 
 require 'rails/all'
+require "action_cable/engine"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -29,6 +30,12 @@ module ShardsOfTheGrid
     # config.active_record.raise_in_transactional_callbacks = true.      Removed in Rails 5
 
     # config.active_storage.service = :local  # not using any cloud services
+    config.assets.enabled = true
+    config.assets.paths << Rails.root.join("app", "assets", "javascripts")
+
+
+    # Explicitly set legacy_connection_handling to false
+    config.active_record.legacy_connection_handling = false
 
   end
 end

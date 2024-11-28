@@ -60,4 +60,16 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
+  # Action Cable Configuration
+  config.action_cable.mount_path = '/cable'
+  config.action_cable.url = "ws://localhost:3000/cable"
+  config.action_cable.disable_request_forgery_protection = true
+  config.action_cable.allowed_request_origins = ['http://localhost:3000', 'http://127.0.0.1:3000']
+  config.action_cable.log_tags = [ :action_cable ]
+
+  config.reload_claasses_only_on_change = true
+
+  config.logger = Logger.new(STDOUT)
+  config.log_level = :debug
+
 end

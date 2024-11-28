@@ -10,7 +10,69 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_14_182403) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_20_223258) do
+  create_table "items", force: :cascade do |t|
+    t.string "item_name", null: false
+    t.string "item_type", null: false
+    t.json "item_attributes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "server_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["server_id"], name: "index_memberships_on_server_id"
+    t.index ["user_id", "server_id"], name: "index_memberships_on_user_id_and_server_id", unique: true
+    t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "content", null: false
+    t.integer "user_id", null: false
+    t.integer "server_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["server_id"], name: "index_messages_on_server_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "servers", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "creator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_servers_on_creator_id"
+  end
+
+  create_table "shard_accounts", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "balance"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_shard_accounts_on_user_id"
+  end
+
+  create_table "shop_items", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "price_in_shards"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_items", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "item_id", null: false
+    t.integer "quantity", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_user_items_on_item_id"
+    t.index ["user_id"], name: "index_user_items_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -25,9 +87,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_14_182403) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username"
+    t.datetime "last_seen_at"
+    t.index "LOWER(username)", name: "index_users_on_lower_username", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "memberships", "servers"
+  add_foreign_key "memberships", "users"
+  add_foreign_key "messages", "servers"
+  add_foreign_key "messages", "users"
+  add_foreign_key "servers", "users", column: "creator_id"
+  add_foreign_key "shard_accounts", "users"
+  add_foreign_key "user_items", "items"
+  add_foreign_key "user_items", "users"
 end
