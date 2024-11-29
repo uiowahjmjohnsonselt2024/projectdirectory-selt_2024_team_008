@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shards of the Grid</title>
-  <link rel="stylesheet" href="welcome.css">
-</head>
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'main_menu', media: 'all' %>
+<% end %>
+
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'main_menu' %>
+<% end %>
+
 <body class="welcome"> <!-- Added the class here -->
 <!-- Moving background -->
 <div class="background-container">
@@ -19,7 +19,3 @@
 <div class="button-container">
   <%= button_to "Login", new_user_session_path, method: :get, class: "button"%>
 </div>
-
-<script src="welcome.js"></script>
-</body>
-</html>
