@@ -31,6 +31,14 @@ class ApplicationController < ActionController::Base
     root_path
   end
 
+  def redirect_to_main_menu
+    if user_signed_in?
+      redirect_to main_menu_path, alert: 'You were redirected to the main menu because the page does not exist or you do not have access.'
+    else
+      redirect_to root_path, alert: 'You need to sign in or sign up before continuing.'
+    end
+  end
+
   private
 
   def store_user_id_in_cookies
