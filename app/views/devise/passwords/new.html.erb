@@ -2,9 +2,12 @@
   <%= stylesheet_link_tag "devise/password_reset", media: "all" %>
 <% end %>
 
-<div class="forgot-password-container">
+<div class="centered-elements">
   <div class="title">Forgot your password?</div>
+  <div class="junk-mail-message"> Make sure to check your junk/spam folder.</div>
+</div>
 
+<div class="forgot-password-container">
   <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "forgot-password-form" }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
 
