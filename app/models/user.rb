@@ -11,20 +11,23 @@ class User < ApplicationRecord
 
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates :email, presence: true, uniqueness: true
+  validates :role, inclusion: { in: %w[admin user guest], message: "%{value} is not a valid role" }
 
-
-  has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id'
-  has_many :memberships
+  has_many :memberships, dependent: :destroy
   has_many :joined_servers, through: :memberships, source: :server
-  has_many :messages
 
-  has_one :shard_account, dependent: :destroy
-  after_create :initialize_shard_account
-  after_create :assign_starting_mystery_boxes
-
+  has_many :created_games, class_name: 'Game', foreign_key: 'creator_id', dependent: :restrict_with_exception
+  has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id', dependent: :nullify
+  has_many :messages, dependent: :destroy
 
   has_many :user_items
   has_many :items, through: :user_items
+  
+  has_one :shard_account, dependent: :destroy
+  
+  after_create :initialize_shard_account
+  after_create :assign_starting_mystery_boxes
+  before_destroy :reassign_creator_roles
 
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
@@ -38,7 +41,7 @@ class User < ApplicationRecord
   end
 
   def online?
-    Rails.cache.fetch("user_#{id}_online", raw: true) || false
+    Rails.cache.read("user_#{id}_online") || (last_seen_at.present? && last_seen_at > 3.minutes.ago)
   end
 
   private
@@ -57,6 +60,35 @@ class User < ApplicationRecord
       user_item.save!
     else
       Rails.logger.error("Failed to find or create Mystery Box item")
+    end
+  end
+
+  def reassign_creator_roles
+    created_servers.each do |server|
+      new_creator = User.where.not(id: id).first
+      if new_creator
+        server.update!(creator_id: new_creator.id)
+      else
+        # Validate the original creator exists
+        if User.exists?(id: server.original_creator_id)
+          server.update!(
+            creator_id: server.original_creator_id,
+            original_creator_name: server.original_creator_name || username,
+            original_creator_email: server.original_creator_email || email
+          )
+        else
+          raise ActiveRecord::RecordInvalid, "Original creator is missing for server #{server.id}"
+        end
+      end
+    end
+
+    created_games.each do |game|
+      new_creator = User.where.not(id: id).first
+      if new_creator
+        game.update!(creator_id: new_creator.id)
+      else
+        raise ActiveRecord::RecordInvalid, "Cannot reassign game creator for game #{game.id}: no valid user found"
+      end
     end
   end
 end

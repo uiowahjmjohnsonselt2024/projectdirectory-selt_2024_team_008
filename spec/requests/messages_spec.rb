@@ -7,9 +7,42 @@ RSpec.describe "MessagesController", type: :request do
   let!(:membership) { Membership.find_or_create_by!(user: user, server: server) } # Prevent duplicates
   let(:valid_params) { { message: { content: "Hello, World!" } } }
   let(:invalid_params) { { message: { content: "" } } }
+  let!(:messages) do
+    create_list(:message, 3, server: server, user: user, content: "Test Message")
+  end
 
   before do
     sign_in user
+  end
+
+  describe "GET /servers/:server_id/messages" do
+    context "when requesting HTML format" do
+      it "renders messages as a collection of partials" do
+        get server_messages_path(server), headers: { "ACCEPT" => "text/html" }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Test Message")
+      end
+    end
+
+    context "when requesting JSON format" do
+      it "renders messages as JSON" do
+        get server_messages_path(server), headers: { "ACCEPT" => "application/json" }
+        expect(response).to have_http_status(:ok)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response.size).to eq(3)
+        expect(json_response.first).to include("content" => "Test Message")
+        expect(json_response.first["user"]).to include("id" => user.id, "username" => user.username)
+      end
+    end
+
+    context "when the server does not exist" do
+      it "returns a not found error" do
+        expect {
+          get server_messages_path(server_id: 999), headers: { "ACCEPT" => "application/json" }
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
   end
 
   describe "POST /servers/:server_id/messages" do
@@ -45,7 +78,6 @@ RSpec.describe "MessagesController", type: :request do
       end
     end
 
-
     context "when the user is not a member of the server" do
       let(:another_user) { create(:user) }
 
@@ -59,6 +91,5 @@ RSpec.describe "MessagesController", type: :request do
         }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
-
   end
 end

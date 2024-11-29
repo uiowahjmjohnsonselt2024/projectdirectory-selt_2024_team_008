@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  # Mount ActionCable server
   mount ActionCable.server => '/cable'
 
+  # Devise routes for user authentication
   devise_for :users
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
@@ -13,12 +13,18 @@ Rails.application.routes.draw do
 
   get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
-  resources :servers do
-    resources :messages, only: [:create]
+  # Server routes
+  resources :servers, only: [:index, :create, :show] do
+    resources :messages, only: [:index, :create]
+    resources :memberships, only: [:create, :destroy]
     member do
       post :update_status
+      post :ensure_membership, defaults: { format: :json }
     end
   end
+
+  # Game routes
+  resources :games, only: [:create, :show, :index]
 
   resources :shard_accounts, only: [] do
     collection do
@@ -41,7 +47,6 @@ Rails.application.routes.draw do
   end
 
   get 'inventory', to: 'inventory#show', as: 'inventory'
-
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

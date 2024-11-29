@@ -1,21 +1,23 @@
-<div class="server-header">
-  <h1><%= @server.name %></h1>
-  <p class="subtitle">Welcome to the server chat room</p>
-</div>
-
 <div class="server-container">
+
   <!-- Chat Section -->
   <div class="chat-section">
     <!-- Messages Container -->
     <div class="message-list" id="messages">
-      <%= render @messages %>
+      <%= render partial: "messages/message", collection: @messages, as: :message %>
     </div>
 
     <!-- New Message Form -->
     <div class="message-input">
       <form id="message-form">
-        <textarea id="message-input" placeholder="Type a message"></textarea>
-        <button type="submit" id="send_button">Send</button>
+        <textarea
+          id="message-input"
+          placeholder="Type a message"
+          rows="1"
+          aria-label="Type your message here"
+          required>
+        </textarea>
+        <button type="submit" id="send_button" aria-label="Send Message">Send</button>
       </form>
     </div>
   </div>
@@ -23,14 +25,11 @@
   <!-- User List Section -->
   <div class="user-list">
     <h2>Users</h2>
-    <% @server.users.each do |user| %>
-      <div class="user offline" data-user-id="<%= user.id %>">
-        <span class="username"><%= user.username %></span>
-      </div>
-    <% end %>
+    <%= render partial: "users/user", collection: @server.users, as: :user %>
   </div>
+
 </div>
 
-  <!-- Server Metadata -->
+<!-- Server Metadata -->
 <div id="server-id" data-server-id="<%= @server.id %>"></div>
-<meta name="csrf-token" content="<%= csrf_meta_tags %>
+<meta name="csrf-token" content="<%= form_authenticity_token %>">

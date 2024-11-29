@@ -2,6 +2,8 @@
 
 source 'https://rubygems.org'
 
+ruby "3.2.2"
+
 gem 'rails', '~> 7.0' # Ensure compatibility with Railties and Rails components
 
 # Use PostgreSQL as the database for Active Record (recommended over sqlite3 for production)
@@ -68,12 +70,16 @@ group :development do
   # Spring for faster Rails command execution
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'
+  gem 'listen', '~> 3.5'
   gem 'simplecov', require: false
 end
 
 # For production deployment
-# group :production do
-# end
+group :production do
+  gem 'redis', '~> 5.0'
+  gem 'redis-rails', '~> 5.0'
+  gem 'rails_12factor'
+end
 
 gem 'devise', '~> 4.9'
 gem 'dotenv-rails'

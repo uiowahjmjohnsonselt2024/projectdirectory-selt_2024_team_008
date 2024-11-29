@@ -37,5 +37,10 @@ module ShardsOfTheGrid
     # Explicitly set legacy_connection_handling to false
     config.active_record.legacy_connection_handling = false
 
+    config.after_initialize do
+      ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON")
+    end
+
+
   end
 end

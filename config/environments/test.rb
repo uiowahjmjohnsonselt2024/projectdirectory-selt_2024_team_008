@@ -45,4 +45,11 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  config.log_level = :debug
+
+  config.active_record.verbose_query_logs = true
+
+  config.logger = ActiveSupport::Logger.new(Rails.root.join('log', 'test.log'))
+
 end

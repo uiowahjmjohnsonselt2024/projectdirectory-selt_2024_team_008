@@ -52,20 +52,23 @@ RSpec.describe ServerChannel, type: :channel do
         expect(subscription).to be_rejected
       end
     end
+  end
 
-    context 'when user does not have access to the server' do
+  describe 'subscribed' do
+    context 'when Membership creation fails' do
       before do
-        allow_any_instance_of(Server).to receive(:user_can_access?).and_return(false)
+        # Stub the logger before triggering the error
+        allow(Rails.logger).to receive(:error)
+
+        # Mock Membership to raise ActiveRecord::RecordInvalid
+        allow(Membership).to receive(:find_or_create_by!).and_raise(ActiveRecord::RecordInvalid.new(Membership.new))
       end
 
-      it 'rejects the subscription' do
+      it 'logs an error and rejects the subscription' do
         subscribe(server_id: server.id)
 
-        # Check that the subscription was rejected
+        expect(Rails.logger).to have_received(:error).with(/Failed to create membership for user #{user.id}:/).once
         expect(subscription).to be_rejected
-
-        # Ensure no streams were created
-        expect(subscription.streams).to be_empty
       end
     end
   end
@@ -81,7 +84,7 @@ RSpec.describe ServerChannel, type: :channel do
       expect {
         unsubscribe
       }.to have_broadcasted_to("server_#{server.id}")
-             .with(type: 'system', message: "#{user.username} has left the chat room.<br>")
+             .with(type: 'system', message: "#{user.username} has left the server.")
 
       expect(Rails.cache.fetch("server_#{server.id}_online_users")).not_to include(user.id)
     end
@@ -93,41 +96,70 @@ RSpec.describe ServerChannel, type: :channel do
       subscribe(server_id: server.id)
     end
 
-    it 'streams messages to the channel' do
+    it 'broadcasts a valid message to the channel' do
       expect {
         perform :send_message, { message: 'Hello, World!' }
       }.to have_broadcasted_to("server_#{server.id}")
              .with(type: 'message', message: "<p><strong>testuser:</strong> Hello, World!</p>")
     end
+
+    it 'logs an error when message saving fails' do
+      allow_any_instance_of(Message).to receive(:save).and_return(false)
+      expect(Rails.logger).to receive(:error).with(/Failed to save message:/)
+      perform :send_message, { message: 'Invalid message' }
+    end
   end
 
   describe 'broadcast_status' do
     before do
-      Membership.find_or_create_by!(user: user, server: server)
+      # Subscribe to the channel to satisfy the "Must be subscribed!" requirement
       subscribe(server_id: server.id)
     end
 
-    let(:invalid_status) { 'busy' }
-
     it 'logs a warning and does not broadcast when the status is invalid' do
-      expect(Rails.logger).to receive(:warn).at_least(:once).with("Invalid status '#{invalid_status}' for user #{user.id} in server #{server.id}")
+      invalid_status = 'busy'
 
-      # Call the method directly
-      subscription.broadcast_status(user.id, invalid_status, server.id)
+      allow(Rails.logger).to receive(:warn)
 
-      expect {
-        subscription.broadcast_status(user.id, invalid_status, server.id)
-      }.not_to have_broadcasted_to("server_#{server.id}")
+      # Trigger broadcast_status by simulating an invalid status change
+      subscription.send(:broadcast_status, user.id, invalid_status, server.id)
+
+      expect(Rails.logger).to have_received(:warn)
+                                .with("Invalid status '#{invalid_status}' for user #{user.id} in server #{server.id}")
+                                .once
+
+      expect do
+        subscription.send(:broadcast_status, user.id, invalid_status, server.id)
+      end.not_to have_broadcasted_to("server_#{server.id}")
     end
 
     it 'broadcasts status when the status is valid' do
       valid_status = 'online'
 
-      expect {
-        subscription.broadcast_status(user.id, valid_status, server.id)
-      }.to have_broadcasted_to("server_#{server.id}")
-             .with(type: 'status', user_id: user.id, status: valid_status)
+      expect do
+        subscription.send(:broadcast_status, user.id, valid_status, server.id)
+      end.to have_broadcasted_to("server_#{server.id}")
+               .with(type: 'status', user_id: user.id, status: valid_status)
     end
   end
 
+  describe 'cache operations' do
+    context 'when adding a user to the online cache' do
+      it 'updates the cache correctly' do
+        subscribe(server_id: server.id)
+        online_users = Rails.cache.fetch("server_#{server.id}_online_users")
+        expect(online_users).to include(user.id)
+      end
+    end
+
+    context 'when removing a user from the online cache' do
+      it 'updates the cache correctly' do
+        Rails.cache.write("server_#{server.id}_online_users", Set.new([user.id]))
+        subscribe(server_id: server.id)
+        unsubscribe
+        online_users = Rails.cache.fetch("server_#{server.id}_online_users")
+        expect(online_users).not_to include(user.id)
+      end
+    end
+  end
 end

@@ -1,0 +1,33 @@
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag "game", media: "all" %>
+<% end %>
+
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "game" %>
+<% end %>
+
+<!-- Moving background -->
+<div class="background-container">
+  <div class="background-scene"></div>
+</div>
+
+<!-- Button to Create New Game -->
+<div class="new-game">
+  <h2>Create a New Game</h2>
+  <%= form_with model: Game.new, local: true do |f| %>
+    <%= f.text_field :name, placeholder: "Enter game name", required: true %>
+    <%= f.submit "Create Game", class: "new-game-button" %>
+  <% end %>
+</div>
+
+<!-- List of Existing Games -->
+<div class="game-list">
+  <h2>Existing Games</h2>
+  <ul>
+    <% @games.each do |game| %>
+      <li>
+        <%= link_to game.name, game_path(game), class: "game-link" %>
+      </li>
+    <% end %>
+  </ul>
+</div>
