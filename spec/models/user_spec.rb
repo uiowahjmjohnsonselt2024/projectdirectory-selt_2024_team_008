@@ -93,4 +93,58 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#reassign_creator_roles' do
+    let!(:user) { create(:user, username: 'creator_user', email: 'creator@example.com') }
+    let!(:new_user) { create(:user, username: 'new_user', email: 'new_user@example.com') }
+    let!(:server) do
+      Server.create!(name: "Chat Room for Test Game", creator_id: user.id).tap do |server|
+        server.update!(
+          original_creator_id: user.id,
+          original_creator_name: user.username,
+          original_creator_email: user.email
+        )
+      end
+    end
+    let!(:game) do
+      Game.create!(name: "Test Game", creator_id: user.id, server_id: server.id).tap do |game|
+        server.update!(game_id: game.id)
+      end
+    end
+
+    context 'when a new user exists' do
+      it 'reassigns servers to a new user' do
+        user.send(:reassign_creator_roles)
+        expect(server.reload.creator_id).to eq(new_user.id)
+      end
+
+      it 'reassigns games to a new user' do
+        user.send(:reassign_creator_roles)
+        expect(game.reload.creator_id).to eq(new_user.id)
+      end
+    end
+
+    context 'when no new user exists' do
+      before do
+        # Simulate no available user by stubbing the User query
+        allow(User).to receive(:where).with(any_args).and_return(User.none)
+      end
+
+      it 'reassigns servers to the original creator if they exist' do
+        user.send(:reassign_creator_roles)
+
+        expect(server.reload.creator_id).to eq(user.id)
+        expect(server.reload.original_creator_name).to eq(user.username)
+        expect(server.reload.original_creator_email).to eq(user.email)
+      end
+
+      it 'sets creator_id to NULL if no valid user exists for a game' do
+        server.update!(original_creator_id: nil, original_creator_name: nil, original_creator_email: nil)
+
+        user.send(:reassign_creator_roles)
+
+        expect(server.reload.creator_id).to be_nil
+      end
+    end
+  end
 end
