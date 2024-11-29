@@ -8,14 +8,16 @@
 //= require actioncable
 
 // Include specific JavaScript files
+//= require welcome
+//= require mystery_boxes
+//= require shop
 //= require servers
 //= require chat_room
 //= require game_logic
 
 // Include all other JavaScript files in the directory tree
 //= require_tree .
-//= require mystery_boxes
-//= require shop
+
 
 console.log(">>> application.js loaded <<<");
 document.addEventListener("turbolinks:load", () => {

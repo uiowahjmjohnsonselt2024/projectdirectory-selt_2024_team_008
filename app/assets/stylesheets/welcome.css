@@ -37,12 +37,13 @@ body {
 .title {
     position: absolute;
     top: 10%;
-    color: white;
+    color: #45a049;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
+    font-size: 5rem;
 }
 body.welcome .title{
-    font-size: 6rem;
+    /*font-size: 6rem;*/
 }
 /* Button container */
 .button-container {

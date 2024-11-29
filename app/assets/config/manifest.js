@@ -13,10 +13,8 @@
 //= link channels/consumer.js
 //= link channels/server_channel.js
 
-//= link sessions.css
-
-//= chat_room.js
-//= chat_room.css
+//= link chat_room.js
+//= link chat_room.css
 
 //= link game_logic.js
 //= link game_logic.css
@@ -34,3 +32,5 @@
 
 //= link welcome.js
 //= link welcome.css
+
+//= link_directory ../stylesheets/devise .css
