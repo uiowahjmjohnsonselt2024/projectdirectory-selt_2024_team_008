@@ -14,7 +14,7 @@ FactoryBot.define do
 
     after(:build) do |server|
       if server.game.present? && server.name.blank?
-        server.name = "Server for #{server.game.name}"
+        server.name = "Chat for #{server.game.name}"
       end
     end
   end
