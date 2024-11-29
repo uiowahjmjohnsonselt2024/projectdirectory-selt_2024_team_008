@@ -1,32 +1,45 @@
-<!-- Login container centered on the screen -->
-<div class="login-container">
-  <div class="title">Log in</div>
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag "devise/login", media: "all" %>
+<% end %>
 
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <div class="field">
-      <%= f.label :login, "Email or Username" %><br />
-      <%= f.text_field :login, autofocus: true, class: "input-field" %>
-    </div>
+<%= csrf_meta_tags %>
 
-    <div class="field">
-      <%= f.label :password %><br />
-      <%= f.password_field :password, autocomplete: "current-password", class: "input-field" %>
-    </div>
+<body>
+  <!-- Login container centered on the screen -->
+  <div class="login-container">
+    <%= form_with model: resource, as: resource_name, url: session_path(resource_name), html: { class: 'new_user', id: 'new_user' } do %>
+      <!-- Title -->
+<!--      <div class="title">Log In</div>-->
 
-    <% if devise_mapping.rememberable? %>
-      <div class="field">
-        <%= f.check_box :remember_me %>
-        <%= f.label :remember_me %>
+      <!-- Fields container -->
+      <div class="fields-container">
+        <div class="field">
+          <label for="user_login">Email or Username</label>
+          <input autofocus="autofocus" class="input-field" type="text" name="user[login]" id="user_login" />
+        </div>
+
+        <div class="field">
+          <label for="user_password">Password</label>
+          <input autocomplete="current-password" class="input-field" type="password" name="user[password]" id="user_password" />
+        </div>
+
+        <div class="field">
+          <input name="user[remember_me]" type="hidden" value="0" autocomplete="off" />
+          <input type="checkbox" value="1" name="user[remember_me]" id="user_remember_me" />
+          <label for="user_remember_me">Remember me</label>
+        </div>
+
+        <div class="actions">
+          <!-- Submit button for login -->
+          <input type="submit" name="commit" value="Log in" class="button" data-disable-with="Log in" />
+
+          <!-- Button to redirect to sign up -->
+          <button type="button" class="button" onclick="window.location.href='/users/sign_up'">Create an Account</button>
+
+          <a href="/users/password/new">Forgot your password?</a>
+        </div>
       </div>
     <% end %>
+  </div>
 
-    <div class="actions">
-      <%= f.submit "Log in", class: "button" %>
-    </div>
-  <% end %>
-
-  <!-- Create an Account button -->
-  <button class="button" onclick="window.location.href='<%= new_registration_path(resource_name) %>'">Create an Account</button>
-
-  <%= render "devise/shared/links" %>
-</div>
+</body>
