@@ -1,4 +1,4 @@
-body {
+.sessions-new {
     font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
     background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64)); /* Subtle blue gradient */
     color: #333; /* Default text color */

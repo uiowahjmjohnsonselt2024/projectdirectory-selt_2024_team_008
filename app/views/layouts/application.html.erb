@@ -19,7 +19,8 @@
   </script>
 </head>
 
-<body>
+<body class="<%= "#{controller_name}-#{action_name}" %>">
+
 <!-- Flash Messages -->
 <% if flash[:notice].present? %>
   <div class="notice">
