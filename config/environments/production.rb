@@ -95,9 +95,9 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'https://selt-group008-final-project-f5f66b74f699.herokuapp.com/', protocol: 'https' }
 
-  config.action_cable.url = "https://selt-group008-final-project-f5f66b74f699.herokuapp.com/"
-  config.action_cable.allowed_request_origins = ["https://selt-group008-final-project-f5f66b74f699.herokuapp.com/"]
-  config.action_cable.adapter = :redis
-  config.action_cable.redis = { url: ENV['REDIS_URL'] }
+  config.action_cable.url = ENV['WEBSOCKET_URL']
+  config.action_cable.allowed_request_origins = [
+    "https://selt-group008-final-project-f5f66b74f699.herokuapp.com"
+  ]
 
 end
