@@ -9,7 +9,7 @@ class GamesController < ApplicationController
     ActiveRecord::Base.transaction do
       # Create the server first
       server = Server.create!(
-        name: "Chat Room for #{game_params[:name]}",
+        name: "Chat for #{game_params[:name]}",
         creator_id: current_user.id
       )
 

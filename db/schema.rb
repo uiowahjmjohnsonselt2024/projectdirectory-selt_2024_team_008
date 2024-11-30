@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_27_122740) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_29_073003) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "creator_id", null: false
+    t.integer "creator_id"
     t.integer "status", default: 0, null: false
     t.string "external_server_url"
     t.integer "server_id", null: false
@@ -21,6 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_27_122740) do
     t.datetime "ended_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "grid"
   end
 
   create_table "items", force: :cascade do |t|
@@ -110,6 +111,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_27_122740) do
   end
 
   add_foreign_key "games", "servers", on_delete: :cascade
+  add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "memberships", "servers", on_delete: :cascade
   add_foreign_key "memberships", "users", on_delete: :cascade
   add_foreign_key "messages", "servers", on_delete: :cascade

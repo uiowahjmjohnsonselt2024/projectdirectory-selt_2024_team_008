@@ -1,0 +1,35 @@
+.game-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.grid-row {
+    display: flex;
+}
+
+.grid-cell {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+
+.grid-cell img.sprite {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+/* game.css or your existing CSS file */
+.game-details {
+    position: absolute; /* Makes it possible to control its position */
+    left: 0; /* Aligns the content to the left side of the screen */
+    top: 10%; /* Optional: Moves the content down slightly from the top */
+    margin-left: 20px; /* Optional: Adds spacing from the edge */
+    font-family: Arial, sans-serif; /* Optional: Sets a clean font style */
+    color: #333; /* Optional: Text color */
+}

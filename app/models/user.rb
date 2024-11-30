@@ -8,6 +8,7 @@ class User < ApplicationRecord
 
   # Virtual attribute for authenticating by either username or email
   attr_accessor :login
+  attr_accessor :reassigning
 
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validates :email, presence: true, uniqueness: true
@@ -16,7 +17,7 @@ class User < ApplicationRecord
   has_many :memberships, dependent: :destroy
   has_many :joined_servers, through: :memberships, source: :server
 
-  has_many :created_games, class_name: 'Game', foreign_key: 'creator_id', dependent: :restrict_with_exception
+  has_many :created_games, class_name: 'Game', foreign_key: 'creator_id', dependent: :nullify
   has_many :created_servers, class_name: 'Server', foreign_key: 'creator_id', dependent: :nullify
   has_many :messages, dependent: :destroy
 
@@ -63,32 +64,45 @@ class User < ApplicationRecord
     end
   end
 
+  def self.reassigning?
+    Thread.current[:reassigning] || false
+  end
+
+  def self.reassigning=(value)
+    Thread.current[:reassigning] = value
+  end
+
   def reassign_creator_roles
-    created_servers.each do |server|
-      new_creator = User.where.not(id: id).first
-      if new_creator
-        server.update!(creator_id: new_creator.id)
-      else
-        # Validate the original creator exists
-        if User.exists?(id: server.original_creator_id)
-          server.update!(
-            creator_id: server.original_creator_id,
-            original_creator_name: server.original_creator_name || username,
-            original_creator_email: server.original_creator_email || email
-          )
+    User.reassigning = true
+    ActiveRecord::Base.transaction do
+      created_servers.each do |server|
+        new_creator = User.where("id NOT IN (?)", id).first
+        if new_creator
+          server.update!(creator_id: new_creator.id)
         else
-          raise ActiveRecord::RecordInvalid, "Original creator is missing for server #{server.id}"
+          if User.exists?(id: server.original_creator_id)
+            server.update!(
+              creator_id: server.original_creator_id,
+              original_creator_name: server.original_creator_name || username,
+              original_creator_email: server.original_creator_email || email
+            )
+          else
+            server.update!(creator_id: nil)
+          end
+        end
+      end
+
+      created_games.each do |game|
+        new_creator = User.where("id NOT IN (?)", id).first
+        if new_creator
+          game.update!(creator_id: new_creator.id)
+        else
+          game.update!(creator_id: nil)
         end
       end
     end
-
-    created_games.each do |game|
-      new_creator = User.where.not(id: id).first
-      if new_creator
-        game.update!(creator_id: new_creator.id)
-      else
-        raise ActiveRecord::RecordInvalid, "Cannot reassign game creator for game #{game.id}: no valid user found"
-      end
-    end
+    Rails.logger.info("Reassigning complete for user ID: #{id}")
+  ensure
+    User.reassigning = false # Reset after completion
   end
 end

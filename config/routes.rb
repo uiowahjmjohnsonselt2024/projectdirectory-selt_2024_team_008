@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+# Helper method to safely check if the route exists
+# def safe_recognize_path(req)
+#   Rails.application.routes.recognize_path(req.path, method: req.method)
+# rescue ActionController::RoutingError, StandardError
+#   false
+# end
+
 Rails.application.routes.draw do
   # Mount ActionCable server
   mount ActionCable.server => '/cable'
@@ -11,6 +18,12 @@ Rails.application.routes.draw do
   # Only using this to start, will change later
   root 'welcome#home'
 
+  # match '*unmatched', to: 'errors#handle_invalid_route', via: :all, constraints: ->(req) {
+  #   !ShardsOfTheGrid::Application.valid_route?(req.path, req.method) &&
+  #     req.path.exclude?('rails/active_storage')
+  # }
+
+  # Define main_menu with role constraints
   get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
   # Server routes
@@ -47,6 +60,14 @@ Rails.application.routes.draw do
   end
 
   get 'inventory', to: 'inventory#show', as: 'inventory'
+
+  # Catch-all route for unknown paths
+  # match '*unmatched', to: 'errors#redirect_to_main_menu', via: :all, constraints: ->(req) {
+  #   req.format.html? &&
+  #     req.path.exclude?('rails/active_storage') &&
+  #     req.path.exclude?('/main_menu') && # Exclude paths that could match valid routes
+  #     req.path.exclude?('/game/')
+  # }
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

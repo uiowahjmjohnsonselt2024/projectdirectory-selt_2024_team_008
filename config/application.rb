@@ -41,6 +41,6 @@ module ShardsOfTheGrid
       ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON")
     end
 
-
   end
+
 end
