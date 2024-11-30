@@ -1,6 +1,7 @@
 {
-    "GROUP" : "G008"
+    "GROUP" : "G008",
     "ALL_SPRINTS" : {
-        "SPRINT1_URL" : http://selt-group008-final-project-f5f66b74f699.herokuapp.com
+        "SPRINT1_URL" : "http://selt-group008-final-project-f5f66b74f699.herokuapp.com",
+        "SPRINT2_URL" : "http://selt-group008-final-project-f5f66b74f699.herokuapp.com",
     }
 }
