@@ -3,7 +3,7 @@ When(/^I am on the shop page$/) do
 end
 
 Then("I should be redirected to the menu page") do
-  expect(current_path).to eq(root_path) # Replace with the actual route helper for the menu
+  expect(current_path).to eq(main_menu_path) # Replace with the actual route helper for the menu
 end
 
 Then("I should be redirected to the buy shards page") do
