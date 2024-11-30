@@ -8,5 +8,5 @@ test:
 
 production:
   adapter: redis
-  url: redis://:UHzNeR54oeg5JCw9Gr5S8hJ97TDEp0Wk@redis-18669.c81.us-east-1-2.ec2.redns.redis-cloud.com:18669
+  url: <%= ENV['REDIS_URL'] %>
   channel_prefix: production_shards_of_the_grid
