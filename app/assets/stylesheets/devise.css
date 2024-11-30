@@ -12,8 +12,9 @@
 
 /* Styling for the title */
 .login-container .title {
-    font-size: 24px;
+    font-size: 32px;
     font-weight: bold;
+    top: 10px;
     margin-bottom: 50px;
 }
 
