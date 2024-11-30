@@ -1,0 +1,78 @@
+/* General styles */
+.welcome-home {
+    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333; /* Default text color */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Moving background */
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.background-scene {
+    width: 100%;
+    height: 100%;
+    animation: moveBackground 20s linear infinite;
+}
+
+@keyframes moveBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: -3000px 0; }
+}
+
+/* Title */
+.title {
+    position: absolute;
+    top: 10%;
+    color: #45a049;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    font-size: 5rem;
+}
+body.welcome .title{
+    /*font-size: 6rem;*/
+}
+/* Button container */
+.button-container {
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Space between buttons */
+}
+
+/* Buttons */
+.button {
+    display: flex;
+    align-items: center; /* Center text alignment */
+    justify-content: center; /* Vertical alignment */
+    padding: 25px 50px; /* Larger padding for bigger buttons */
+    font-size: 2rem; /* Increase font size for button text */
+    font-weight: bold;
+    text-align: center;
+    color: white; /* Text color */
+    background-color: green; /* Button background */
+    border: none;
+    border-radius: 12px; /* Slightly rounded corners */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease; /* Add smooth animations */
+}
+
+.button:hover {
+    background-color: darkgreen; /* Darken the green background on hover */
+    transform: scale(1.1); /* Slightly enlarge button on hover */
+}
