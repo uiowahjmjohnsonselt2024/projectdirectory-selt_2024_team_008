@@ -83,7 +83,7 @@ class User < ApplicationRecord
           if User.exists?(id: server.original_creator_id)
             server.update!(
               creator_id: server.original_creator_id,
-              original_creator_name: server.original_creator_name || username,
+              original_creator_username: server.original_creator_username || username,
               original_creator_email: server.original_creator_email || email
             )
           else
