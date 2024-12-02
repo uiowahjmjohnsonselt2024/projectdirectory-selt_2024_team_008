@@ -52,4 +52,6 @@ Rails.application.configure do
 
   config.logger = ActiveSupport::Logger.new(Rails.root.join('log', 'test.log'))
 
+  config.assets.compile = true
+
 end
