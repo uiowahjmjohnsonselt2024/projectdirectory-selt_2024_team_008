@@ -101,7 +101,7 @@ RSpec.describe User, type: :model do
       Server.create!(name: "Chat Room for Test Game", creator_id: user.id).tap do |server|
         server.update!(
           original_creator_id: user.id,
-          original_creator_name: user.username,
+          original_creator_username: user.username,
           original_creator_email: user.email
         )
       end
@@ -134,12 +134,12 @@ RSpec.describe User, type: :model do
         user.send(:reassign_creator_roles)
 
         expect(server.reload.creator_id).to eq(user.id)
-        expect(server.reload.original_creator_name).to eq(user.username)
+        expect(server.reload.original_creator_username).to eq(user.username)
         expect(server.reload.original_creator_email).to eq(user.email)
       end
 
       it 'sets creator_id to NULL if no valid user exists for a game' do
-        server.update!(original_creator_id: nil, original_creator_name: nil, original_creator_email: nil)
+        server.update!(original_creator_id: nil, original_creator_username: nil, original_creator_email: nil)
 
         user.send(:reassign_creator_roles)
 
