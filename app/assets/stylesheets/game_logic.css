@@ -24,7 +24,6 @@
     max-height: 90%;
 }
 
-/* game.css or your existing CSS file */
 .game-details {
     position: absolute; /* Makes it possible to control its position */
     left: 0; /* Aligns the content to the left side of the screen */
