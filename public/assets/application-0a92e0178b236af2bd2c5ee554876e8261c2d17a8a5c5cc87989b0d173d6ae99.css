@@ -55,7 +55,7 @@ body {
     right: 0;
     width: 50%;
     height: 100%;
-    z-index: 10;
+    z-index: 100;
     background-color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border: 2px solid #ccc;
@@ -96,10 +96,11 @@ body {
 
 /* Dropdown trigger */
 .chat-room-button {
+    display: block;
     position: absolute;
     top: 10px;
     right: 20px;
-    z-index: 1000;
+    z-index: 10;
     padding: 10px 20px;
     font-size: 1.2rem;
     font-weight: bold;
@@ -194,40 +195,148 @@ body {
 .message-input button:hover {
     background-color: #555;
 }
-/* Center the login container on the screen */
+/* Flash message container styling */
+.notice, .alert {
+    position: fixed; /* Keeps the messages in a fixed position */
+    top: 0; /* Aligns the messages to the top of the viewport */
+    left: 50%; /* Center the message horizontally */
+    transform: translateX(-50%); /* Adjust position to center correctly */
+    z-index: 1000; /* Ensures the messages are above all other elements */
+    padding: 15px 20px; /* Adds spacing around the text */
+    margin: 0; /* Removes margin */
+    font-size: 16px; /* Readable text size */
+    font-weight: bold; /* Makes the text bold */
+    border-radius: 5px; /* Adds rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    max-width: 80%; /* Restricts the width to fit smaller screens */
+    text-align: center; /* Centers the text inside the message */
+}
+
+/* Specific styling for notice messages */
+.notice {
+    background-color: #dff0d8; 
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+/* Specific styling for alert messages */
+.alert {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+/* Close button styling */
+.notice button, .alert button {
+    background: none; /* Removes default background */
+    border: none; /* Removes default border */
+    color: inherit; /* Matches the button color with the message */
+    font-size: 18px; /* Larger button text */
+    cursor: pointer; /* Pointer cursor for better UX */
+    margin-left: 15px; /* Adds space between the text and the button */
+}
+.sessions-new {
+    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333; /* Default text color */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Login container */
 .login-container {
     max-width: 400px;
+    height: 400px;
     margin: 50px auto;
     padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 12px;
     background-color: #f9f9f9;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for the title */
-.login-container .title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 50px;
+/* Form layout */
+.new_user {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-/* Styling for input fields */
-.login-container .input-field {
+/* Title stays at the top */
+.new_user .title {
+    margin-top: 50px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #4CAF50;
+    text-align: center;
+    margin-bottom: 0; /* Remove margin, so it doesn't affect layout */
+    text-shadow: none;
+}
+
+/* Fields and actions container */
+.new_user .fields-container {
+    /*margin-top: 150px; !* Move fields and buttons down *!*/
+    margin-top: 20px;
+}
+
+/* Field styling */
+.new_user .field {
+    margin-bottom: 15px; /* Space between fields */
+}
+
+.new_user .field label {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px; /* Space between label and input */
+    color: #555;
+}
+
+.new_user .input-field {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 14px;
+    box-sizing: border-box;
 }
 
-/* Styling for submit button */
-.login-container .submit-button {
+.new_user .field input[type="checkbox"] + label {
+    display: inline-block; /* Ensure the label is inline with the checkbox */
+    margin-left: 5px; /* Add space between the checkbox and label */
+    vertical-align: middle; /* Align the label vertically with the checkbox */
+}
+
+.new_user .field input[type="checkbox"] {
+    margin: 0; /* Remove any default margins on the checkbox */
+    vertical-align: middle; /* Align the checkbox with the label */
+    transform: scale(1.1); /* Make the checkbox slightly larger */
+    accent-color: #4CAF50; /* Modern checkbox color */
+}
+
+.new_user .field label[for="user_remember_me"] {
+    margin-top: 5px;
+    font-size: 17px;
+}
+
+/* Buttons */
+.actions {
+    margin-top: 15px; /* Space above the buttons */
+}
+
+.new_user .button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
     font-weight: bold;
     background-color: #4CAF50;
@@ -235,25 +344,264 @@ body {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-top: 10px; /* Add space between buttons */
 }
 
-.login-container .submit-button:hover {
+.new_user .button:hover {
     background-color: #45a049;
 }
 
-/* Styling for links */
-.login-container .extra-links {
-    margin-top: 20px;
+/* Forgot password link */
+.new_user a {
+    display: block;
+    margin-top: 15px; /* Space above the link */
     font-size: 14px;
-}
-
-.login-container .extra-links .link {
     color: #007BFF;
     text-decoration: none;
 }
 
-.login-container .extra-links .link:hover {
+.new_user a:hover {
     text-decoration: underline;
+}
+.logout-container {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    z-index: 1000;
+}
+
+#logoutButton {
+    background-color: #f04e30;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+#logoutButton:hover {
+    background-color: #d0432b;
+}
+/* Body Styling */
+.passwords-new {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Forgot Password Container */
+.forgot-password-container {
+    width: 400px;
+    height: 200px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.centered-elements {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Horizontally center children */
+    width: 100%; /* Ensure it spans the full width of the parent container */
+    margin: 0;
+}
+
+/* Title */
+.centered-elements .title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #4CAF50;
+    text-align: center;
+    margin: 0;
+    width: fit-content;
+    text-shadow: none;
+}
+
+/* Junk Mail Message */
+.centered-elements .junk-mail-message {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #4CAF50;
+    width: 100%;
+    text-shadow: none;
+    margin-top: -20px;
+}
+
+/* Fields Container */
+.forgot-password-container .fields-container {
+    margin-top: 10px;
+}
+
+/* Field Styling */
+.forgot-password-container .field {
+    margin-bottom: 15px;
+}
+
+.forgot-password-container .field label {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    color: #555;
+}
+
+.forgot-password-container .input-field {
+    width: 75%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.forgot-password-container .input-field:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+.forgot-password-container .actions {
+    display: flex;
+    flex-direction: column; /* Stack the buttons vertically */
+    align-items: center; /* Center buttons horizontally */
+}
+
+/* Submit Button */
+.forgot-password-container .button {
+    width: 75%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 5px;
+    justify-content: center;
+}
+
+.forgot-password-container .button:hover {
+    background-color: #45a049;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/* Body Styling (if needed) */
+.registrations-new {
+    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333; /* Default text color */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Signup Container */
+.signup-container {
+    max-width: 400px;
+    height: 700px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.signup-container .title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+/* Fields Container */
+.signup-container .fields-container {
+    margin-top: 20px;
+}
+
+/* Field Styling */
+.signup-container .field {
+    margin-bottom: 15px;
+}
+
+.signup-container .field label {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.signup-container .input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.signup-container .input-field:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+/* Submit Button */
+.signup-container .button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.signup-container .button:hover {
+    background-color: #45a049;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Links */
+.signup-container .links a {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.signup-container .links a:hover {
+    text-decoration: underline;
+    color: #0056b3;
 }
 .game-grid {
     display: flex;
@@ -281,7 +629,6 @@ body {
     max-height: 90%;
 }
 
-/* game.css or your existing CSS file */
 .game-details {
     position: absolute; /* Makes it possible to control its position */
     left: 0; /* Aligns the content to the left side of the screen */
@@ -296,26 +643,6 @@ body {
     gap: 20px; /* Space between items */
     padding: 20px;
     justify-content: flex-start; /* Align items to the left */
-}
-.logout-container {
-    position: absolute;
-    top: 10px;
-    left: 20px;
-    z-index: 1000;
-}
-
-#logoutButton {
-    background-color: #f04e30;
-    color: #fff;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
-#logoutButton:hover {
-    background-color: #d0432b;
 }
 /* General Styles */
 body {
@@ -354,14 +681,14 @@ body {
 
 /* Title */
 .title {
-    margin-top: 100px; /* Provide spacing from the New Game button */
-    color: white;
+    position: absolute;
+    top: 10%;
+    color: #45a049;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
-    font-size: 60px;
 }
 body.main-menu .title{
-    font-size: 6rem;
+    font-size: 5rem;
 }
 
 /* Puts Log out in the top right*/
@@ -898,16 +1225,16 @@ h2 {
     text-align: center;
 }
 /* General styles */
-body {
+.welcome-home {
+    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333; /* Default text color */
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 100vh;
-    overflow: hidden;
-    background-color: white; /* Fallback background color */
 }
 
 /* Moving background */
@@ -936,12 +1263,13 @@ body {
 .title {
     position: absolute;
     top: 10%;
-    color: white;
+    color: #45a049;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
+    font-size: 5rem;
 }
 body.welcome .title{
-    font-size: 6rem;
+    /*font-size: 6rem;*/
 }
 /* Button container */
 .button-container {
@@ -988,14 +1316,10 @@ body.welcome .title{
  *
 
 
-
-
-
-
  */
 
 @import url(/assets/shop-90ea7353367c2aa5aa760da050f217d35e6f983bb38e27785f6fa5aa78913a26.css);
-@import url(/assets/main_menu-17764411b0ec98889e0cfdc1e584cbb160639155c7e5c942cce736c04cba62e9.css);
+@import url(/assets/main_menu-6c92758e401a627eae98eba6b2ad50604e1d2e123e41b92e47506afc9a5548ad.css);
 @import url(/assets/mystery_boxes-b4bf6e57a53c2bdb55b8998cc94cd00883793c1c37c5e5aea3ef6749b4f6d92b.css);
 @import url(/assets/server-d9fce0eb15ecef177aede8887b0f06d6baab207d8463ef577233fa1bd80133d9.css);
 @import url(/assets/sessions-8e202e5154a0abfe8db32575be850dbb6bc18d17da51c80443e1bac4c0e9a2f1.css);

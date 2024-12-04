@@ -13,4 +13,4 @@ Rails.application.config.assets.precompile += %w[application.js]
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
-Rails.application.config.assets.precompile += %w( server.css server_channel.js consumer.js )
+Rails.application.config.assets.precompile += %w( application.js application.css welcome.js welcome.css main_menu.css main_menu.js devise/devise.css devise/login.css devise/logout.css devise/password_reset.css devise/signup.css game_logic.css game_logic.js chat_room.css chat_room.js server.css servers.js inventory.css mystery_boxes.css mystery_boxes.js sessions.css channels/server_channel.js channels/consumer.js )
