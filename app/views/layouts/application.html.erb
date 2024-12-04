@@ -8,11 +8,8 @@
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= csrf_meta_tags %>
+  <meta name="turbo-cache-control" content="no-cache">
   <meta name="rails-env" content="<%= Rails.env %>">
-
-  <!-- Additional Page-Specific Stylesheets/Scripts -->
-  <%= yield :stylesheets %>
-  <%= yield :javascripts %>
 
   <script>
       console.log(">>> Inline script in application.html.erb loaded <<<");
@@ -42,5 +39,9 @@
 
 <!-- Main Content -->
 <%= yield %>
+
+<!-- Additional Page-Specific Stylesheets/Scripts -->
+<%= yield :stylesheets %>
+<%= yield :javascripts %>
 </body>
 </html>
