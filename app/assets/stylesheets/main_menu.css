@@ -35,14 +35,14 @@ body {
 
 /* Title */
 .title {
-    position: absolute;
-    top: 10%;
-    color: #45a049;
+    margin-top: 60px; /* Provide spacing from the New Game button */
+    color: darkgreen;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
+    font-size: 60px;
 }
 body.main-menu .title{
-    font-size: 5rem;
+    font-size: 6rem;
 }
 
 /* Puts Log out in the top right*/

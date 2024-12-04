@@ -33,7 +33,7 @@ body {
 .title {
     position: absolute;
     top: 10%;
-    color: white;
+    color: darkgreen;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
     font-size: 4rem;
@@ -105,7 +105,7 @@ body {
     font-size: 1.2rem;
     font-weight: bold;
     color: white;
-    background-color: blue;
+    background-color: green;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -113,7 +113,7 @@ body {
 }
 
 .chat-room-button:hover {
-    background-color: darkblue;
+    background-color: darkgreen;
 }
 
 /* Chat Section */
