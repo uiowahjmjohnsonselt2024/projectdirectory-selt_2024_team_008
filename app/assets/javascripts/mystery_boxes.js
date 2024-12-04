@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const itemName = document.getElementById("item-name");
     const mysteryBoxCount = document.getElementById("mystery-box-count");
 
+    if (!openCaseButton || !boxOpeningVideo || !boxImage) {
+        console.warn("Required mystery box elements are missing. Initialization skipped.");
+        return;
+    }
+
     openCaseButton.addEventListener("click", () => {
         openCaseButton.style.display = "none";
         boxImage.style.display = "none";
