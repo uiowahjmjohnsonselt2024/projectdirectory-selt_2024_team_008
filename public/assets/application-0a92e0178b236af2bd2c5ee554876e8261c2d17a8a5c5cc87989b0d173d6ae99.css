@@ -1,0 +1,1326 @@
+/* Body Styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    background-color: white; /* Fallback background color */
+}
+
+/* Background Styling */
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+/* New Game Button Styling */
+.new-game-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* Title Styling */
+.title {
+    position: absolute;
+    top: 10%;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    font-size: 4rem;
+    line-height: 1.5;
+}
+
+/* Dropdown Chat Room */
+.chat-rooms {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.chat-room {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.chat-room iframe {
+    width: 100%;
+    height: 90%; /* Leave space for close button */
+    border: none;
+}
+
+.chat-room-header {
+    position: relative;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.chat-room-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.chat-room-close:hover {
+    background: darkred;
+}
+
+/* Dropdown trigger */
+.chat-room-button {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    z-index: 10;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background-color: blue;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.chat-room-button:hover {
+    background-color: darkblue;
+}
+
+/* Chat Section */
+.chat-section {
+    flex: 2;
+    margin-right: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 80vh; /* Ensures consistent height for the chat area */
+}
+
+/* Messages */
+.message-list {
+    overflow-y: auto;
+    padding: 10px;
+    flex: 1; /* Ensures it grows to fill available space */
+    background-color: #fff;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.message.user-message {
+    background-color: #d9fdd3;
+    text-align: right;
+}
+
+.message.server-message {
+    background-color: #f0f0f0;
+    text-align: left;
+}
+
+.message .username {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.message .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    text-align: right;
+}
+
+/* Message Input */
+.message-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+    position: sticky; /* Keeps it pinned to the bottom */
+    bottom: 0; /* Ensures it's at the bottom of the chat section */
+}
+
+.message-input textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    resize: none; /* Prevent resizing of the textarea */
+}
+
+.message-input button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.message-input button:hover {
+    background-color: #555;
+}
+/* Flash message container styling */
+.notice, .alert {
+    position: fixed; /* Keeps the messages in a fixed position */
+    top: 0; /* Aligns the messages to the top of the viewport */
+    left: 50%; /* Center the message horizontally */
+    transform: translateX(-50%); /* Adjust position to center correctly */
+    z-index: 1000; /* Ensures the messages are above all other elements */
+    padding: 15px 20px; /* Adds spacing around the text */
+    margin: 0; /* Removes margin */
+    font-size: 16px; /* Readable text size */
+    font-weight: bold; /* Makes the text bold */
+    border-radius: 5px; /* Adds rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    max-width: 80%; /* Restricts the width to fit smaller screens */
+    text-align: center; /* Centers the text inside the message */
+}
+
+/* Specific styling for notice messages */
+.notice {
+    background-color: #dff0d8; 
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+/* Specific styling for alert messages */
+.alert {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+/* Close button styling */
+.notice button, .alert button {
+    background: none; /* Removes default background */
+    border: none; /* Removes default border */
+    color: inherit; /* Matches the button color with the message */
+    font-size: 18px; /* Larger button text */
+    cursor: pointer; /* Pointer cursor for better UX */
+    margin-left: 15px; /* Adds space between the text and the button */
+}
+.sessions-new {
+    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333; /* Default text color */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Login container */
+.login-container {
+    max-width: 400px;
+    height: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form layout */
+.new_user {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Title stays at the top */
+.new_user .title {
+    margin-top: 50px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #4CAF50;
+    text-align: center;
+    margin-bottom: 0; /* Remove margin, so it doesn't affect layout */
+    text-shadow: none;
+}
+
+/* Fields and actions container */
+.new_user .fields-container {
+    /*margin-top: 150px; !* Move fields and buttons down *!*/
+    margin-top: 20px;
+}
+
+/* Field styling */
+.new_user .field {
+    margin-bottom: 15px; /* Space between fields */
+}
+
+.new_user .field label {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px; /* Space between label and input */
+    color: #555;
+}
+
+.new_user .input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.new_user .field input[type="checkbox"] + label {
+    display: inline-block; /* Ensure the label is inline with the checkbox */
+    margin-left: 5px; /* Add space between the checkbox and label */
+    vertical-align: middle; /* Align the label vertically with the checkbox */
+}
+
+.new_user .field input[type="checkbox"] {
+    margin: 0; /* Remove any default margins on the checkbox */
+    vertical-align: middle; /* Align the checkbox with the label */
+    transform: scale(1.1); /* Make the checkbox slightly larger */
+    accent-color: #4CAF50; /* Modern checkbox color */
+}
+
+.new_user .field label[for="user_remember_me"] {
+    margin-top: 5px;
+    font-size: 17px;
+}
+
+/* Buttons */
+.actions {
+    margin-top: 15px; /* Space above the buttons */
+}
+
+.new_user .button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px; /* Add space between buttons */
+}
+
+.new_user .button:hover {
+    background-color: #45a049;
+}
+
+/* Forgot password link */
+.new_user a {
+    display: block;
+    margin-top: 15px; /* Space above the link */
+    font-size: 14px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.new_user a:hover {
+    text-decoration: underline;
+}
+.logout-container {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    z-index: 1000;
+}
+
+#logoutButton {
+    background-color: #f04e30;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+#logoutButton:hover {
+    background-color: #d0432b;
+}
+/* Body Styling */
+.passwords-new {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Forgot Password Container */
+.forgot-password-container {
+    width: 400px;
+    height: 200px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.centered-elements {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Horizontally center children */
+    width: 100%; /* Ensure it spans the full width of the parent container */
+    margin: 0;
+}
+
+/* Title */
+.centered-elements .title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #4CAF50;
+    text-align: center;
+    margin: 0;
+    width: fit-content;
+    text-shadow: none;
+}
+
+/* Junk Mail Message */
+.centered-elements .junk-mail-message {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #4CAF50;
+    width: 100%;
+    text-shadow: none;
+    margin-top: -20px;
+}
+
+/* Fields Container */
+.forgot-password-container .fields-container {
+    margin-top: 10px;
+}
+
+/* Field Styling */
+.forgot-password-container .field {
+    margin-bottom: 15px;
+}
+
+.forgot-password-container .field label {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    color: #555;
+}
+
+.forgot-password-container .input-field {
+    width: 75%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.forgot-password-container .input-field:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+.forgot-password-container .actions {
+    display: flex;
+    flex-direction: column; /* Stack the buttons vertically */
+    align-items: center; /* Center buttons horizontally */
+}
+
+/* Submit Button */
+.forgot-password-container .button {
+    width: 75%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 5px;
+    justify-content: center;
+}
+
+.forgot-password-container .button:hover {
+    background-color: #45a049;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/* Body Styling (if needed) */
+.registrations-new {
+    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333; /* Default text color */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Signup Container */
+.signup-container {
+    max-width: 400px;
+    height: 700px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.signup-container .title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+/* Fields Container */
+.signup-container .fields-container {
+    margin-top: 20px;
+}
+
+/* Field Styling */
+.signup-container .field {
+    margin-bottom: 15px;
+}
+
+.signup-container .field label {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.signup-container .input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.signup-container .input-field:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
+}
+
+/* Submit Button */
+.signup-container .button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.signup-container .button:hover {
+    background-color: #45a049;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Links */
+.signup-container .links a {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.signup-container .links a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+.game-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.grid-row {
+    display: flex;
+}
+
+.grid-cell {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+
+.grid-cell img.sprite {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.game-details {
+    position: absolute; /* Makes it possible to control its position */
+    left: 0; /* Aligns the content to the left side of the screen */
+    top: 10%; /* Optional: Moves the content down slightly from the top */
+    margin-left: 20px; /* Optional: Adds spacing from the edge */
+    font-family: Arial, sans-serif; /* Optional: Sets a clean font style */
+    color: #333; /* Optional: Text color */
+}
+.inventory-grid {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next row */
+    gap: 20px; /* Space between items */
+    padding: 20px;
+    justify-content: flex-start; /* Align items to the left */
+}
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    background-color: white; /* Fallback background color */
+}
+
+/* Moving background */
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.background-scene {
+    width: 100%;
+    height: 100%;
+    animation: moveBackground 20s linear infinite;
+}
+
+@keyframes moveBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: -3000px 0; }
+}
+
+/* Title */
+.title {
+    position: absolute;
+    top: 10%;
+    color: #45a049;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    text-align: center;
+}
+body.main-menu .title{
+    font-size: 5rem;
+}
+
+/* Puts Log out in the top right*/
+body.main-menu #logoutButton{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1rem;
+    color: purple;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Button container */
+.button-container {
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Space between buttons */
+}
+
+/* Buttons */
+.button {
+    display: flex;
+    align-items: center; /* Center text alignment */
+    justify-content: center; /* Vertical alignment */
+    padding: 25px 50px; /* Larger padding for bigger buttons */
+    font-size: 2rem; /* Increase font size for button text */
+    font-weight: bold;
+    text-align: center;
+    color: white; /* Text color */
+    background-color: green; /* Button background */
+    border: none;
+    border-radius: 12px; /* Slightly rounded corners */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease; /* Add smooth animations */
+}
+
+.button:hover {
+    background-color: darkgreen; /* Darken the green background on hover */
+    transform: scale(1.1); /* Slightly enlarge button on hover */
+}
+
+
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Server Header */
+.server-header {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.server-header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.server-header .subtitle {
+    font-size: 1em;
+    color: #ccc;
+}
+
+/* Main Content Layout */
+.server-container {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Chat Section */
+.chat-section {
+    flex: 2;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    position: relative;
+}
+
+/* Messages */
+.message-list {
+    overflow-y: auto;
+    padding: 10px;
+    flex: 1; /* Ensures it fills the available space above the input */
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.message.user-message {
+    background-color: #d9fdd3;
+    text-align: right;
+}
+
+.message.server-message {
+    background-color: #f0f0f0;
+    text-align: left;
+    font-style: italic; /* Distinguishes system messages */
+}
+
+.message .username {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.message .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    text-align: right;
+}
+
+/* Message Input */
+.message-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+    position: sticky; /* Keeps it pinned at the bottom of the chat section */
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.message-input textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    resize: none; /* Prevent resizing */
+    overflow: auto;
+    height: 40px; /* Fixed height for consistent layout */
+}
+
+.message-input button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 10px;
+    border: none;
+    background-color: blue;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 40px; 
+    transition: background-color 0.3s ease;
+}
+
+.message-input button:hover {
+    background-color: darkblue;
+}
+
+/* User List Section */
+.user-list {
+    flex: 1;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.user-list h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+.user-list .user {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-list .user:last-child {
+    border-bottom: none;
+}
+
+.user-list .user .username {
+    font-weight: bold;
+}
+
+.user-list .user.online {
+    color: green;
+    font-weight: bold;
+}
+
+.user-list .user.offline {
+    color: gray;
+}
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f7f7f7;
+}
+
+/* Center container */
+.login-container {
+    width: 300px;
+    padding: 40px 20px 20px;
+    text-align: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.signup-container {
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Sign-in / Login title */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: auto 100px;
+    color: black;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* Input fields */
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.input-field::placeholder {
+    color: #aaa;
+}
+
+/* Buttons */
+.button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid green;
+    border-radius: 4px;
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #e0ffe0;
+}
+/* Shop Tabs */
+.shop-tabs {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    gap: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shop-tab {
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: green;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.shop-tab:hover {
+    background-color: darkgreen;
+}
+
+/* Horizontal Layout for Tiles */
+.shard-options, .shop-items {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* General Tile Styling */
+.shard-tile, .shop-item {
+    flex: 0 0 auto;
+    width: 250px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.shard-tile:hover, .shop-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Text Styling for Tiles */
+.shard-tile h3, .shop-item span {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.shard-tile p, .shop-item span {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Buttons Inside Tiles */
+.btn-tile, .btn-buy, .buy-button {
+    padding: 10px 15px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-tile:hover, .btn-buy:hover, .buy-button:hover {
+    background-color: darkgreen;
+}
+
+/* Balance Section */
+.shard-balance {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Top Navigation */
+.top-navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100% - 20px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+/* Buttons */
+.return-btn, .add-funds-btn {
+    background-color: green;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.return-btn:hover, .add-funds-btn:hover {
+    opacity: 0.9;
+}
+
+/* Centered Headers */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Add Funds Page */
+.add-funds-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.add-funds-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.add-funds-container .form-group {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.add-funds-container .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.add-funds-container .form-group .form-input,
+.add-funds-container .form-group .form-select {
+    width: 90%;
+    max-width: 400px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto;
+}
+
+.add-funds-container .form-actions {
+    text-align: center;
+}
+
+.add-funds-container .form-actions .btn-submit {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: green;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-funds-container .form-actions .btn-submit:hover {
+    background-color: darkgreen;
+}
+
+/* Form Container */
+#shard-form {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    width: 400px;
+    text-align: center;
+}
+
+/* Form Groups */
+#shard-form .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+#shard-form label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 5px;
+    display: block;
+}
+
+#shard-form input,
+#shard-form select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid green;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+#convert-button,
+#buy-button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px 0;
+    font-size: 1.2rem;
+    color: white;
+    background-color: green;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#convert-button:hover,
+#buy-button:hover {
+    background-color: darkgreen;
+}
+
+#conversion-result {
+    font-size: 1rem;
+    color: green;
+    margin-top: 10px;
+    text-align: center;
+}
+/* General styles */
+.welcome-home {
+    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333; /* Default text color */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Moving background */
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.background-scene {
+    width: 100%;
+    height: 100%;
+    animation: moveBackground 20s linear infinite;
+}
+
+@keyframes moveBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: -3000px 0; }
+}
+
+/* Title */
+.title {
+    position: absolute;
+    top: 10%;
+    color: #45a049;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    font-size: 5rem;
+}
+body.welcome .title{
+    /*font-size: 6rem;*/
+}
+/* Button container */
+.button-container {
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Space between buttons */
+}
+
+/* Buttons */
+.button {
+    display: flex;
+    align-items: center; /* Center text alignment */
+    justify-content: center; /* Vertical alignment */
+    padding: 25px 50px; /* Larger padding for bigger buttons */
+    font-size: 2rem; /* Increase font size for button text */
+    font-weight: bold;
+    text-align: center;
+    color: white; /* Text color */
+    background-color: green; /* Button background */
+    border: none;
+    border-radius: 12px; /* Slightly rounded corners */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease; /* Add smooth animations */
+}
+
+.button:hover {
+    background-color: darkgreen; /* Darken the green background on hover */
+    transform: scale(1.1); /* Slightly enlarge button on hover */
+}
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+
+
+ */
+
+@import url(/assets/shop-90ea7353367c2aa5aa760da050f217d35e6f983bb38e27785f6fa5aa78913a26.css);
+@import url(/assets/main_menu-6c92758e401a627eae98eba6b2ad50604e1d2e123e41b92e47506afc9a5548ad.css);
+@import url(/assets/mystery_boxes-b4bf6e57a53c2bdb55b8998cc94cd00883793c1c37c5e5aea3ef6749b4f6d92b.css);
+@import url(/assets/server-d9fce0eb15ecef177aede8887b0f06d6baab207d8463ef577233fa1bd80133d9.css);
+@import url(/assets/sessions-8e202e5154a0abfe8db32575be850dbb6bc18d17da51c80443e1bac4c0e9a2f1.css);
+@import url(/assets/inventory-25ea847354dd2942797b918a33b438811cbf890ecb66950ad90bf677082faaa0.css);

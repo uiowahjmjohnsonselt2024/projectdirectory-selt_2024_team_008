@@ -1,5 +1,8 @@
 /* General styles */
-body {
+.welcome-home {
+    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
+    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
+    color: #333; /* Default text color */
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;

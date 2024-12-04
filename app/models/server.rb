@@ -75,7 +75,7 @@ class Server < ApplicationRecord
 
   def store_original_creator
     update!(
-      original_creator_name: creator.username,
+      original_creator_username: creator.username,
       original_creator_email: creator.email,
       original_creator_id: creator.id
     )

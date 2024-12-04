@@ -1,0 +1,40 @@
+/* Flash message container styling */
+.notice, .alert {
+    position: fixed; /* Keeps the messages in a fixed position */
+    top: 0; /* Aligns the messages to the top of the viewport */
+    left: 50%; /* Center the message horizontally */
+    transform: translateX(-50%); /* Adjust position to center correctly */
+    z-index: 1000; /* Ensures the messages are above all other elements */
+    padding: 15px 20px; /* Adds spacing around the text */
+    margin: 0; /* Removes margin */
+    font-size: 16px; /* Readable text size */
+    font-weight: bold; /* Makes the text bold */
+    border-radius: 5px; /* Adds rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    max-width: 80%; /* Restricts the width to fit smaller screens */
+    text-align: center; /* Centers the text inside the message */
+}
+
+/* Specific styling for notice messages */
+.notice {
+    background-color: #dff0d8; 
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+/* Specific styling for alert messages */
+.alert {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+/* Close button styling */
+.notice button, .alert button {
+    background: none; /* Removes default background */
+    border: none; /* Removes default border */
+    color: inherit; /* Matches the button color with the message */
+    font-size: 18px; /* Larger button text */
+    cursor: pointer; /* Pointer cursor for better UX */
+    margin-left: 15px; /* Adds space between the text and the button */
+}
