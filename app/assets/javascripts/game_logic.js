@@ -10,17 +10,22 @@ document.addEventListener("turbolinks:load", () => {
     }
 
     cells.forEach(cell => {
-        cell.addEventListener("mouseover", () => {
-            cell.style.backgroundColor = "#ccc";
+        // Remove any existing click listeners
+        const newCell = cell.cloneNode(true);
+        cell.parentNode.replaceChild(newCell, cell);
+
+        // Add new listeners
+        newCell.addEventListener("mouseover", () => {
+            newCell.style.backgroundColor = "#ccc";
         });
 
-        cell.addEventListener("mouseout", () => {
-            cell.style.backgroundColor = "#f0f0f0";
+        newCell.addEventListener("mouseout", () => {
+            newCell.style.backgroundColor = "#f0f0f0";
         });
 
-        cell.addEventListener("click", () => {
-            const x = cell.dataset.x;
-            const y = cell.dataset.y;
+        newCell.addEventListener("click", () => {
+            const x = newCell.dataset.x;
+            const y = newCell.dataset.y;
             console.log(`Cell clicked at (${x}, ${y})`);
         });
     });
