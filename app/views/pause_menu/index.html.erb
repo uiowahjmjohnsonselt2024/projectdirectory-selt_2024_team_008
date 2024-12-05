@@ -1,0 +1,19 @@
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'pause_menu', media: 'all' %>
+<% end %>
+
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'pause_menu' %>
+<% end %>
+
+<div class="background-container">
+  <div class="background-scene"></div>
+</div>
+
+<div class="title">Paused</div>
+
+<!-- Buttons -->
+<div class="button-container">
+  <%= button_to "Play", games_path, method: :get, class: "button" %>
+  <%= button_to "Shop", shop_index_path, method: :get, class: "button"%>
+</div>
