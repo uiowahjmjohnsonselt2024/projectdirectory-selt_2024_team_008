@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_02_051020) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_05_011721) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -22,14 +22,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_02_051020) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "grid"
+    t.index ["creator_id"], name: "index_games_on_creator_id"
+    t.index ["server_id"], name: "index_games_on_server_id"
   end
 
   create_table "items", force: :cascade do |t|
     t.string "item_name", null: false
     t.string "item_type", null: false
     t.json "item_attributes"
+    t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "images"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -52,16 +56,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_02_051020) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
-  create_table "servers", force: :cascade do |t|
-    t.string "name", null: false
-    t.integer "creator_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "game_id"
-    t.string "original_creator_username"
-    t.string "original_creator_email"
-    t.integer "original_creator_id"
-  end
+# Could not dump table "servers" because of following StandardError
+#   Unknown type '' for column 'original_creator_id'
 
   create_table "shard_accounts", force: :cascade do |t|
     t.integer "user_id"
@@ -110,12 +106,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_02_051020) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "games", "servers", on_delete: :cascade
+  add_foreign_key "games", "servers"
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
+  add_foreign_key "memberships", "servers"
   add_foreign_key "memberships", "servers", on_delete: :cascade
-  add_foreign_key "memberships", "users", on_delete: :cascade
+  add_foreign_key "memberships", "users"
+  add_foreign_key "messages", "servers"
   add_foreign_key "messages", "servers", on_delete: :cascade
-  add_foreign_key "messages", "users", on_delete: :cascade
+  add_foreign_key "messages", "users"
+  add_foreign_key "servers", "games"
+  add_foreign_key "servers", "users", column: "creator_id"
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
   add_foreign_key "user_items", "items"
