@@ -38,6 +38,10 @@ jobs:
           git remote remove heroku || true
           git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
 
+      - name: Precompile Assets
+        run: |
+          RAILS_ENV=production bundle exec rake assets:precompile
+
       - name: Deploy to Heroku
         run: |
           git push heroku main --force
