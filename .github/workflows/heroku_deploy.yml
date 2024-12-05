@@ -50,7 +50,7 @@ jobs:
 
       - name: Precompile Assets
         run: |
-          RAILS_ENV=production bundle exec rails assets:precompile
+          RAILS_ENV=production bundle exec rake assets:precompile
 
       - name: Deploy to Heroku
         run: |

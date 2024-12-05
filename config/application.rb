@@ -41,6 +41,8 @@ module ShardsOfTheGrid
     #   ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON")
     # end
 
+    config.assets.initialize_on_precompile = false
+
   end
 
 end
