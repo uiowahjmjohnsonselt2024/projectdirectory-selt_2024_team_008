@@ -8,7 +8,7 @@ body {
     justify-content: center;
     height: 100vh;
     overflow: hidden;
-    background-color: black; /* Fallback background color */
+    background-color: darkgray; /* Fallback background color */
 }
 
 /* Moving background */
@@ -37,7 +37,7 @@ body {
 .title {
     margin-top: 20px; /* Provide spacing from the New Game button */
     color: darkgreen;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    text-shadow: 2px 2px 8px white;
     text-align: center;
     font-size: 40px;
 }
