@@ -33,4 +33,6 @@
 //= link welcome.js
 //= link welcome.css
 
+//= link instructions.js
+//= link instructions.css
 //= link_directory ../stylesheets/devise .css
