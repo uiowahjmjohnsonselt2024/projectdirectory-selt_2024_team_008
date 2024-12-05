@@ -15,10 +15,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Ruby
-        uses: actions/setup-ruby@v1
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2.2p53'
+          ruby-version: '3.2.2'
+          bundler-cache: true   # Caches gems for faster builds
 
       - name: Install Bundler
         run: |
