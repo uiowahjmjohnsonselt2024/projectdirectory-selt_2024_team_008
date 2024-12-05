@@ -3,7 +3,7 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   deploy:
@@ -13,26 +13,33 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Set up Heroku CLI
+      - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
 
-      - name: Authenticate with Heroku
+      - name: Set up Heroku Authentication
         run: |
           echo "machine git.heroku.com" > ~/.netrc
           echo "  login heroku" >> ~/.netrc
           echo "  password $HEROKU_API_KEY" >> ~/.netrc
           chmod 600 ~/.netrc
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
-      - name: Configure Git User
+      - name: Set Git User Info
         run: |
           git config --global user.email "${{ secrets.HEROKU_EMAIL }}"
           git config --global user.name "GitHub Actions"
 
-      - name: Add Heroku Git Remote
+      - name: Add Heroku Remote
         run: |
           git remote remove heroku || true
           git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+
+      - name: Debug `.netrc`
+        run: |
+          cat ~/.netrc
+          ls -la ~
 
       - name: Deploy to Heroku
         run: |
