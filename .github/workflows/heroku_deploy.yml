@@ -50,7 +50,7 @@ jobs:
 
       - name: Precompile Assets
         run: |
-          RAILS_ENV=production bin/rake assets:precompile
+          DATABASE_URL=postgresql://localhost:5432/dummy RAILS_ENV=production RAILS_GROUPS=assets bundle exec rake assets:precompile
 
       - name: Deploy to Heroku
         run: |
