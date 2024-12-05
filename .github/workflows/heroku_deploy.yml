@@ -43,3 +43,9 @@ jobs:
           git push heroku main --force
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Run Database Migrations
+        run: |
+          heroku run rails db:migrate --app ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
