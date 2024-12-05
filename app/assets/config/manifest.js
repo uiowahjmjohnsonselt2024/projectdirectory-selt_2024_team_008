@@ -34,3 +34,6 @@
 //= link welcome.css
 
 //= link_directory ../stylesheets/devise .css
+
+//=link mysteryBox.png
+//=link redHat.png
