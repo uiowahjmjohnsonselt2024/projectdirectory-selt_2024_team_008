@@ -35,6 +35,7 @@
 
 //= link instructions.js
 //= link instructions.css
+
 //= link pause_menu.js
 //= link pause_menu.css
 //= link_directory ../stylesheets/devise .css

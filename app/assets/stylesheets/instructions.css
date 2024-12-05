@@ -1,0 +1,20 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    background-color: white; /* Fallback background color */
+}
+/* Title */
+.title {
+    margin-top: 20px; /* Provide spacing from the New Game button */
+    color: darkgreen;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    font-size: 100px;
+}

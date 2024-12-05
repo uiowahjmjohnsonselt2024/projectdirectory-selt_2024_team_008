@@ -1,17 +1,13 @@
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'main_menu', media: 'all' %>
+  <%= stylesheet_link_tag 'instructions', media: 'all' %>
 <% end %>
 
 <% content_for :javascripts do %>
-  <%= javascript_include_tag 'main_menu' %>
+  <%= javascript_include_tag 'instructions' %>
 <% end %>
 
 <div class="background-container">
   <div class="background-scene"></div>
 </div>
 
-<div class="title">Shards of the Grid</div>
-
-<div class="button-container">
-  <%#= button_to "Pause", games_path, method: :get, class: "button" %>
-</div>
+<div class="title">How To Play</div>
