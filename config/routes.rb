@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
-  root 'welcome#home'
+  root 'pause_menu#index'
 
   # match '*unmatched', to: 'errors#handle_invalid_route', via: :all, constraints: ->(req) {
   #   !ShardsOfTheGrid::Application.valid_route?(req.path, req.method) &&
@@ -61,6 +61,7 @@ Rails.application.routes.draw do
 
   get 'inventory', to: 'inventory#show', as: 'inventory'
 
+  get 'pause_menu', to: 'pause_menu#index', as: 'pause_menu'
   # Catch-all route for unknown paths
   # match '*unmatched', to: 'errors#redirect_to_main_menu', via: :all, constraints: ->(req) {
   #   req.format.html? &&

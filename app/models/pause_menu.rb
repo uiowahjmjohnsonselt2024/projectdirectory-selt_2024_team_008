@@ -1,2 +1,0 @@
-class PauseMenu < ApplicationRecord
-end
