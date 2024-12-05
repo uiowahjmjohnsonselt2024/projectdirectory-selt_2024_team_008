@@ -14,7 +14,7 @@ class MysteryBoxesController < ApplicationController
     if mystery_box && mystery_box.quantity > 0
       mystery_box.update(quantity: mystery_box.quantity - 1)
 
-      random_item = Item.order("RANDOM()").first
+      random_item = Item.where.not(item_name: "Mystery Box").order("RANDOM()").first
 
       user_item = current_user.user_items.find_or_initialize_by(item: random_item)
       user_item.quantity ||= 0
