@@ -15,5 +15,9 @@ ShopItem.create([
 
 Item.create([
               { item_name: "Mystery Box", item_type: "Box", images: "mysteryBox.png", item_attributes: { rarity: "Special", description: "A box containing random items." } },
-              { item_name: "Red Hat", item_type: "Cosmetic", images: "redHat.png", item_attributes: { rarity: "Rare", description: "It's red" } }
+              { item_name: "Red Hat", item_type: "Cosmetic", images: "redHat.png", item_attributes: { rarity: "Rare", description: "It's red" } },
+              { item_name: "Gold Boots", item_type: "Cosmetic", images: "goldBoots.png", item_attributes: { rarity: "Rare", description: "They're Gold" } },
+              { item_name: "Fancy Gloves", item_type: "Cosmetic", images: "fancyGloves.png", item_attributes: { rarity: "Rare", description: "Very Fancy gloves" } },
+              { item_name: "Hawaiian Shirt", item_type: "Cosmetic", images: "hawaiianShirt.png", item_attributes: { rarity: "Rare", description: "Very Hawaiian Shirt" } },
+              { item_name: "Jean Shorts", item_type: "Cosmetic", images: "jeanShorts.png", item_attributes: { rarity: "Rare", description: "Like jeans but shorter" } }
             ])
