@@ -42,6 +42,11 @@ gem 'rubocop-rspec_rails', require: false
 gem 'sprockets'        # Core asset pipeline library
 gem 'sprockets-rails'  # Manages the asset pipeline in Rails
 
+gem 'devise', '~> 4.9'
+gem 'dotenv-rails'
+gem 'execjs', '>= 2.9'
+gem 'puma', '~> 6.0'
+
 # Group gems for development and testing
 group :development, :test do
   # Better errors and debugging
@@ -76,12 +81,10 @@ end
 
 # For production deployment
 group :production do
+  gem 'uglifier', '>= 1.3.0'
   gem 'redis', '~> 5.0'
   gem 'redis-rails', '~> 5.0'
   gem 'rails_12factor'
 end
 
-gem 'devise', '~> 4.9'
-gem 'dotenv-rails'
-gem 'execjs', '>= 2.9'
-gem 'puma', '~> 6.0'
+
