@@ -3,7 +3,7 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
   deploy:
@@ -24,12 +24,18 @@ jobs:
           echo "  password $HEROKU_API_KEY" >> ~/.netrc
           chmod 600 ~/.netrc
 
-      - name: Set Git User Info
+      - name: Configure Git User
         run: |
           git config --global user.email "${{ secrets.HEROKU_EMAIL }}"
           git config --global user.name "GitHub Actions"
 
+      - name: Add Heroku Git Remote
+        run: |
+          git remote remove heroku || true
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+
       - name: Deploy to Heroku
         run: |
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
           git push heroku main --force
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
