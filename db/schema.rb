@@ -30,7 +30,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_05_011721) do
     t.string "item_name", null: false
     t.string "item_type", null: false
     t.json "item_attributes"
-    t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "images"
