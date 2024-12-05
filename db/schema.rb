@@ -32,6 +32,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_05_193559) do
     t.json "item_attributes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "images"
   end
 
   create_table "memberships", force: :cascade do |t|
