@@ -1,8 +1,5 @@
-/* General styles */
-.welcome-home {
-    font-family: 'Roboto', sans-serif; /* Use a clean, modern font */
-    background: linear-gradient(to bottom, #e3f2fd, rgba(17, 83, 33, 0.64));
-    color: #333; /* Default text color */
+/* General Styles */
+body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -11,7 +8,7 @@
     justify-content: center;
     height: 100vh;
     overflow: hidden;
-    background-color: white; /* Fallback background color */
+    background-color: darkgray; /* Fallback background color */
 }
 
 /* Moving background */
@@ -31,35 +28,20 @@
     animation: moveBackground 20s linear infinite;
 }
 
-/* Title */
-.title {
-    position: absolute;
-    top: 10%;
-    color: darkgreen;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-    text-align: center;
-    font-size: 7.5rem;
-    animation: growShrink 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes growShrink {
-    0%, 100% {
-        font-size: 7rem;
-    }
-    50% {
-        font-size: 7.5rem;
-    }
-}
-
 @keyframes moveBackground {
     0% { background-position: 0 0; }
     100% { background-position: -3000px 0; }
 }
 
+/* Title */
+.title {
+    margin-top: 20px; /* Provide spacing from the New Game button */
+    color: darkgreen;
+    text-shadow: 2px 2px 8px white;
+    text-align: center;
+    font-size: 40px;
+}
 
-/*body.welcome .title{*/
-/*    font-size: 4rem;*/
-/*}*/
 /* Button container */
 .button-container {
     position: relative;
@@ -75,7 +57,7 @@
     display: flex;
     align-items: center; /* Center text alignment */
     justify-content: center; /* Vertical alignment */
-    padding: 25px 50px; /* Larger padding for bigger buttons */
+    padding: 15px 25px; /* Larger padding for bigger buttons */
     font-size: 2rem; /* Increase font size for button text */
     font-weight: bold;
     text-align: center;

@@ -61,6 +61,7 @@ Rails.application.routes.draw do
 
   get 'inventory', to: 'inventory#show', as: 'inventory'
 
+  get 'pause_menu', to: 'pause_menu#index', as: 'pause_menu'
   # Catch-all route for unknown paths
   # match '*unmatched', to: 'errors#redirect_to_main_menu', via: :all, constraints: ->(req) {
   #   req.format.html? &&
