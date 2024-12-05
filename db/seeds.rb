@@ -14,9 +14,10 @@ ShopItem.create([
                 ])
 
 Item.create([
-              { item_name: "Mystery Box", item_type: "Box", item_attributes: { rarity: "Special", description: "A box containing random items." } },
-              { item_name: "Sword of Legends", item_type: "Weapon", item_attributes: { rarity: "Legendary", damage: 100, description: "A powerful weapon from the old times." } },
-              { item_name: "Potion of Healing", item_type: "Potion", item_attributes: { rarity: "Common", healing: 50, description: "A potion that restores health." } },
-              { item_name: "Shield of Aegis", item_type: "Armor", item_attributes: { rarity: "Rare", defense: 75, description: "A shield that blocks powerful attacks." } },
-              { item_name: "Scroll of Fireball", item_type: "Scroll", item_attributes: { rarity: "Uncommon", magic: 200, description: "A spell that causes fiery destruction." } }
+              { item_name: "Mystery Box", item_type: "Box", images: "mysteryBox.png", item_attributes: { rarity: "Special", description: "A box containing random items." } },
+              { item_name: "Red Hat", item_type: "Cosmetic", images: "redHat.png", item_attributes: { rarity: "Rare", description: "It's red" } },
+              { item_name: "Gold Boots", item_type: "Cosmetic", images: "goldBoots.png", item_attributes: { rarity: "Rare", description: "They're Gold" } },
+              { item_name: "Fancy Gloves", item_type: "Cosmetic", images: "fancyGloves.png", item_attributes: { rarity: "Rare", description: "Very Fancy gloves" } },
+              { item_name: "Hawaiian Shirt", item_type: "Cosmetic", images: "hawaiianShirt.png", item_attributes: { rarity: "Rare", description: "Very Hawaiian Shirt" } },
+              { item_name: "Jean Shorts", item_type: "Cosmetic", images: "jeanShorts.png", item_attributes: { rarity: "Rare", description: "Like jeans but shorter" } }
             ])

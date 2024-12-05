@@ -14,14 +14,14 @@ class MysteryBoxesController < ApplicationController
     if mystery_box && mystery_box.quantity > 0
       mystery_box.update(quantity: mystery_box.quantity - 1)
 
-      random_item = Item.order("RANDOM()").first
+      random_item = Item.where.not(item_name: "Mystery Box").order("RANDOM()").first
 
       user_item = current_user.user_items.find_or_initialize_by(item: random_item)
       user_item.quantity ||= 0
       user_item.quantity += 1
       user_item.save
 
-      render json: { success: true, item_name: random_item.item_name, remaining_boxes: mystery_box.quantity }
+      render json: { success: true, item_name: random_item.item_name, item_image_url: view_context.asset_path(random_item.images), remaining_boxes: mystery_box.quantity }
     else
       render json: { success: false, message: "No mystery boxes remaining." }
     end
