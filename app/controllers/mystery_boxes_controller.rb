@@ -21,7 +21,7 @@ class MysteryBoxesController < ApplicationController
       user_item.quantity += 1
       user_item.save
 
-      render json: { success: true, item_name: random_item.item_name, remaining_boxes: mystery_box.quantity }
+      render json: { success: true, item_name: random_item.item_name, item_image_url: view_context.asset_path(random_item.images), remaining_boxes: mystery_box.quantity }
     else
       render json: { success: false, message: "No mystery boxes remaining." }
     end
