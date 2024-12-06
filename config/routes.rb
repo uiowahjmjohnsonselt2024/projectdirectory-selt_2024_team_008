@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     end
   end
 
+
   get 'inventory', to: 'inventory#show', as: 'inventory'
 
   get 'instructions', to: 'instructions#show', as: 'instructions'
