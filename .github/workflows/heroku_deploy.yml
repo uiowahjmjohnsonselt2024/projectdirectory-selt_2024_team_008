@@ -40,7 +40,7 @@ jobs:
       - name: Set GitHub Authentication
         run: |
           git config --global user.email "jarkin@uiowa.edu"
-          git config --global user.name "GitHub Action"
+          git config --global user.name "jarkin0513"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_GITHUB }}@github.com/${{ github.repository }}
           git config --list
 
