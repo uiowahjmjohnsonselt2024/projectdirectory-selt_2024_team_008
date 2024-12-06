@@ -1,8 +1,8 @@
 class InstructionsController < ApplicationController
   before_action :redirect_unauthorized_users
 
-  def index
-    # Render the main menu view
+  def show
+    # Render the view
   end
 
   private

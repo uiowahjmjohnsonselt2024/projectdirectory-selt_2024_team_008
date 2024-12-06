@@ -3,36 +3,21 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    /* Remove or comment out the flex and height properties */
-    /* display: flex; */
-    /* align-items: center; */
-    /* justify-content: center; */
-    /* height: 100vh; */
-    /* overflow: hidden; */
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: auto;
     background-color: white; /* Fallback background color */
-    overflow: auto; /* Allow scrolling */
 }
 /* Title */
 .title {
-    margin-top: 20px; /* Provide spacing from the New Game button */
+    margin-top: 40px; /* Provide spacing from the New Game button */
     color: darkgreen;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
-    font-size: 100px;
+    font-size: 60px;
 }
-
-.instructions-content {
-    margin-top: 40px;
-    color: #333;
-    font-size: 1.5rem;
-    line-height: 1.6;
-    width: 60%;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-}
-
-.instructions-content ol {
-    padding-left: 40px;
+body.instructions .title{
+    font-size: 6rem;
 }

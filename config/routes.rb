@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
-  root 'instructions#show'
+  root 'pause_menu#index'
 
   # match '*unmatched', to: 'errors#handle_invalid_route', via: :all, constraints: ->(req) {
   #   !ShardsOfTheGrid::Application.valid_route?(req.path, req.method) &&
@@ -27,8 +27,8 @@ Rails.application.routes.draw do
   get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
   # Server routes
-  resources :servers, only: [:index, :create, :show] do
-    resources :messages, only: [:index, :create]
+  resources :servers, only: [:show, :create, :show] do
+    resources :messages, only: [:show, :create]
     resources :memberships, only: [:create, :destroy]
     member do
       post :update_status
@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   end
 
   # Game routes
-  resources :games, only: [:create, :show, :index]
+  resources :games, only: [:create, :show, :show]
 
   resources :shard_accounts, only: [] do
     collection do
@@ -48,7 +48,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :shop, only: [:index, :show]
+  resources :shop, only: [:show, :show]
 
   get '/mystery_box', to: 'mystery_boxes#open'
   post 'mystery_boxes/open_box', to: 'mystery_boxes#open_box', as: 'open_mystery_box'
