@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
   # Server routes
-  resources :servers, only: [:show, :create, :show] do
+  resources :servers, only: [:index, :create, :show] do
     resources :messages, only: [:show, :create]
     resources :memberships, only: [:create, :destroy]
     member do
@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   end
 
   # Game routes
-  resources :games, only: [:create, :show, :show]
+  resources :games, only: [:create, :index, :show]
 
   resources :shard_accounts, only: [] do
     collection do
@@ -48,7 +48,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :shop, only: [:show, :show]
+  resources :shop, only: [:index, :show]
 
   get '/mystery_box', to: 'mystery_boxes#open'
   post 'mystery_boxes/open_box', to: 'mystery_boxes#open_box', as: 'open_mystery_box'

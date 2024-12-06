@@ -1,7 +1,0 @@
-.inventory-grid {
-    display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next row */
-    gap: 20px; /* Space between items */
-    padding: 20px;
-    justify-content: flex-start; /* Align items to the left */
-}
