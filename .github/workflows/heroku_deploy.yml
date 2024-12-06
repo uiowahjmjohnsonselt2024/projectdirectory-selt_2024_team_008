@@ -70,7 +70,7 @@ jobs:
 
       - name: Push Precompiled Assets to GitHub
         run: |
-          git push https://x-access-token:${{ secrets.PAT_GITHUB }}@github.com/${{ github.repository }} main || true
+          git push https://x-access-token:${{ secrets.PAT_GITHUB }}@github.com/${{ github.repository }} main --force || true
         env:
           PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
 
