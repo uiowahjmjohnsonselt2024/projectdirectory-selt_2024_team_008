@@ -42,6 +42,7 @@ jobs:
           git config --global user.email "jarkin@uiowa.edu"
           git config --global user.name "GitHub Action"
           git remote set-url origin https://x-access-token:${{ secrets.PAT_GITHUB }}@github.com/${{ github.repository }}
+          git config --list
 
       - name: Add Heroku Git Remote
         run: |
@@ -71,7 +72,7 @@ jobs:
         run: |
           git push origin main || true
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
+          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
 
       - name: Deploy to Heroku
         run: git push heroku main --force
