@@ -28,7 +28,7 @@ Rails.application.routes.draw do
 
   # Server routes
   resources :servers, only: [:index, :create, :show] do
-    resources :messages, only: [:show, :create]
+    resources :messages, only: [:index, :create]
     resources :memberships, only: [:create, :destroy]
     member do
       post :update_status
