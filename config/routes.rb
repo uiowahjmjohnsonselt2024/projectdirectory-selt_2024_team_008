@@ -11,8 +11,10 @@ Rails.application.routes.draw do
   # Mount ActionCable server
   mount ActionCable.server => '/cable'
 
-  # Devise routes for user authentication
-  devise_for :users
+  # Devise routes for user authentication and omni auth
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
