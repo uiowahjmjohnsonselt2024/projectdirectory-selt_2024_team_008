@@ -28,6 +28,13 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
 
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
       - name: Set up Heroku Authentication
         run: |
           echo "machine git.heroku.com" > ~/.netrc
@@ -36,22 +43,6 @@ jobs:
           chmod 600 ~/.netrc
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-
-      - name: Set GitHub Authentication
-        run: |
-          git config --global user.email "jarkin@uiowa.edu"
-          git config --global user.name "jarkin0513"
-          git remote set-url origin https://x-access-token:${{ secrets.PAT_GITHUB }}@github.com/${{ github.repository }}
-          git config --global credential.helper store
-          git config --list
-          git remote -v
-        env:
-          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
-
-      - name: Debug Authentication
-        run: |
-          echo "Checking authentication for ${{ github.repository }}"
-          curl -u x-access-token:${{ secrets.PAT_GITHUB }} https://api.github.com/repos/${{ github.repository }}
 
       - name: Add Heroku Git Remote
         run: |
@@ -79,9 +70,8 @@ jobs:
 
       - name: Push Precompiled Assets to GitHub
         run: |
-          git push https://x-access-token:${{ secrets.PAT_GITHUB }}@github.com/${{ github.repository }} main --force
-        env:
-          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
+          git remote set-url origin git@github.com:${{ github.repository }}.git
+          git push origin main --force
 
       - name: Deploy to Heroku
         run: git push heroku main --force
