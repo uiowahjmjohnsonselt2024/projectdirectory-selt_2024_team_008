@@ -3,6 +3,7 @@ class Game < ApplicationRecord
 
   has_one :server, dependent: :delete # Each game has one associated chat room
 
+  has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
 
   enum status: { waiting: 0, in_progress: 1, completed: 2 }
