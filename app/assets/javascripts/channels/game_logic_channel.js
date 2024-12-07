@@ -42,12 +42,14 @@ const initializeGameLogicChannel = async () => {
         return;
     }
 
-    const gameId = gameElement.dataset.gameId; // Assuming server ID maps to game ID
+    const gameId = gameElement.dataset.gameId;
     const userId = gameElement.dataset.userId;
 
     try {
         // Ensure membership before subscribing
         await ensureGameMembership(gameId);
+
+        let visited = {}
 
         // Subscribe to the GameLogicChannel
         gameLogicSubscription = App.cable.subscriptions.create(
@@ -61,7 +63,8 @@ const initializeGameLogicChannel = async () => {
                 },
                 received(data) {
                     // Handle received data
-                    if (data.grid) {
+                    if (data.grid && data.visited) {
+                        visited = data.visited
                         updateGrid(data.grid);
                         console.log(`User ${data.user_id} moved at (${data.x}, ${data.y})`);
                     } else if (data.error) {
@@ -90,19 +93,45 @@ const initializeGameLogicChannel = async () => {
 };
 
 // Update the grid dynamically
-const updateGrid = (grid) => {
+const updateGrid = (grid = [], visited = {}) => {
+    // Clear all grid cells
     document.querySelectorAll(".grid-cell").forEach((cell) => {
-        const x = parseInt(cell.dataset.x, 10);
-        const y = parseInt(cell.dataset.y, 10);
-        const value = grid[y][x];
+        cell.innerHTML = ""; // Clear content
+        cell.classList.remove("occupied", "visited");
+    });
 
-        if (value) {
-            cell.innerHTML = `<span>${value}</span>`; // Example: Show user ID or marker
-            cell.classList.add("occupied"); // Optional: Add a CSS class for styling
-        } else {
-            cell.innerHTML = "";
-            cell.classList.remove("occupied");
-        }
+    // Update the visited state
+    grid.forEach((row, y) => {
+        row?.forEach((value, x) => {
+            if (value) {
+                // Mark the tile as visited
+                if (!visited[y]) visited[y] = {};
+                visited[y][x] = value; // Track the player who visited this tile
+            }
+        });
+    });
+
+    // Apply the visited styling
+    Object.keys(visited).forEach((y) => {
+        Object.keys(visited[y]).forEach((x) => {
+            const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+            if (cell) {
+                cell.classList.add("visited"); // Apply visited styling
+            }
+        });
+    });
+
+    // Update the grid with the current player positions
+    grid.forEach((row, y) => {
+        row?.forEach((value, x) => {
+            if (value) {
+                const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+                if (cell) {
+                    cell.innerHTML = `<span>${value}</span>`; // Display the player
+                    cell.classList.add("occupied"); // Mark as occupied
+                }
+            }
+        });
     });
 };
 

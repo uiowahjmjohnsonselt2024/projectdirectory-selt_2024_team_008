@@ -35,12 +35,25 @@ class GameLogicChannel < ApplicationCable::Channel
 
     # Validate and process the move
     if valid_move?(game, x, y)
-      # Update game state
-      game.grid[y][x] = current_user.id
+      # Clear the user's previous position
+      game.grid.each_with_index do |row, row_index|
+        row.map! { |cell| cell == current_user.username ? nil : cell }
+      end
+
+      # Update game state with username
+      game.grid[y][x] = current_user.username
       game.save!
 
       # Broadcast updated game state
-      GameLogicChannel.broadcast_to(game, { type: 'game_state', grid: game.grid, user_id: current_user.id, x: x, y: y })
+      GameLogicChannel.broadcast_to(
+        game,
+        type: 'game_state',
+        grid: game.grid,
+        user_id: current_user.id,
+        username: current_user.username,
+        x: x,
+        y: y
+      )
     else
       transmit(error: "Invalid move")
     end
