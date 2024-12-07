@@ -42,7 +42,7 @@ class GameLogicChannel < ApplicationCable::Channel
       if distance > 1
         cost = calculate_shard_cost(distance)
         if current_user.shard_account.balance < cost
-          transmit(error: "Insufficient shards to move #{distance} tiles.")
+          transmit(type: 'error', message: "Insufficient shards to move #{distance} tiles.")
           return
         end
 
@@ -75,11 +75,11 @@ class GameLogicChannel < ApplicationCable::Channel
         grid: game.grid,
         user_id: current_user.id,
         username: current_user.username,
-        x: x,
-        y: y
+        x: x, # Target x
+        y: y  # Target y
       )
     else
-      transmit(error: "Invalid move")
+      transmit(type: 'error', message: 'Invalid move')
     end
   end
 
@@ -102,9 +102,8 @@ class GameLogicChannel < ApplicationCable::Channel
       raise ArgumentError, "Target coordinates (#{target_x}, #{target_y}) are out of bounds."
     end
 
-    distance_x = (target_x - current_x).abs
-    distance_y = (target_y - current_y).abs
-    distance_x + distance_y
+    # Calculate Chebyshev distance
+    [ (target_x - current_x).abs, (target_y - current_y).abs ].max
   end
 
   def calculate_shard_cost(distance)

@@ -65,17 +65,20 @@ const initializeGameLogicChannel = async () => {
                 },
                 received(data) {
                     // Handle received data
+                    console.log(`data.type: ${data.type}`)
                     if (data.type === "game_state") {
                         updateGrid(data.grid);
 
+                        console.log(`data.user_id: ${data.user_id} userId: ${userId}`)
+                        console.log(`Type of data.user_id: ${typeof data.user_id}, Type of userId: ${typeof userId}`);
                         // Update `lastPosition` for the current user
-                        if (data.user_id === userId) {
+                        if (data.user_id === parseInt(userId)) {
                             lastPosition = { x: data.x, y: data.y };
-                            console.log(`Last position: ${lastPosition}`);
+                            console.log(`Last position updated: ${JSON.stringify(lastPosition)}`);
                         }
 
                         console.log(`User ${data.user_id} moved at (${data.x}, ${data.y})`);
-                    } else if (data.type === "balance_update" && data.user_id === userId) {
+                    } else if (data.type === "balance_update" && data.user_id === parseInt(userId)) {
                         updateShardBalance(data.balance);
                     } else if (data.error) {
                         alert(data.error); // Display error messages
@@ -120,7 +123,12 @@ const initializeGameLogicChannel = async () => {
 // Calculate distance between two positions
 const calculateDistance = (from, to) => {
     if (from.x === null || from.y === null) return 0; // Initial move
-    return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
+
+    // Calculate Chebyshev distance
+    const horizontalDistance = Math.abs(to.x - from.x);
+    const verticalDistance = Math.abs(to.y - from.y);
+
+    return Math.max(horizontalDistance, verticalDistance);
 };
 
 // Calculate shard cost for a move
