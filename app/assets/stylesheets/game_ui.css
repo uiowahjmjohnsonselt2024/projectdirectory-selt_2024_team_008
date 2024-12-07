@@ -32,3 +32,14 @@
     font-family: Arial, sans-serif; /* Optional: Sets a clean font style */
     color: #333; /* Optional: Text color */
 }
+
+.grid-cell.visited {
+    background-color: #3e3c3c !important; /* Light color for visited tiles */
+    color: #888;
+    font-style: italic;
+}
+
+.grid-cell.occupied {
+    background-color: #ffcccb !important; /* Highlight for current position */
+    font-weight: bold;
+}
