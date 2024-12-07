@@ -32,3 +32,19 @@
     font-family: Arial, sans-serif; /* Optional: Sets a clean font style */
     color: #333; /* Optional: Text color */
 }
+.pause-button {
+    background-color: green; /* Primary button color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Spacing around the text */
+    font-size: 16px; /* Text size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-left: 20px; /* Spacing to separate from other elements */
+    transition: background-color 0.2s ease; /* Smooth hover effect */
+}
+
+.pause-button:hover {
+    background-color: darkgreen; /* Darker shade on hover */
+}
