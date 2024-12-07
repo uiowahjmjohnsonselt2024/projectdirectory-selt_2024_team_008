@@ -1,6 +1,10 @@
 class NpcTaskController < ApplicationController
   def chat
     user_message = params[:message]
+    if user_message.blank?
+      render json: { error: "Message parameter is required" }, status: :bad_request
+      return
+    end
 
     client = OpenAI::Client.new
     response = client.chat(
