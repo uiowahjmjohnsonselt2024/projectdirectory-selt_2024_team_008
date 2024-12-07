@@ -3,7 +3,12 @@ require 'rails_helper'
 RSpec.describe NpcTaskController, type: :controller do
   include Devise::Test::ControllerHelpers
 
-  let(:user) { FactoryBot.create(:user) } # Use a valid user factory
+  let!(:user) do
+    user = User.create!(username: 'test_user', email: 'test@example.com', password: 'password')
+    ShardAccount.create!(user: user, balance: 0) # Initialize with 0 shards
+    user
+  end
+  let(:shard_account) { user.shard_account }
   let(:mock_openai_client) { instance_double(OpenAI::Client) }
 
   before do
@@ -15,10 +20,10 @@ RSpec.describe NpcTaskController, type: :controller do
     context "when a valid message is sent" do
       it "returns a valid NPC response" do
         allow(mock_openai_client).to receive(:chat).and_return({
-           'choices' => [
-             { 'message' => { 'content' => 'Here is a riddle for you!' } }
-           ]
-        })
+                                                                 'choices' => [
+                                                                   { 'message' => { 'content' => 'Here is a riddle for you!' } }
+                                                                 ]
+                                                               })
         post :chat, params: { message: "What is the riddle?" }, as: :json
         expect(response).to have_http_status(:success)
         expect(JSON.parse(response.body)["npc_message"]).to eq("Here is a riddle for you!")
@@ -40,6 +45,53 @@ RSpec.describe NpcTaskController, type: :controller do
         post :chat, params: {}, as: :json
         expect(response).to have_http_status(:bad_request)
         expect(JSON.parse(response.body)["error"]).to eq("Message parameter is required")
+      end
+    end
+  end
+
+  #------------------------------------------------------------------------------------------------
+  describe "POST #chat" do
+    context "when a valid message is sent" do
+      it "returns a valid NPC response" do
+        allow(mock_openai_client).to receive(:chat).and_return({
+                                                                 'choices' => [
+                                                                   { 'message' => { 'content' => 'Here is a riddle for you!' } }
+                                                                 ]
+                                                               })
+
+        post :chat, params: { message: "What is the riddle?" }, as: :json
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)["npc_message"]).to eq("Here is a riddle for you!")
+      end
+    end
+
+    context "when the user's answer is correct" do
+      it "awards 50 shards to the user" do
+        allow(mock_openai_client).to receive(:chat).and_return({
+                                                                 'choices' => [
+                                                                   { 'message' => { 'content' => 'Correct!' } }
+                                                                 ]
+                                                               })
+
+        post :chat, params: { message: "A piano" }, as: :json
+
+        expect(response).to have_http_status(:success)
+        expect(shard_account.reload.balance).to eq(50)
+      end
+    end
+
+    context "when the user's answer is incorrect" do
+      it "does not award shards to the user" do
+        allow(mock_openai_client).to receive(:chat).and_return({
+                                                                 'choices' => [
+                                                                   { 'message' => { 'content' => 'Not quite, try again!' } }
+                                                                 ]
+                                                               })
+
+        post :chat, params: { message: "A door" }, as: :json
+
+        expect(response).to have_http_status(:success)
+        expect(shard_account.reload.balance).to eq(0)
       end
     end
   end
