@@ -13,6 +13,12 @@ class GameLogicChannel < ApplicationCable::Channel
 
       # Send the current game state to the new subscriber
       # transmit_game_state(game)
+      # Send the current game state to the new subscriber
+      GameLogicChannel.broadcast_to(
+        game,
+        type: 'game_state',
+        grid: game.grid
+      )
     else
       reject
     end
@@ -42,7 +48,7 @@ class GameLogicChannel < ApplicationCable::Channel
       if distance > 1
         cost = calculate_shard_cost(distance)
         if current_user.shard_account.balance < cost
-          transmit({ type: 'balanceError', message: "Insufficient shards to move #{distance} tiles." })
+          transmit({ type: 'balance_error', message: "Insufficient shards to move #{distance} tiles." })
           return
         end
 
@@ -59,20 +65,13 @@ class GameLogicChannel < ApplicationCable::Channel
         )
       end
 
-      # Clear the user's previous position
-      game.grid.each_with_index do |row, row_index|
-        row.map! { |cell| cell == current_user.username ? nil : cell }
-      end
-
-      # Update game state with username
-      game.grid[y][x] = current_user.username
-      game.save!
+      # Update the grid using the model method
+      game.update_grid(x, y, current_user.username)
 
       # Broadcast updated game state
       GameLogicChannel.broadcast_to(
         game,
         type: 'game_state',
-        grid: game.grid,
         user_id: current_user.id,
         username: current_user.username,
         x: x, # Target x
@@ -80,6 +79,7 @@ class GameLogicChannel < ApplicationCable::Channel
       )
     else
       transmit({ type: 'error', message: 'Invalid move' })
+      Rails.logger.debug("Current position for #{current_user.username}: x: #{x}, y: #{y}")
     end
   end
 

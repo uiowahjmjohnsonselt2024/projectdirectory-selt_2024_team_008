@@ -14,6 +14,23 @@ class Game < ApplicationRecord
 
   attribute :grid, :json, default: -> { Array.new(6) { Array.new(6, nil) } }
 
-  private
+  def update_grid(x, y, username)
+    self.grid.each_with_index do |row, row_index|
+      row.map! { |cell| cell == username ? nil : cell }
+    end
+    self.grid[y][x] = username
+    save!
+  end
+
+  def find_user_position(username)
+    position = grid.flatten.index(username)
+    return nil unless position
+
+    [position % grid.first.size, position / grid.first.size]
+  end
+
+  def tile_empty?(x, y)
+    grid[y][x].nil?
+  end
 
 end

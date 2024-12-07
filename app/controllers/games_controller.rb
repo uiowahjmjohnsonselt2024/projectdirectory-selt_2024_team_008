@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class GamesController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_game, only: [:show, :game_state, :ensure_membership]
+  before_action :ensure_membership, only: [:game_state]
+
   def index
     @games = Game.includes(:server).all # Preload associated servers for faster queries
   end
@@ -41,6 +45,17 @@ class GamesController < ApplicationController
     redirect_to root_path, alert: "Game not found."
   end
 
+  def game_state
+    position = @game.find_user_position(current_user.username)
+    Rails.logger.debug "Game state grid: #{@game.grid.inspect}"
+    Rails.logger.debug "User position: #{position.inspect}"
+
+    render json: {
+      grid: @game.grid,
+      user_position: position
+    }, status: :ok
+  end
+
   def ensure_membership
     @game = Game.find_by(id: params[:id])
 
@@ -63,6 +78,13 @@ class GamesController < ApplicationController
   end
 
   private
+
+  def set_game
+    @game = Game.find_by(id: params[:id])
+    unless @game
+      render json: { error: "Game not found" }, status: :not_found
+    end
+  end
 
   def game_params
     params.require(:game).permit(:name)
