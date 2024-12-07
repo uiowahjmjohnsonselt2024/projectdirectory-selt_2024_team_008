@@ -27,6 +27,7 @@
   </div>
 </div>
 
+<div id="flash-messages"></div>
 
 <div class="game-details">
   <h1>Debug Info:</h1>
@@ -34,7 +35,8 @@
   <p>Status: <%= @game.status %></p>
   <p>Creator id: <%= @game.creator_id %></p>
   <p>Creator user: <%= @server.original_creator_username%></p>
-<!--  <p>Creator user: <%#= @server.original_creator_username%></p>-->
+  <p>Logged in user: <%= current_user.username %></p>
+  <p>User id: <%= current_user.id %></p>
 
 
 </div>
