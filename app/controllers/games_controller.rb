@@ -36,6 +36,26 @@ class GamesController < ApplicationController
     redirect_to root_path, alert: "Game not found."
   end
 
+  def ensure_membership
+    @game = Game.find_by(id: params[:id])
+
+    unless @game
+      return render json: { error: "Game not found" }, status: :not_found
+    end
+
+    if @game.memberships.exists?(user: current_user)
+      render json: { message: "Membership already exists" }, status: :ok
+    else
+      membership = @game.memberships.new(user: current_user)
+
+      if membership.save
+        render json: { message: "Membership ensured" }, status: :ok
+      else
+        render json: { error: "Unable to create membership: #{membership.errors.full_messages.join(', ')}" }, status: :unprocessable_entity
+      end
+    end
+  end
+
   private
 
   def game_params
