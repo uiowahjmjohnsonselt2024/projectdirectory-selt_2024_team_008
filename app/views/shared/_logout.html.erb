@@ -1,3 +1,9 @@
 <div class="logout-container">
-  <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton" %>
+  <% if controller_name == 'games' && action_name == 'show' %>
+    <!-- Render Pause button instead of Log Out on the games/show page -->
+    <%= button_to "Pause", pause_menu_path, method: :get, id: "pauseButton", class: "pause-button" %>
+  <% else %>
+    <!-- Render Log Out button on all other pages -->
+    <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton" %>
+  <% end %>
 </div>

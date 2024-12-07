@@ -1,44 +1,27 @@
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag "game_ui", media: "all" %>
+  <%= stylesheet_link_tag "game_logic", media: "all" %>
 <% end %>
 
 <% content_for :javascripts do %>
-  <%= javascript_include_tag "game_ui" %>
-  <%= javascript_include_tag "channels/game_logic_channel" %>
+  <%= javascript_include_tag "game_logic" %>
 <% end %>
 
-<!-- Title -->
-<!--<div class="title">Playing...</div>-->
-
 <div id="server-id" data-server-id="<%= @server.id %>" data-user-id="<%= current_user.id %>"></div>
-<div id="game-element" data-game-id="<%= @game.id %>" data-user-id="<%= current_user.id %>"></div>
 
 <div class="header">
-  <!-- Left-side content -->
-  <div class="logout-container">
-    <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton", class: "logout-button" %>
-  </div>
-  <div class="shard-balance-display">
-    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
-  </div>
+
   <!-- Right-side content -->
   <div class="chat-room-container">
     <button id="chatRoomButton" class="chat-room-button">Open Chat Room</button>
   </div>
 </div>
 
-<div id="flash-messages"></div>
-
 <div class="game-details">
   <h1>Debug Info:</h1>
   <p>Game: <%= @game.name %></p>
   <p>Status: <%= @game.status %></p>
   <p>Creator id: <%= @game.creator_id %></p>
-  <p>Creator user: <%= @server.original_creator_username%></p>
-  <p>Logged in user: <%= current_user.username %></p>
-  <p>User id: <%= current_user.id %></p>
-
-
+  <p>Creator user: <%= @server.original_creator_username %></p>
 </div>
 
 <div class="game-container">
@@ -48,11 +31,11 @@
       <div class="grid-row">
         <% row.each_with_index do |cell, x| %>
           <div
-            class="grid-cell <%= 'occupied' if cell.present? %>"
+            class="grid-cell"
             data-x="<%= x %>"
             data-y="<%= y %>">
             <% if cell.present? %>
-              <span><%= cell %></span>
+              <img src="<%= image_path('sprite.png') %>" alt="Player" class="sprite">
             <% else %>
               &nbsp;
             <% end %>
@@ -60,24 +43,5 @@
         <% end %>
       </div>
     <% end %>
-  </div>
-</div>
-
-  <!-- Button to Open/Close Chat Room -->
-  <div class="chat-room-toggle">
-    <button class="chat-room-button" id="chatRoomToggle">Open Chat Room</button>
-  </div>
-
-  <!-- Chat Room Embedded -->
-  <div class="chat-room" id="chatRoom" style="display: none;">
-    <div class="chat-room-header">
-      <span><%= @server.name %></span>
-      <button class="chat-room-close" id="chatRoomClose">Close</button>
-    </div>
-    <iframe
-      src="<%= server_path(@server) %>"
-      title="Chat Room for <%= @server.name %>"
-      style="width: 100%; height: 95%; border: 1px solid #111111;">
-    </iframe>
   </div>
 </div>
