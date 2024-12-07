@@ -6,7 +6,7 @@ let chatSubscription = null;
 const ensureMembership = async (serverId) => {
     try {
         const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-        const response = await fetch(`/games/${gameId}/ensure_membership`, {
+        const response = await fetch(`/games/${serverId}/ensure_membership`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -18,8 +18,8 @@ const ensureMembership = async (serverId) => {
         }
 
         const data = await response.json();
-        if (data.message === "Membership ensured") {
-            console.log("Membership already exists.");
+        if (data.message === "Membership for chat room ensured") {
+            console.log("Membership for chat room already exists.");
         } else {
             console.log("Membership ensured:", data);
         }

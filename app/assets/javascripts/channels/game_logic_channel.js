@@ -4,6 +4,12 @@
 let gameLogicSubscription = null;
 
 const ensureGameMembership = async (gameId) => {
+    const gameElement = document.getElementById("server-id");
+    if (!gameElement) {
+        console.error("Server element not found. Cannot ensure membership.");
+        return;
+    }
+
     try {
         const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
         const response = await fetch(`/games/${gameId}/ensure_membership.json`, {
@@ -28,10 +34,15 @@ const ensureGameMembership = async (gameId) => {
 };
 
 const initializeGameLogicChannel = async () => {
-    const gameElement = document.getElementById("server-id");
-    if (!gameElement) return;
+    console.log('>>> Initializing game_logic_channel.js <<<')
 
-    const gameId = gameElement.dataset.serverId; // Assuming server ID maps to game ID
+    const gameElement = document.getElementById("game-element");
+    if (!gameElement) {
+        console.warn("Game element not found. Skipping GameLogicChannel initialization.");
+        return;
+    }
+
+    const gameId = gameElement.dataset.gameId; // Assuming server ID maps to game ID
     const userId = gameElement.dataset.userId;
 
     try {
@@ -39,7 +50,7 @@ const initializeGameLogicChannel = async () => {
         await ensureGameMembership(gameId);
 
         // Subscribe to the GameLogicChannel
-        gameLogicSubscription = consumer.subscriptions.create(
+        gameLogicSubscription = App.cable.subscriptions.create(
             { channel: "GameLogicChannel", game_id: gameId },
             {
                 connected() {
