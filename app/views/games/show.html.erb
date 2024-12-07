@@ -18,7 +18,9 @@
   <div class="logout-container">
     <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton", class: "logout-button" %>
   </div>
-
+  <div class="shard-balance-display">
+    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
+  </div>
   <!-- Right-side content -->
   <div class="chat-room-container">
     <button id="chatRoomButton" class="chat-room-button">Open Chat Room</button>
