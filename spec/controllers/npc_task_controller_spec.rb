@@ -6,7 +6,6 @@ RSpec.describe NpcTaskController, type: :controller do
   let!(:user) do
     user = User.create!(username: 'test_user', email: 'test@example.com', password: 'password')
     ShardAccount.create!(user: user, balance: 0) # Initialize with 0 shards
-    puts "ShardAccount Balance: #{user.shard_account&.balance}"
     user
   end
 
@@ -45,10 +44,26 @@ RSpec.describe NpcTaskController, type: :controller do
     end
 
     context "when no message is sent" do
-      it "returns a bad request error" do
-        post :chat, params: {}, as: :json
-        expect(response).to have_http_status(:bad_request)
-        expect(JSON.parse(response.body)["error"]).to eq("Message parameter is required")
+      it "returns a riddle on initial load" do
+        allow(mock_openai_client).to receive(:chat).with(
+          parameters: {
+            model: 'gpt-3.5-turbo',
+            messages: [
+              { role: 'system', content: 'You are an NPC who gives riddles.' },
+              { role: 'user', content: 'Give me a riddle.' }
+            ],
+            max_tokens: 50
+          }
+        ).and_return({
+                       'choices' => [
+                         { 'message' => { 'content' => 'Here is a riddle for you!' } }
+                       ]
+                     })
+
+        post :chat, params: { message: nil }, as: :json
+
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body)["npc_message"]).to eq("Here is a riddle for you!")
       end
     end
   end
