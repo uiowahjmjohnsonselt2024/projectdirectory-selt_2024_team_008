@@ -5,9 +5,10 @@ class Membership < ApplicationRecord
   belongs_to :server, optional: true
   belongs_to :game, optional: true
 
-  # Validation to ensure a user can only join a server once
-  validates :user_id, uniqueness:{
-    scope: :server_id, message: 'User is already a member of this server'
+  # Validation to ensure a user can only join a unique combination of server and game
+  validates :user_id, uniqueness: {
+    scope: [:server_id, :game_id],
+    message: 'User is already a member of this server or game'
   }
 
   # Scopes for common queries
@@ -20,12 +21,8 @@ class Membership < ApplicationRecord
   private
 
   def log_membership_creation
-    if server_id
-      Rails.logger.info "Membership created: User #{user_id} joined Server #{server_id}"
-    elsif game_id
-      Rails.logger.info "Membership created: User #{user_id} joined Game #{game_id}"
-    else
-      Rails.logger.info "Membership created: User #{user_id} has no specific association"
+    if server_id && game_id
+      Rails.logger.info "Membership created: User #{user_id} joined Game #{game_id}, Server #{server_id}"
     end
   end
 end
