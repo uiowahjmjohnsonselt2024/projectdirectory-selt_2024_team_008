@@ -3,48 +3,79 @@
 
 let gameLogicSubscription = null;
 
-const initializeGameLogicChannel = () => {
+const ensureGameMembership = async (gameId) => {
+    try {
+        const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+        const response = await fetch(`/games/${gameId}/ensure_membership.json`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to ensure game membership: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Game membership ensured:", data.message || data);
+    } catch (error) {
+        console.error("Error ensuring game membership:", error);
+        alert("Unable to join the game. Please try again.");
+        throw error; // Prevent further execution if membership fails
+    }
+};
+
+const initializeGameLogicChannel = async () => {
     const gameElement = document.getElementById("server-id");
     if (!gameElement) return;
 
     const gameId = gameElement.dataset.serverId; // Assuming server ID maps to game ID
     const userId = gameElement.dataset.userId;
 
-    // Subscribe to the GameLogicChannel
-    gameLogicSubscription = consumer.subscriptions.create(
-        { channel: "GameLogicChannel", game_id: gameId },
-        {
-            connected() {
-                console.log(`Connected to GameLogicChannel for game ${gameId}`);
-            },
-            disconnected() {
-                console.log(`Disconnected from GameLogicChannel`);
-            },
-            received(data) {
-                // Update grid based on received data
-                if (data.grid) {
-                    updateGrid(data.grid);
-                    console.log(`User ${data.user_id} moved at (${data.x}, ${data.y})`);
-                } else if (data.error) {
-                    alert(data.error); // Display error messages
-                }
-            },
+    try {
+        // Ensure membership before subscribing
+        await ensureGameMembership(gameId);
 
-            // Client-side method to make a move
-            makeMove(x, y) {
-                this.perform("make_move", { x: x, y: y, user_id: userId });
-            },
-        }
-    );
+        // Subscribe to the GameLogicChannel
+        gameLogicSubscription = consumer.subscriptions.create(
+            { channel: "GameLogicChannel", game_id: gameId },
+            {
+                connected() {
+                    console.log(`Connected to GameLogicChannel for game ${gameId}`);
+                },
+                disconnected() {
+                    console.log(`Disconnected from GameLogicChannel`);
+                },
+                received(data) {
+                    // Handle received data
+                    if (data.grid) {
+                        updateGrid(data.grid);
+                        console.log(`User ${data.user_id} moved at (${data.x}, ${data.y})`);
+                    } else if (data.error) {
+                        alert(data.error); // Display error messages
+                    }
+                },
 
-    // Attach click listeners to grid cells
-    document.querySelectorAll(".grid-cell").forEach((cell) => {
-        cell.addEventListener("click", () => {
-            const x = cell.dataset.x;
-            const y = cell.dataset.y;
-            gameLogicSubscription.makeMove(x, y);
+                // Client-side method to make a move
+                makeMove(x, y) {
+                    this.perform("make_move", { x: x, y: y, user_id: userId });
+                },
+            }
+        );
+
+        // Attach click listeners to grid cells
+        document.querySelectorAll(".grid-cell").forEach((cell) => {
+            cell.addEventListener("click", () => {
+                const x = cell.dataset.x;
+                const y = cell.dataset.y;
+                gameLogicSubscription.makeMove(x, y);
+            });
         });
-    });
+    } catch (error) {
+        console.error("Failed to initialize GameLogicChannel:", error);
+    }
 };
 
 // Update the grid dynamically
