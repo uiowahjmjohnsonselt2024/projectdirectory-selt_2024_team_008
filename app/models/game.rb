@@ -1,7 +1,7 @@
 class Game < ApplicationRecord
   belongs_to :creator, class_name: "User"
 
-  has_one :server, dependent: :delete # Each game has one associated chat room
+  has_one :server, dependent: :destroy # Each game has one associated chat room
 
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
