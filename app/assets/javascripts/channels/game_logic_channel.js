@@ -77,7 +77,7 @@ const initializeGameLogicChannel = async () => {
                             console.log(`Last position updated: ${JSON.stringify(lastPosition)}`);
                         }
 
-                        console.log(`User ${data.user_id} moved at (${data.x}, ${data.y})`);
+                        console.log(`User ${data.user_id} moved to (${data.x}, ${data.y})`);
                     } else if (data.type === "balance_update" && data.user_id === parseInt(userId)) {
                         updateShardBalance(data.balance);
                     } else if (data.error) {
@@ -88,6 +88,11 @@ const initializeGameLogicChannel = async () => {
                 // Client-side method to make a move
                 makeMove(x, y) {
                     const distance = calculateDistance(lastPosition, { x, y })
+
+                    if (distance === Infinity) {
+                        alert("Invalid move! You can only move vertically or horizontally.");
+                        return;
+                    }
 
                     if (distance > 1) {
                         const shardCost = calculateShardCost(distance);
@@ -127,6 +132,11 @@ const calculateDistance = (from, to) => {
     // Calculate Chebyshev distance
     const horizontalDistance = Math.abs(to.x - from.x);
     const verticalDistance = Math.abs(to.y - from.y);
+
+    // Allow only horizontal or vertical moves
+    if (horizontalDistance > 0 && verticalDistance > 0) {
+        return Infinity; // Invalid move, return a high value
+    }
 
     return Math.max(horizontalDistance, verticalDistance);
 };

@@ -42,7 +42,7 @@ class GameLogicChannel < ApplicationCable::Channel
       if distance > 1
         cost = calculate_shard_cost(distance)
         if current_user.shard_account.balance < cost
-          transmit(type: 'error', message: "Insufficient shards to move #{distance} tiles.")
+          transmit({ type: 'error', message: "Insufficient shards to move #{distance} tiles." })
           return
         end
 
@@ -79,17 +79,27 @@ class GameLogicChannel < ApplicationCable::Channel
         y: y  # Target y
       )
     else
-      transmit(type: 'error', message: 'Invalid move')
+      transmit({ type: 'error', message: 'Invalid move' })
     end
   end
 
   private
 
   def valid_move?(game, target_x, target_y)
-    # Ensure the target coordinates are within bounds and the target cell is empty
-    target_x.between?(0, game.grid.first.size - 1) &&
-      target_y.between?(0, game.grid.size - 1) &&
-      game.grid[target_y][target_x].nil?
+    current_position = find_user_position(game, current_user.username)
+    return false unless current_position
+
+    current_x, current_y = current_position
+
+    # Check for valid tile bounds
+    return false unless target_x.between?(0, 5) && target_y.between?(0, 5)
+
+    # Check for horizontal or vertical move
+    valid_horizontal_or_vertical = (target_x == current_x || target_y == current_y)
+    return false unless valid_horizontal_or_vertical
+
+    # Check if the target tile is empty
+    game.grid[target_y][target_x].nil?
   end
 
   def calculate_distance(game, target_x, target_y)
