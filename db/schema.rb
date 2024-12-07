@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_07_023139) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_07_034619) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -118,16 +118,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_07_023139) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "games", "servers"
+  add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
-  add_foreign_key "memberships", "servers"
+  add_foreign_key "memberships", "games", on_delete: :cascade
   add_foreign_key "memberships", "servers", on_delete: :cascade
-  add_foreign_key "memberships", "users"
-  add_foreign_key "messages", "servers"
+  add_foreign_key "memberships", "users", on_delete: :nullify
   add_foreign_key "messages", "servers", on_delete: :cascade
-  add_foreign_key "messages", "users"
-  add_foreign_key "servers", "games"
-  add_foreign_key "servers", "users", column: "creator_id"
+  add_foreign_key "messages", "users", on_delete: :nullify
+  add_foreign_key "servers", "games", on_delete: :cascade
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
   add_foreign_key "user_items", "items"
