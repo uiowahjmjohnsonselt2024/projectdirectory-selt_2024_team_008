@@ -2,8 +2,19 @@
 // = require actioncable
 
 let gameLogicSubscription = null;
+let lastPosition = { x: null, y: null };
 
 const SHARD_COST_PER_TILE = 2;
+
+const userColors = {};
+const getUserColor = (userId) => {
+    if (!userColors[userId]) {
+        // Generate a unique pastel color for each user
+        const hue = Math.floor(Math.random() * 360);
+        userColors[userId] = `hsl(${hue}, 70%, 80%)`;
+    }
+    return userColors[userId];
+};
 
 const ensureGameMembership = async (gameId) => {
     const gameElement = document.getElementById("server-id");
@@ -36,7 +47,7 @@ const ensureGameMembership = async (gameId) => {
 };
 
 const initializeGameLogicChannel = async () => {
-    console.log('>>> Initializing game_logic_channel.js <<<')
+    console.log('>>> Initializing GameLogicChannel <<<');
 
     const gameElement = document.getElementById("game-element");
     if (!gameElement) {
@@ -45,13 +56,14 @@ const initializeGameLogicChannel = async () => {
     }
 
     const gameId = gameElement.dataset.gameId;
-    const userId = gameElement.dataset.userId;
+    const userId = parseInt(gameElement.dataset.userId, 10);
 
     try {
         // Ensure membership before subscribing
         await ensureGameMembership(gameId);
+        await fetchGameState(gameId);
 
-        let lastPosition = { x:null, y:null }
+        console.log("After ensure membership")
 
         // Subscribe to the GameLogicChannel
         gameLogicSubscription = App.cable.subscriptions.create(
@@ -60,79 +72,99 @@ const initializeGameLogicChannel = async () => {
                 connected() {
                     console.log(`Connected to GameLogicChannel for game ${gameId}`);
                 },
+
                 disconnected() {
                     console.log(`Disconnected from GameLogicChannel`);
                 },
-                makeMove(x, y) {
-                    const distance = calculateDistance(lastPosition, { x, y })
-                    const shardCost = calculateShardCost(distance);
-                    const currentShardBalance = document.querySelector('.shard-balance-display p');
 
-                    if (distance === Infinity) {
-                        alert("Invalid move! You can only move vertically or horizontally.");
-                        return;
-                    }
-
-                    if (distance > 1) {
-                        if (shardCost > currentShardBalance) { // Add a check for insufficient shards
-                            alert("Insufficient shards to make this move!");
-                            triggerShardBalanceShake(); // Trigger the shake effect
-                            return;
-                        }
-                        const confirmMove = confirm(
-                            `Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`
-                        );
-                        if (!confirmMove) return;
-                    }
-
-                    this.perform("make_move", { x: x, y: y, user_id: userId });
+                received(data) {
+                    handleGameChannelEvent(data, userId, lastPosition);
                 },
 
-                // Client-side method to make a move
-                received(data) {
-                    // Handle received data
-                    console.log(`data.type: ${data.type}`)
-                    if (data.type === "game_state") {
-                        updateGrid(data.grid);
-
-                        console.log(`data.user_id: ${data.user_id} userId: ${userId}`)
-                        console.log(`Type of data.user_id: ${typeof data.user_id}, Type of userId: ${typeof userId}`);
-                        // Update `lastPosition` for the current user
-                        if (data.user_id === parseInt(userId)) {
-                            lastPosition = { x: data.x, y: data.y };
-                            console.log(`Last position updated: ${JSON.stringify(lastPosition)}`);
-                        }
-
-                        console.log(`User ${data.user_id} moved to (${data.x}, ${data.y})`);
-
-                    } else if (data.type === "balance_update" && data.user_id === parseInt(userId)) {
-                        updateShardBalance(data.balance);
-                    } else if (data.type === "balanceError") {
-                        console.log("balanceError detected, calling triggerShardBalanceShake()");
-                        triggerShardBalanceShake();
-                    } else if (data.error) {
-                        alert(data.error); // Display error messages
-                    }
+                makeMove(x, y) {
+                    handleMove(x, y, lastPosition, userId, this);
                 },
             }
         );
 
         // Attach click listeners to grid cells
-        document.querySelectorAll(".grid-cell").forEach((cell) => {
-            cell.addEventListener("click", () => {
-                const x = cell.dataset.x;
-                const y = cell.dataset.y;
-
-                if (lastPosition.x === null || lastPosition.y === null) {
-                    lastPosition = { x, y }; // Set initial position
-                }
-
-                gameLogicSubscription.makeMove(x, y);
-            });
-        });
+        attachGridCellListeners(lastPosition);
     } catch (error) {
         console.error("Failed to initialize GameLogicChannel:", error);
     }
+};
+
+// Handle received data
+const handleGameChannelEvent = (data, userId, lastPosition) => {
+    console.log(`data.type: ${data.type}`);
+    switch (data.type) {
+        case "game_state":
+            updateGrid(data.grid);
+            if (data.user_id === userId) {
+                lastPosition.x = data.x;
+                lastPosition.y = data.y;
+                console.log(`Last position updated: ${JSON.stringify(lastPosition)}`);
+            }
+            console.log(`User ${data.user_id} moved to (${data.x}, ${data.y})`);
+            break;
+        case "balance_update":
+            if (data.user_id === userId) {
+                updateShardBalance(data.balance);
+            }
+            break;
+        case "balance_error":
+            showFlashMessage(data.message, 'alert');
+            triggerShardBalanceShake();
+            break;
+        case "error":
+            showFlashMessage(data.message || "An error occurred.", 'alert');
+            break;
+        default:
+            console.warn(`Unhandled data type: ${data.type}`);
+    }
+};
+
+// Handle move logic
+const handleMove = (x, y, lastPosition, userId, channel) => {
+    const distance = calculateDistance(lastPosition, { x, y });
+
+    if (distance === Infinity) {
+        showFlashMessage("Invalid move! You can only move vertically or horizontally.", "alert");
+        return;
+    }
+
+    const shardCost = calculateShardCost(distance);
+    const currentShardBalance = parseInt(document.querySelector('.shard-balance-display p').textContent.match(/\d+/)[0], 10);
+
+    if (distance > 1 && shardCost > currentShardBalance) {
+        triggerShardBalanceShake();
+        showFlashMessage("Insufficient shards to make this move!", "alert");
+        return;
+    }
+
+    if (distance > 1) {
+        const confirmMove = confirm(`Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`);
+        if (!confirmMove) return;
+    }
+
+    channel.perform("make_move", { x, y, user_id: userId });
+};
+
+// Attach click listeners to grid cells
+const attachGridCellListeners = (lastPosition) => {
+    document.querySelectorAll(".grid-cell").forEach((cell) => {
+        cell.addEventListener("click", () => {
+            const x = parseInt(cell.dataset.x, 10);
+            const y = parseInt(cell.dataset.y, 10);
+
+            if (lastPosition.x === null || lastPosition.y === null) {
+                lastPosition.x = x;
+                lastPosition.y = y;
+            }
+
+            gameLogicSubscription.makeMove(x, y);
+        });
+    });
 };
 
 // Calculate distance between two positions
@@ -169,7 +201,8 @@ const updateGrid = (grid = [], visited = {}) => {
     // Clear all grid cells
     document.querySelectorAll(".grid-cell").forEach((cell) => {
         cell.innerHTML = ""; // Clear content
-        cell.classList.remove("occupied", "visited");
+        cell.classList.remove("occupied");
+        // cell.style.backgroundColor = "";
     });
 
     // Update the visited state
@@ -189,6 +222,10 @@ const updateGrid = (grid = [], visited = {}) => {
             const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
             if (cell) {
                 cell.classList.add("visited"); // Apply visited styling
+                const userId = visited[y][x];
+                const color = getUserColor(userId);
+                console.log(`Setting visited color for cell at (${x}, ${y}) to ${color}`);
+                cell.style.backgroundColor = color; // Set visited colo
             }
         });
     });
@@ -201,6 +238,9 @@ const updateGrid = (grid = [], visited = {}) => {
                 if (cell) {
                     cell.innerHTML = `<span>${value}</span>`; // Display the player
                     cell.classList.add("occupied"); // Mark as occupied
+                    const color = getUserColor(value);
+                    console.log(`Setting occupied color for cell at (${x}, ${y}) to ${color}`);
+                    cell.style.backgroundColor = color; // Set player color
                 }
             }
         });
@@ -218,7 +258,65 @@ const triggerShardBalanceShake = () => {
     }
 };
 
-document.addEventListener("turbolinks:load", initializeGameLogicChannel);
+const showFlashMessage = (message, type = "alert") => {
+    const flashContainer = document.getElementById("flash-messages");
+
+    if (!flashContainer) {
+        console.error("Flash container not found. Unable to display flash message.");
+        return;
+    }
+
+    // Set z-index to bring the flash message forward
+    flashContainer.style.zIndex = '1001';
+
+    // Create the flash message element
+    const flashMessage = document.createElement("div");
+    flashMessage.className = type === "alert" ? "alert" : "notice";
+    flashMessage.innerHTML = `
+        ${message}
+        <button onclick="this.parentElement.style.display='none';" aria-label="Close flash message">×</button>
+    `;
+
+    // Append the flash message to the container
+    flashContainer.appendChild(flashMessage);
+
+    // Automatically remove the flash message after 3 seconds
+    setTimeout(() => {
+        flashMessage.style.display = 'none';
+        flashContainer.removeChild(flashMessage);
+        flashContainer.style.zIndex = '-1';
+    }, 3000);
+};
+
+const fetchGameState = async (gameId) => {
+    try {
+        const response = await fetch(`/games/${gameId}/game_state`);
+        if (!response.ok) throw new Error(`Failed to fetch game state: ${response.statusText}`);
+
+        const jsonData = await response.json();
+        if (jsonData.grid && jsonData.user_position !== undefined) {
+            console.log("Fetched game state:", jsonData.grid, jsonData.user_position);
+            updateGrid(jsonData.grid); // Update the grid UI
+            if (jsonData.user_position) {
+                lastPosition.x = jsonData.user_position[0];
+                lastPosition.y = jsonData.user_position[1];
+            }
+        } else {
+            console.error("Unexpected response from game_state:", jsonData);
+        }
+    } catch (error) {
+        console.error("Error fetching game state:", error);
+    }
+};
+
+document.addEventListener("turbolinks:load", async () => {
+    const gameElement = document.getElementById("game-element");
+    if (gameElement) {
+        const gameId = gameElement.dataset.gameId;
+        // await fetchGameState(gameId); // Fetch the grid state on page load
+        await initializeGameLogicChannel();
+    }
+});
 document.addEventListener("turbolinks:before-visit", () => {
     if (gameLogicSubscription) {
         gameLogicSubscription.unsubscribe();
