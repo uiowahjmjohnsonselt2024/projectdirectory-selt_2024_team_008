@@ -12,8 +12,10 @@
 //= require mystery_boxes
 //= require shop
 //= require servers
+//= require channels/server_channel
 //= require chat_room
-//= require game_logic
+//= require game_ui
+//= require channels/game_logic_channel
 
 // Include all other JavaScript files in the directory tree
 //= require_tree .

@@ -12,12 +12,13 @@
 
 //= link channels/consumer.js
 //= link channels/server_channel.js
+//= link channels/game_logic_channel.js
 
 //= link chat_room.js
 //= link chat_room.css
 
-//= link game_logic.js
-//= link game_logic.css
+//= link game_ui.js
+//= link game_ui.css
 
 //= link chat_room.js
 //= link chat_room.css
