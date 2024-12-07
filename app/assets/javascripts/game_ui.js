@@ -1,5 +1,5 @@
 document.addEventListener("turbolinks:load", () => {
-    console.log(">>> turbolinks:load event fired in game_logic.js <<<");
+    console.log(">>> turbolinks:load event fired in game_ui.js <<<");
 
     const cells = document.querySelectorAll(".grid-cell");
     console.log("Number of grid cells:", cells.length);
