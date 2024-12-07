@@ -1,5 +1,7 @@
 class GameLogicChannel < ApplicationCable::Channel
-  def subscribed
+  SHARD_COST_PER_TILE = 2
+
+    def subscribed
     game = Game.find_by(id: params[:game_id])
 
     if game && current_user
@@ -35,6 +37,28 @@ class GameLogicChannel < ApplicationCable::Channel
 
     # Validate and process the move
     if valid_move?(game, x, y)
+      distance = calculate_distance(game, x, y)
+
+      if distance > 1
+        cost = calculate_shard_cost(distance)
+        if current_user.shard_account.balance < cost
+          transmit(error: "Insufficient shards to move #{distance} tiles.")
+          return
+        end
+
+        # Deduct shards
+        current_user.shard_account.balance -= cost
+        current_user.shard_account.save!
+
+        # Broadcast updated shard balance
+        GameLogicChannel.broadcast_to(
+          game,
+          type: 'balance_update',
+          user_id: current_user.id,
+          balance: current_user.shard_account.balance
+        )
+      end
+
       # Clear the user's previous position
       game.grid.each_with_index do |row, row_index|
         row.map! { |cell| cell == current_user.username ? nil : cell }
@@ -61,8 +85,38 @@ class GameLogicChannel < ApplicationCable::Channel
 
   private
 
-  def valid_move?(game, x, y)
-    x.between?(0, 5) && y.between?(0, 5) && game.grid[y][x].nil?
+  def valid_move?(game, target_x, target_y)
+    # Ensure the target coordinates are within bounds and the target cell is empty
+    target_x.between?(0, game.grid.first.size - 1) &&
+      target_y.between?(0, game.grid.size - 1) &&
+      game.grid[target_y][target_x].nil?
+  end
+
+  def calculate_distance(game, target_x, target_y)
+    current_position = find_user_position(game, current_user.username)
+    return Float::INFINITY unless current_position
+
+    current_x, current_y = current_position
+
+    unless valid_move?(game, target_x, target_y)
+      raise ArgumentError, "Target coordinates (#{target_x}, #{target_y}) are out of bounds."
+    end
+
+    distance_x = (target_x - current_x).abs
+    distance_y = (target_y - current_y).abs
+    distance_x + distance_y
+  end
+
+  def calculate_shard_cost(distance)
+    # CAN BE CHANGED: 2 shards per tile beyond the first
+    (distance - 1) * SHARD_COST_PER_TILE
+  end
+
+  def find_user_position(game, username)
+    position = game.grid.flatten.index(username)
+    return nil unless position
+
+    [position % game.grid.first.size, position / game.grid.first.size]
   end
 
   def transmit_game_state(game)

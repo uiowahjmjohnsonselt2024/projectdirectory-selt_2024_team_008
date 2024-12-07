@@ -3,6 +3,8 @@
 
 let gameLogicSubscription = null;
 
+const SHARD_COST_PER_TILE = 2;
+
 const ensureGameMembership = async (gameId) => {
     const gameElement = document.getElementById("server-id");
     if (!gameElement) {
@@ -49,7 +51,7 @@ const initializeGameLogicChannel = async () => {
         // Ensure membership before subscribing
         await ensureGameMembership(gameId);
 
-        let visited = {}
+        let lastPosition = { x:null, y:null }
 
         // Subscribe to the GameLogicChannel
         gameLogicSubscription = App.cable.subscriptions.create(
@@ -63,10 +65,18 @@ const initializeGameLogicChannel = async () => {
                 },
                 received(data) {
                     // Handle received data
-                    if (data.grid && data.visited) {
-                        visited = data.visited
+                    if (data.type === "game_state") {
                         updateGrid(data.grid);
+
+                        // Update `lastPosition` for the current user
+                        if (data.user_id === userId) {
+                            lastPosition = { x: data.x, y: data.y };
+                            console.log(`Last position: ${lastPosition}`);
+                        }
+
                         console.log(`User ${data.user_id} moved at (${data.x}, ${data.y})`);
+                    } else if (data.type === "balance_update" && data.user_id === userId) {
+                        updateShardBalance(data.balance);
                     } else if (data.error) {
                         alert(data.error); // Display error messages
                     }
@@ -74,6 +84,16 @@ const initializeGameLogicChannel = async () => {
 
                 // Client-side method to make a move
                 makeMove(x, y) {
+                    const distance = calculateDistance(lastPosition, { x, y })
+
+                    if (distance > 1) {
+                        const shardCost = calculateShardCost(distance);
+                        const confirmMove = confirm(
+                            `Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`
+                        );
+                        if (!confirmMove) return;
+                    }
+
                     this.perform("make_move", { x: x, y: y, user_id: userId });
                 },
             }
@@ -84,11 +104,35 @@ const initializeGameLogicChannel = async () => {
             cell.addEventListener("click", () => {
                 const x = cell.dataset.x;
                 const y = cell.dataset.y;
+
+                if (lastPosition.x === null || lastPosition.y === null) {
+                    lastPosition = { x, y }; // Set initial position
+                }
+
                 gameLogicSubscription.makeMove(x, y);
             });
         });
     } catch (error) {
         console.error("Failed to initialize GameLogicChannel:", error);
+    }
+};
+
+// Calculate distance between two positions
+const calculateDistance = (from, to) => {
+    if (from.x === null || from.y === null) return 0; // Initial move
+    return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
+};
+
+// Calculate shard cost for a move
+const calculateShardCost = (distance) => {
+    return (distance - 1) * SHARD_COST_PER_TILE;
+}
+
+// Update the shard balance display
+const updateShardBalance = (newBalance) => {
+    const balanceDisplay = document.querySelector('.shard-balance-display p');
+    if (balanceDisplay) {
+        balanceDisplay.textContent = `Shard Balance: ${newBalance} Shards`;
     }
 };
 
