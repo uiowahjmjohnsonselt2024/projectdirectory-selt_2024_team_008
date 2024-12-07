@@ -44,14 +44,12 @@
       <div class="grid-row">
         <% row.each_with_index do |cell, x| %>
           <div
-            class="grid-cell"
+            class="grid-cell <%= 'occupied' if cell.present? %>"
             data-x="<%= x %>"
             data-y="<%= y %>">
             <% if cell.present? %>
-              <!-- Example: Render player or item if the cell is occupied -->
-              <img src="<%= image_path('sprite.png') %>" alt="Player" class="sprite">
+              <span><%= cell %></span>
             <% else %>
-              <!-- Empty cell -->
               &nbsp;
             <% end %>
           </div>
@@ -59,6 +57,7 @@
       </div>
     <% end %>
   </div>
+</div>
 
   <!-- Button to Open/Close Chat Room -->
   <div class="chat-room-toggle">
