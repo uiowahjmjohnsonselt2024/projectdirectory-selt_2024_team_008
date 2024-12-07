@@ -47,6 +47,8 @@ gem 'dotenv-rails'
 gem 'execjs', '>= 2.9'
 gem 'puma', '~> 6.0'
 
+gem 'ruby-openai'
+
 # Group gems for development and testing
 group :development, :test do
   # Better errors and debugging
