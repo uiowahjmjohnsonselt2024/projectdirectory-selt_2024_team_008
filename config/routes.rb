@@ -37,7 +37,12 @@ Rails.application.routes.draw do
   end
 
   # Game routes
-  resources :games, only: [:create, :show, :index]
+  resources :games, only: [:create, :show, :index] do
+    resources :memberships, only: [:create, :destroy], defaults: { format: :json }
+    member do
+      post :ensure_membership, defaults: { format: :json }
+    end
+  end
 
   resources :shard_accounts, only: [] do
     collection do
