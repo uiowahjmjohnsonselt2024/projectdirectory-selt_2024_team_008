@@ -6,7 +6,7 @@ let chatSubscription = null;
 const ensureMembership = async (serverId) => {
     try {
         const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-        const response = await fetch(`/servers/${serverId}/ensure_membership.json`, {
+        const response = await fetch(`/games/${gameId}/ensure_membership`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
