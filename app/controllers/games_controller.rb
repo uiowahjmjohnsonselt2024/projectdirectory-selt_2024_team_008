@@ -21,6 +21,11 @@ class GamesController < ApplicationController
 
       server.update!(game_id: @game.id)
 
+      # Automatically add the creator as a member of both the game and the server
+      membership = Membership.find_or_initialize_by(user: current_user, server: server)
+      membership.game = @game # Update the game association if needed
+      membership.save! if membership.new_record? || membership.changed?
+
       redirect_to game_path(@game), notice: "Game successfully created!"
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -43,16 +48,17 @@ class GamesController < ApplicationController
       return render json: { error: "Game not found" }, status: :not_found
     end
 
-    if @game.memberships.exists?(user: current_user)
-      render json: { message: "Membership already exists" }, status: :ok
-    else
-      membership = @game.memberships.new(user: current_user)
+    @server = @game.server
 
-      if membership.save
-        render json: { message: "Membership ensured" }, status: :ok
-      else
-        render json: { error: "Unable to create membership: #{membership.errors.full_messages.join(', ')}" }, status: :unprocessable_entity
-      end
+    # Ensure membership for both the game and the server
+    membership = Membership.find_or_initialize_by(user: current_user, game: @game, server: @server)
+
+    if membership.new_record? && membership.save
+      render json: { message: "Membership ensured for game and server" }, status: :ok
+    elsif membership.persisted?
+      render json: { message: "Membership already exists for game and server" }, status: :ok
+    else
+      render json: { error: "Unable to create membership: #{membership.errors.full_messages.join(', ')}" }, status: :unprocessable_entity
     end
   end
 
