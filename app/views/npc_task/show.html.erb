@@ -1,0 +1,26 @@
+<%= stylesheet_link_tag 'npc_task', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+
+<div class="Inventory">
+  <div class="top-navigation">
+    <%= button_to "Return", shop_index_path, class: "btn return-btn", method: :get %>
+  </div>
+</div>
+
+<div class="npc-task-container">
+  <div class="npc-photo">
+    <img src="<%= asset_path('npc1.png') %>" alt="NPC Photo">
+  </div>
+  <div class="npc-riddle">
+    <h3>Riddle:</h3>
+    <p>This is a placeholder There will by dynamic questions asked here.</p>
+  </div>
+</div>
+
+<div class="npc-response-container">
+  <form class="npc-response-form" action="#" method="POST">
+    <label for="user-response" class="response-label">Your Answer:</label>
+    <textarea id="user-response" class="response-textarea" placeholder="Type your answer here..."></textarea>
+    <button type="submit" class="response-submit">Submit</button>
+  </form>
+</div>
