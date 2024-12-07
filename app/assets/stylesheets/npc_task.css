@@ -40,6 +40,24 @@
 
 .chat-history p {
     margin: 5px 0;
+    padding: 10px;
+    border-radius: 8px;
+
+    word-wrap: break-word;
+}
+
+.npc-message {
+    background-color: #f1f1f1; /* Light gray background for NPC messages */
+    color: #333;
+    text-align: left; /* Align to the left */
+    margin-right: auto; /* Push to the left */
+}
+
+.user-message {
+    background-color: #d4edda; /* Light green background for user messages */
+    color: #155724;
+    text-align: right; /* Align to the right */
+    margin-left: auto; /* Push to the right */
 }
 
 .npc-response-form {
