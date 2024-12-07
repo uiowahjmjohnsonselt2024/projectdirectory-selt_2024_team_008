@@ -1,10 +1,13 @@
 <%= stylesheet_link_tag 'npc_task', media: 'all', 'data-turbolinks-track': 'reload' %>
 
 
-<div class="Inventory">
-  <div class="top-navigation">
-    <%= button_to "Return", shop_index_path, class: "btn return-btn", method: :get %>
+
+<div class="top-navigation">
+  <%= button_to "Return", main_menu_path, class: "btn return-btn", method: :get %>
+  <div class="shard-balance-display">
+    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
   </div>
+  <%= button_to "Temp", buy_shards_shard_accounts_path, class: "btn add-funds-btn", method: :get %>
 </div>
 
 <div class="npc-task-container">
