@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   resources :games, only: [:create, :show, :index] do
     resources :memberships, only: [:create, :destroy], defaults: { format: :json }
     member do
+      get :game_state, defaults: { format: :json }
       post :ensure_membership, defaults: { format: :json }
     end
   end
