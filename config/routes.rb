@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   end
 
   # Game routes
-  resources :games, only: [:create, :show, :index]
+  resources :games, only: [:create, :index, :show]
 
   resources :shard_accounts, only: [] do
     collection do
@@ -59,7 +59,10 @@ Rails.application.routes.draw do
     end
   end
 
+
   get 'inventory', to: 'inventory#show', as: 'inventory'
+
+  get 'instructions', to: 'instructions#show', as: 'instructions'
 
   get 'pause_menu', to: 'pause_menu#index', as: 'pause_menu'
   # Catch-all route for unknown paths
