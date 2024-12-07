@@ -42,7 +42,7 @@ class GameLogicChannel < ApplicationCable::Channel
       if distance > 1
         cost = calculate_shard_cost(distance)
         if current_user.shard_account.balance < cost
-          transmit({ type: 'error', message: "Insufficient shards to move #{distance} tiles." })
+          transmit({ type: 'balanceError', message: "Insufficient shards to move #{distance} tiles." })
           return
         end
 
