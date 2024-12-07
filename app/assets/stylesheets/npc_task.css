@@ -1,6 +1,6 @@
 .npc-task-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     padding: 20px;
 }
@@ -15,67 +15,58 @@
     height: auto;
 }
 
-.npc-riddle {
-    flex: 0 0 60%;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    color: #333;
-}
-
-.npc-response-container {
-    margin-top: 20px;
+.npc-chat-container {
+    flex: 0 0 65%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+    height: 500px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.chat-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.chat-history p {
+    margin: 5px 0;
 }
 
 .npc-response-form {
-    width: 100%;
-    max-width: 600px;
     display: flex;
-    flex-direction: column;
     gap: 10px;
-    text-align: left;
-}
-
-.response-label {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 5px;
+    align-items: center;
 }
 
 .response-textarea {
-    width: 100%;
-    height: 100px;
+    flex-grow: 1;
+    height: 50px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
     resize: none;
 }
 
-.response-textarea:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
-}
-
 .response-submit {
-    width: 150px;
-    padding: 10px;
+    padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
     color: #fff;
     background-color: #28a745;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
-    align-self: center;
     transition: background-color 0.3s ease;
 }
 

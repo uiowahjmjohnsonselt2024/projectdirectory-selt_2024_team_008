@@ -11,16 +11,16 @@
   <div class="npc-photo">
     <img src="<%= asset_path('npc1.png') %>" alt="NPC Photo">
   </div>
-  <div class="npc-riddle">
-    <h3>Riddle:</h3>
-    <p>This is a placeholder There will by dynamic questions asked here.</p>
-  </div>
-</div>
 
-<div class="npc-response-container">
-  <form class="npc-response-form" action="#" method="POST">
-    <label for="user-response" class="response-label">Your Answer:</label>
-    <textarea id="user-response" class="response-textarea" placeholder="Type your answer here..."></textarea>
-    <button type="submit" class="response-submit">Submit</button>
-  </form>
+  <div class="npc-chat-container">
+    <div class="chat-history" id="chat-history">
+      <!-- Placeholder chat messages -->
+      <p><strong>NPC:</strong> Welcome, adventurer! Solve this riddle.</p>
+    </div>
+
+    <form class="npc-response-form" id="npc-response-form" action="#" method="POST">
+      <textarea id="user-response" class="response-textarea" placeholder="Type your answer here..."></textarea>
+      <button type="submit" class="response-submit">Send</button>
+    </form>
+  </div>
 </div>
