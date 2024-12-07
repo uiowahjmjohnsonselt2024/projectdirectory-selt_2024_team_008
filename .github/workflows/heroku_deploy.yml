@@ -13,24 +13,73 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Set up Heroku CLI
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.2'
+          bundler-cache: true
+
+      - name: Install Bundler
+        run: gem install bundler -v '2.4.10'
+
+      - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
 
-      - name: Authenticate with Heroku
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Set up Heroku Authentication
         run: |
           echo "machine git.heroku.com" > ~/.netrc
           echo "  login heroku" >> ~/.netrc
           echo "  password $HEROKU_API_KEY" >> ~/.netrc
           chmod 600 ~/.netrc
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
-      - name: Set Git User Info
+      - name: Add Heroku Git Remote
         run: |
-          git config --global user.email "${{ secrets.HEROKU_EMAIL }}"
-          git config --global user.name "GitHub Actions"
+          git remote remove heroku || true
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+
+      - name: Clear Old Assets
+        run: |
+          DATABASE_URL=postgresql://localhost:5432/dummy RAILS_ENV=production RAILS_GROUPS=assets SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} bin/rails assets:clobber
+        env:
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+
+      - name: Precompile Assets
+        run: |
+          DATABASE_URL=postgresql://localhost:5432/dummy RAILS_ENV=production RAILS_GROUPS=assets SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} bin/rails assets:precompile --trace
+        env:
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+
+      - name: Commit Precompiled Assets
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "GitHub Actions"
+          git add public/assets || true
+          git diff --cached --quiet || git commit -m "GitHub Action: Precompiled assets for deployment"
+
+      - name: Push Precompiled Assets to GitHub
+        run: |
+          git remote set-url origin git@github.com:${{ github.repository }}.git
+          git push origin main --force
 
       - name: Deploy to Heroku
-        run: |
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-          git push heroku main --force
+        run: git push heroku main --force
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Run Database Migrations
+        run: heroku run rails db:migrate --app ${{ secrets.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
