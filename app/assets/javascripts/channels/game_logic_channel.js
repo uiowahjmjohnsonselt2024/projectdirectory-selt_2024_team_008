@@ -63,6 +63,32 @@ const initializeGameLogicChannel = async () => {
                 disconnected() {
                     console.log(`Disconnected from GameLogicChannel`);
                 },
+                makeMove(x, y) {
+                    const distance = calculateDistance(lastPosition, { x, y })
+                    const shardCost = calculateShardCost(distance);
+                    const currentShardBalance = document.querySelector('.shard-balance-display p');
+
+                    if (distance === Infinity) {
+                        alert("Invalid move! You can only move vertically or horizontally.");
+                        return;
+                    }
+
+                    if (distance > 1) {
+                        if (shardCost > currentShardBalance) { // Add a check for insufficient shards
+                            alert("Insufficient shards to make this move!");
+                            triggerShardBalanceShake(); // Trigger the shake effect
+                            return;
+                        }
+                        const confirmMove = confirm(
+                            `Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`
+                        );
+                        if (!confirmMove) return;
+                    }
+
+                    this.perform("make_move", { x: x, y: y, user_id: userId });
+                },
+
+                // Client-side method to make a move
                 received(data) {
                     // Handle received data
                     console.log(`data.type: ${data.type}`)
@@ -78,31 +104,15 @@ const initializeGameLogicChannel = async () => {
                         }
 
                         console.log(`User ${data.user_id} moved to (${data.x}, ${data.y})`);
+
                     } else if (data.type === "balance_update" && data.user_id === parseInt(userId)) {
                         updateShardBalance(data.balance);
+                    } else if (data.type === "balanceError") {
+                        console.log("balanceError detected, calling triggerShardBalanceShake()");
+                        triggerShardBalanceShake();
                     } else if (data.error) {
                         alert(data.error); // Display error messages
                     }
-                },
-
-                // Client-side method to make a move
-                makeMove(x, y) {
-                    const distance = calculateDistance(lastPosition, { x, y })
-
-                    if (distance === Infinity) {
-                        alert("Invalid move! You can only move vertically or horizontally.");
-                        return;
-                    }
-
-                    if (distance > 1) {
-                        const shardCost = calculateShardCost(distance);
-                        const confirmMove = confirm(
-                            `Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`
-                        );
-                        if (!confirmMove) return;
-                    }
-
-                    this.perform("make_move", { x: x, y: y, user_id: userId });
                 },
             }
         );
@@ -195,6 +205,17 @@ const updateGrid = (grid = [], visited = {}) => {
             }
         });
     });
+};
+
+// Trigger the shake effect on shard balance display
+const triggerShardBalanceShake = () => {
+    const balanceDisplay = document.querySelector('.shard-balance-display');
+    if (balanceDisplay) {
+        balanceDisplay.classList.add('shake');
+        setTimeout(() => {
+            balanceDisplay.classList.remove('shake');
+        }, 500); // Duration of the shake animation
+    }
 };
 
 document.addEventListener("turbolinks:load", initializeGameLogicChannel);
