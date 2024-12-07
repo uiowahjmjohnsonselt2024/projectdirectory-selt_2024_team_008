@@ -6,16 +6,20 @@ RSpec.describe NpcTaskController, type: :controller do
   let!(:user) do
     user = User.create!(username: 'test_user', email: 'test@example.com', password: 'password')
     ShardAccount.create!(user: user, balance: 0) # Initialize with 0 shards
+    puts "ShardAccount Balance: #{user.shard_account&.balance}"
     user
   end
+
+
   let(:shard_account) { user.shard_account }
   let(:mock_openai_client) { instance_double(OpenAI::Client) }
 
   before do
     sign_in user
+    allow(controller).to receive(:current_user).and_return(user)
+    allow(user).to receive(:shard_account).and_return(shard_account)
     allow(OpenAI::Client).to receive(:new).and_return(mock_openai_client)
   end
-
   describe "POST #chat" do
     context "when a valid message is sent" do
       it "returns a valid NPC response" do
@@ -67,16 +71,19 @@ RSpec.describe NpcTaskController, type: :controller do
 
     context "when the user's answer is correct" do
       it "awards 50 shards to the user" do
+        # Simulate OpenAI response indicating the answer is correct
         allow(mock_openai_client).to receive(:chat).and_return({
                                                                  'choices' => [
                                                                    { 'message' => { 'content' => 'Correct!' } }
                                                                  ]
                                                                })
 
+        # Send a valid message
         post :chat, params: { message: "A piano" }, as: :json
 
+        # Reload the shard account to check the updated balance
         expect(response).to have_http_status(:success)
-        expect(shard_account.reload.balance).to eq(50)
+        expect(user.shard_account.reload.balance).to eq(50)
       end
     end
 
