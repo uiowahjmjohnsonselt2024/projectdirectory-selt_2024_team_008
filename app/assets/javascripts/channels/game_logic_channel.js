@@ -106,7 +106,9 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
         case "tile_updates":
             // Update only the specific tile when a tile update is received
             if (data.updates) {
-                data.updates.forEach(update => updateTile(update.x, update.y, update.username, update.color));
+                requestAnimationFrame(() => {
+                    data.updates.forEach(update => updateTile(update.x, update.y, update.username, update.color));
+                });
             }
             break;
         case "balance_update":
@@ -238,6 +240,7 @@ const updateTile = (x, y, username, color) => {
         // Update the tile with the user's username and color class
         cell.innerHTML = `<span>${username}</span>`;
         cell.className = `grid-cell ${color} occupied`;
+        console.log(`Updated tile at (${x}, ${y}) with username=${username}, color=${color}`);
     } else {
         console.warn(`Tile at (${x}, ${y}) not found.`);
     }
