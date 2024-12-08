@@ -91,3 +91,8 @@
 .response-submit:hover {
     background-color: #218838;
 }
+
+.hidden {
+    display: none;
+}
+
