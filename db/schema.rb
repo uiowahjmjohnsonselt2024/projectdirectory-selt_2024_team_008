@@ -22,8 +22,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_07_014131) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "grid"
-    t.index ["creator_id"], name: "index_games_on_creator_id"
-    t.index ["server_id"], name: "index_games_on_server_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -72,8 +70,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_07_014131) do
     t.string "original_creator_username"
     t.string "original_creator_email"
     t.integer "original_creator_id"
-    t.index ["creator_id"], name: "index_servers_on_creator_id"
-    t.index ["game_id"], name: "index_servers_on_game_id"
   end
 
   create_table "shard_accounts", force: :cascade do |t|
@@ -118,21 +114,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_07_014131) do
     t.string "username"
     t.datetime "last_seen_at"
     t.string "role", default: "user"
+    t.string "provider"
+    t.string "uid"
     t.index "LOWER(username)", name: "index_users_on_lower_username", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "games", "servers"
+  add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
-  add_foreign_key "memberships", "servers"
   add_foreign_key "memberships", "servers", on_delete: :cascade
-  add_foreign_key "memberships", "users"
-  add_foreign_key "messages", "servers"
+  add_foreign_key "memberships", "users", on_delete: :cascade
   add_foreign_key "messages", "servers", on_delete: :cascade
-  add_foreign_key "messages", "users"
-  add_foreign_key "servers", "games"
-  add_foreign_key "servers", "users", column: "creator_id"
+  add_foreign_key "messages", "users", on_delete: :cascade
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
   add_foreign_key "user_items", "items"
