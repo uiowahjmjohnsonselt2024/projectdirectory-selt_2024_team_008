@@ -4,6 +4,8 @@ class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_game, only: [:show, :game_state, :ensure_membership]
 
+  respond_to :html, :json
+
   def index
     @games = Game.includes(:server).all # Preload associated servers for faster queries
   end
@@ -49,7 +51,10 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])  # Find the game by ID
     @server = @game.server          # Fetch the associated server
   rescue ActiveRecord::RecordNotFound
-    redirect_to root_path, alert: "Game not found."
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: "Game not found." }
+      format.json { render json: { error: "Game not found" }, status: :not_found }
+    end
   end
 
   def game_state
@@ -97,7 +102,10 @@ class GamesController < ApplicationController
   def set_game
     @game = Game.find_by(id: params[:id])
     unless @game
-      render json: { error: "Game not found" }, status: :not_found
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: "Game not found." }
+        format.json { render json: { error: "Game not found" }, status: :not_found }
+      end
     end
   end
 
