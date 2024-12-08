@@ -37,9 +37,11 @@ jobs:
       - name: Run RSpec tests
         env:
           CURRENCY_CONVERSION_API_KEY: ${{ secrets.CURRENCY_CONVERSION_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: bundle exec rspec
 
       - name: Run Cucumber tests
         env:
           CURRENCY_CONVERSION_API_KEY: ${{ secrets.CURRENCY_CONVERSION_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: bundle exec cucumber
