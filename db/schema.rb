@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_07_014131) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_08_011405) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -22,6 +22,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_07_014131) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "grid"
+    t.json "user_colors", default: {}
+    t.index ["creator_id"], name: "index_games_on_creator_id"
+    t.index ["server_id"], name: "index_games_on_server_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -38,7 +41,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_07_014131) do
     t.integer "server_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "game_id"
+    t.index ["game_id"], name: "index_memberships_on_game_id"
     t.index ["server_id"], name: "index_memberships_on_server_id"
+    t.index ["user_id", "game_id"], name: "index_memberships_on_user_id_and_game_id", unique: true
     t.index ["user_id", "server_id"], name: "index_memberships_on_user_id_and_server_id", unique: true
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
@@ -123,10 +129,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_07_014131) do
 
   add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
+  add_foreign_key "memberships", "games", on_delete: :cascade
   add_foreign_key "memberships", "servers", on_delete: :cascade
-  add_foreign_key "memberships", "users", on_delete: :cascade
+  add_foreign_key "memberships", "users", on_delete: :nullify
   add_foreign_key "messages", "servers", on_delete: :cascade
-  add_foreign_key "messages", "users", on_delete: :cascade
+  add_foreign_key "messages", "users", on_delete: :nullify
+  add_foreign_key "servers", "games", on_delete: :cascade
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
   add_foreign_key "user_items", "items"
