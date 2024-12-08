@@ -10,22 +10,22 @@ document.addEventListener("turbolinks:load", () => {
     }
 
     cells.forEach(cell => {
-        // Remove any existing click listeners
-        const newCell = cell.cloneNode(true);
-        cell.parentNode.replaceChild(newCell, cell);
-
-        // Add new listeners
-        newCell.addEventListener("mouseover", () => {
-            newCell.style.backgroundColor = "#ccc";
+        // Add new listeners without replacing the node
+        cell.addEventListener("mouseover", () => {
+            if (!cell.classList.contains("occupied")) {
+                cell.style.backgroundColor = "#ccc"; // Temporary highlight
+            }
         });
 
-        newCell.addEventListener("mouseout", () => {
-            newCell.style.backgroundColor = "#f0f0f0";
+        cell.addEventListener("mouseout", () => {
+            if (!cell.classList.contains("occupied")) {
+                cell.style.backgroundColor = ""; // Restore background color set by game_logic_channel.js
+            }
         });
 
-        newCell.addEventListener("click", () => {
-            const x = newCell.dataset.x;
-            const y = newCell.dataset.y;
+        cell.addEventListener("click", () => {
+            const x = cell.dataset.x;
+            const y = cell.dataset.y;
             console.log(`Cell clicked at (${x}, ${y})`);
         });
     });

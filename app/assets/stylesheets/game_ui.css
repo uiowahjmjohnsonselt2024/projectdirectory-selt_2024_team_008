@@ -33,15 +33,40 @@
     color: #333; /* Optional: Text color */
 }
 
-.grid-cell.visited {
-    background-color: #3e3c3c !important; /* Light color for visited tiles */
-    color: #888;
-    font-style: italic;
+.tile-color-1 {
+    background-color: #f28b82 !important; /* Light red */
 }
 
-.grid-cell.occupied {
-    background-color: #ffcccb !important; /* Highlight for current position */
+.tile-color-2 {
+    background-color: #fbbc04 !important; /* Light orange */
+}
+
+.tile-color-3 {
+    background-color: #fff475 !important; /* Light yellow */
+}
+
+.tile-color-4 {
+    background-color: #ccff90 !important; /* Light green */
+}
+
+.tile-color-5 {
+    background-color: #a7ffeb !important; /* Light cyan */
+}
+
+.tile-color-6 {
+    background-color: #cbf0f8 !important; /* Light blue */
+}
+
+.grid-cell.visited {
+    /* Light color for visited tiles */
+    /*color: #888;*/
+    font-style: italic;
+    /*background-color: inherit !important;*/
+}
+
+.grid-cell.occupied { /* Highlight for current position */
     font-weight: bold;
+    /*background-color: inherit !important;*/
 }
 
 /* Shake animation */
@@ -62,4 +87,43 @@
 
 .shake {
     animation: shake 0.5s ease-in-out;
+}
+
+#flash-messages {
+    width: 700px;
+    height: 100px;
+    position: fixed; /* Keeps the flash messages visible on scroll */
+    top: 10%; /* Adjust this value to move the messages further down */
+    left: 50%; /* Centers the messages horizontally */
+    transform: translateX(-50%); /* Ensures proper horizontal centering */
+    z-index: -1; /* Ensures the flash messages are above other elements */
+    max-width: 80%; /* Restricts the width */
+    padding: 15px 20px; /* Adds spacing inside the message */
+    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); !* Adds a subtle shadow *!*/
+    text-align: center; /* Centers the text */
+    border-radius: 5px; /* Rounds the corners */
+}
+
+/* Styling for notice messages */
+#flash-messages .notice {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+/* Styling for alert messages */
+#flash-messages .alert {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+/* Styling for the close button */
+#flash-messages button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: inherit;
+    cursor: pointer;
+    margin-left: 15px;
 }
