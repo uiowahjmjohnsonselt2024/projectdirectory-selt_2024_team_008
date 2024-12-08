@@ -15,10 +15,10 @@ class Game < ApplicationRecord
   attribute :grid, :json, default: -> { Array.new(6) { Array.new(6, nil) } }
 
   def update_grid(x, y, username)
-    self.grid.each_with_index do |row, row_index|
+    grid.each_with_index do |row, row_index|
       row.map! { |cell| cell == username ? nil : cell }
     end
-    self.grid[y][x] = username
+    grid[y][x] = username
     save!
   end
 
