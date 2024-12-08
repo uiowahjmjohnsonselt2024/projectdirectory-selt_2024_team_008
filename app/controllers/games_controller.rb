@@ -50,11 +50,6 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])  # Find the game by ID
     @server = @game.server          # Fetch the associated server
-  rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html { redirect_to root_path, alert: "Game not found." }
-      format.json { render json: { error: "Game not found" }, status: :not_found }
-    end
   end
 
   def game_state
@@ -75,10 +70,6 @@ class GamesController < ApplicationController
 
   def ensure_membership
     @game = Game.find_by(id: params[:id])
-
-    unless @game
-      return render json: { error: "Game not found" }, status: :not_found
-    end
 
     @server = @game.server
 
