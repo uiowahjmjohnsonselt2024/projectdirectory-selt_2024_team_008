@@ -149,6 +149,13 @@ const handleMove = (x, y, lastPosition, userId, channel) => {
         if (!confirmMove) return;
     }
 
+    // Check if the target cell is occupied
+    const targetCell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+    if (targetCell && targetCell.classList.contains("occupied")) {
+        showFlashMessage("Invalid move! The target cell is already occupied.", "alert");
+        return;
+    }
+
     // Clear the previous position in the grid
     if (lastPosition.x !== null && lastPosition.y !== null) {
         updateTile(lastPosition.x, lastPosition.y, null); // Clear the previous tile

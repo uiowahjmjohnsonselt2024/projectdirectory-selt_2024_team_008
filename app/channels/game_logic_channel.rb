@@ -47,49 +47,53 @@ class GameLogicChannel < ApplicationCable::Channel
     y = data['y'].to_i
     current_position = find_user_position(game, current_user.username)
 
+    # Validate the move before proceeding
+    unless valid_move?(game, x, y)
+      return # Exit early if the move is invalid
+    end
+
     ActiveRecord::Base.transaction do
-      if valid_move?(game, x, y)
-        # Calculate distance and shard cost
-        distance = calculate_distance(game, x, y)
-        cost = calculate_shard_cost(distance)
 
-        # Check shard balance if move costs shards
-        if distance > 1 && current_user.shard_account.balance < cost
-          transmit({ type: 'balance_error', message: "Insufficient shards to move #{distance} tiles." })
-          return
-        end
-
-        # Deduct shards for multi-tile moves
-        if distance > 1
-          current_user.shard_account.update!(balance: current_user.shard_account.balance - cost)
-        end
-
-        # Prepare updates for the frontend
-        updates = []
-
-        # Clear previous position
-        if current_position
-          old_x, old_y = current_position
-          game.grid[old_y][old_x] = nil
-          updates << { x: old_x, y: old_y, username: nil, color: nil }
-        end
-
-        # Update grid with new position
-        game.update_grid(x, y, current_user.username)
-        updates << { x: x, y: y, username: current_user.username, color: game.user_colors[current_user.username] }
-
-        # Broadcast updates together
-        GameLogicChannel.broadcast_to(
-          game,
-          type: 'tile_updates',
-          updates: updates
-        )
-      else
-        transmit({ type: 'error', message: 'Invalid move' })
-      end
+      # Calculate distance and shard cost
+      distance = calculate_distance(game, x, y)
+      cost = calculate_shard_cost(distance)
 
       Rails.logger.debug("Current position for #{current_user.username}: x: #{x}, y: #{y}")
       Rails.logger.debug("Distance: #{distance}, Cost: #{cost}")
+
+      # Check shard balance if move costs shards
+      if distance > 1 && current_user.shard_account.balance < cost
+        transmit({ type: 'balance_error', message: "Insufficient shards to move #{distance} tiles." })
+        return
+      end
+
+      # Deduct shards for multi-tile moves
+      if distance > 1
+        current_user.shard_account.update!(balance: current_user.shard_account.balance - cost)
+      end
+
+      # Prepare updates for the frontend
+      updates = []
+
+      # Clear previous position
+      if current_position
+        old_x, old_y = current_position
+        game.grid[old_y][old_x] = nil
+        updates << { x: old_x, y: old_y, username: nil, color: nil }
+      end
+
+      # Update grid with new position
+      game.update_grid(x, y, current_user.username)
+      updates << { x: x, y: y, username: current_user.username, color: game.user_colors[current_user.username] }
+
+      # Broadcast updates together
+      GameLogicChannel.broadcast_to(
+        game,
+        type: 'tile_updates',
+        updates: updates
+      )
+
+
     end
   end
 
@@ -109,7 +113,13 @@ class GameLogicChannel < ApplicationCable::Channel
     return false unless valid_horizontal_or_vertical
 
     # Check if the target tile is empty
-    game.grid[target_y][target_x].nil?
+    is_empty = game.grid[target_y][target_x].nil?
+
+    # Log reasons for invalidity
+    unless is_empty
+      Rails.logger.info("Tile (#{target_x}, #{target_y}) is occupied, move is invalid.")
+    end
+    is_empty
   end
 
   def calculate_distance(game, target_x, target_y)
