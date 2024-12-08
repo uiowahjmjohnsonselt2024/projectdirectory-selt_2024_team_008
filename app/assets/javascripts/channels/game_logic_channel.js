@@ -100,12 +100,12 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
     switch (data.type) {
         case "game_state":
             updateGrid(data.grid);
-            if (data.user_id === userId) {
-                lastPosition.x = data.x;
-                lastPosition.y = data.y;
-                console.log(`Last position updated: ${JSON.stringify(lastPosition)}`);
+            break;
+        case "tile_updates":
+            // Update only the specific tile when a tile update is received
+            if (data.updates) {
+                data.updates.forEach(update => updateTile(update.x, update.y, update.username));
             }
-            console.log(`User ${data.user_id} moved to (${data.x}, ${data.y})`);
             break;
         case "balance_update":
             if (data.user_id === userId) {
@@ -147,7 +147,16 @@ const handleMove = (x, y, lastPosition, userId, channel) => {
         if (!confirmMove) return;
     }
 
+    // Clear the previous position in the grid
+    if (lastPosition.x !== null && lastPosition.y !== null) {
+        updateTile(lastPosition.x, lastPosition.y, null); // Clear the previous tile
+    }
+
     channel.perform("make_move", { x, y, user_id: userId });
+
+    // Update the local last position
+    lastPosition.x = x;
+    lastPosition.y = y;
 };
 
 // Attach click listeners to grid cells
@@ -245,6 +254,29 @@ const updateGrid = (grid = [], visited = {}) => {
             }
         });
     });
+};
+
+const updateTile = (x, y, username) => {
+    // Find the target tile based on coordinates
+    const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+
+    // Clear the tile if the username is empty (optional)
+    if (!username && cell) {
+        cell.innerHTML = "";
+        cell.classList.remove("occupied");
+        cell.style.backgroundColor = "";
+        return;
+    }
+
+    // Update the tile with the user's username
+    if (cell) {
+        cell.innerHTML = `<span>${username}</span>`;
+        cell.classList.add("occupied");
+        const color = getUserColor(username);
+        cell.style.backgroundColor = color;
+    } else {
+        console.warn(`Tile at (${x}, ${y}) not found.`);
+    }
 };
 
 // Trigger the shake effect on shard balance display
