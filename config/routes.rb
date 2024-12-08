@@ -73,6 +73,10 @@ Rails.application.routes.draw do
     end
   end
 
+
+
+  post '/npc_task/chat', to: 'npc_task#chat'
+
   get 'npc_task', to: 'npc_task#show', as: 'npc_task'
 
 
