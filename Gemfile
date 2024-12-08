@@ -43,9 +43,14 @@ gem 'sprockets'        # Core asset pipeline library
 gem 'sprockets-rails'  # Manages the asset pipeline in Rails
 
 gem 'devise', '~> 4.9'
+gem 'omniauth-google-oauth2'
+gem "omniauth-rails_csrf_protection"
+
 gem 'dotenv-rails'
 gem 'execjs', '>= 2.9'
 gem 'puma', '~> 6.0'
+
+gem 'ruby-openai'
 
 # Group gems for development and testing
 group :development, :test do

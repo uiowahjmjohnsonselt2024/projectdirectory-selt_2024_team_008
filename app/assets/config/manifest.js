@@ -42,3 +42,5 @@
 
 //=link mysteryBox.png
 //=link redHat.png
+
+//= link npc_task.css
