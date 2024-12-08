@@ -147,4 +147,57 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe ".from_omniauth" do
+    let(:auth_hash) do
+      OmniAuth::AuthHash.new({
+                               provider: 'google_oauth2',
+                               uid: '1234567890',
+                               info: {
+                                 email: 'testuser@example.com'
+                               }
+                             })
+    end
+
+    context "when the user is new" do
+      it "creates a new user with the correct attributes" do
+        user = User.from_omniauth(auth_hash)
+
+        expect(user).to be_persisted
+        expect(user.email).to eq('testuser@example.com')
+        expect(user.provider).to eq('google_oauth2')
+        expect(user.uid).to eq('1234567890')
+        expect(user.username).to eq('testuser')
+      end
+    end
+
+    context "when the user already exists" do
+      let!(:existing_user) { User.create!(email: 'testuser@example.com', provider: 'google_oauth2', uid: '1234567890', password: 'password', username: 'testuser') }
+
+      it "does not create a new user and returns the existing user" do
+        user = User.from_omniauth(auth_hash)
+
+        expect(user).to eq(existing_user)
+        expect(User.count).to eq(1)
+      end
+    end
+
+    context "when the auth hash is missing required fields" do
+      let(:invalid_auth_hash) do
+        OmniAuth::AuthHash.new({
+                                 provider: 'google_oauth2',
+                                 uid: nil,
+                                 info: {
+                                   email: nil
+                                 }
+                               })
+      end
+
+      it "does not create a user when required fields are missing" do
+        expect {
+          User.from_omniauth(invalid_auth_hash)
+        }.not_to change(User, :count)
+      end
+    end
+  end
 end
