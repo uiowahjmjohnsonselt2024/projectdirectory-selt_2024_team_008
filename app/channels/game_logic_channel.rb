@@ -28,7 +28,7 @@ class GameLogicChannel < ApplicationCable::Channel
     stop_all_streams
 
     game = Game.find_by(id: params[:game_id])
-    return unless game && current_user
+    nil unless game && current_user
 
     # Notify all players that a user has left
     # broadcast_system_message("#{current_user.username} has left the game.", game)
@@ -40,46 +40,51 @@ class GameLogicChannel < ApplicationCable::Channel
 
     x = data['x'].to_i
     y = data['y'].to_i
+    current_position = find_user_position(game, current_user.username)
 
-    # Validate and process the move
-    if valid_move?(game, x, y)
-      distance = calculate_distance(game, x, y)
-
-      if distance > 1
+    ActiveRecord::Base.transaction do
+      if valid_move?(game, x, y)
+        # Calculate distance and shard cost
+        distance = calculate_distance(game, x, y)
         cost = calculate_shard_cost(distance)
-        if current_user.shard_account.balance < cost
+
+        # Check shard balance if move costs shards
+        if distance > 1 && current_user.shard_account.balance < cost
           transmit({ type: 'balance_error', message: "Insufficient shards to move #{distance} tiles." })
           return
         end
 
-        # Deduct shards
-        current_user.shard_account.balance -= cost
-        current_user.shard_account.save!
+        # Deduct shards for multi-tile moves
+        if distance > 1
+          current_user.shard_account.update!(balance: current_user.shard_account.balance - cost)
+        end
 
-        # Broadcast updated shard balance
+        # Prepare updates for the frontend
+        updates = []
+
+        # Clear previous position
+        if current_position
+          old_x, old_y = current_position
+          game.grid[old_y][old_x] = nil
+          updates << { x: old_x, y: old_y, username: nil }
+        end
+
+        # Update grid with new position
+        game.update_grid(x, y, current_user.username)
+        updates << { x: x, y: y, username: current_user.username }
+
+        # Broadcast updates together
         GameLogicChannel.broadcast_to(
           game,
-          type: 'balance_update',
-          user_id: current_user.id,
-          balance: current_user.shard_account.balance
+          type: 'tile_updates',
+          updates: updates
         )
+      else
+        transmit({ type: 'error', message: 'Invalid move' })
       end
 
-      # Update the grid using the model method
-      game.update_grid(x, y, current_user.username)
-
-      # Broadcast updated game state
-      GameLogicChannel.broadcast_to(
-        game,
-        type: 'game_state',
-        user_id: current_user.id,
-        username: current_user.username,
-        x: x, # Target x
-        y: y  # Target y
-      )
-    else
-      transmit({ type: 'error', message: 'Invalid move' })
       Rails.logger.debug("Current position for #{current_user.username}: x: #{x}, y: #{y}")
+      Rails.logger.debug("Distance: #{distance}, Cost: #{cost}")
     end
   end
 
@@ -107,6 +112,8 @@ class GameLogicChannel < ApplicationCable::Channel
     return Float::INFINITY unless current_position
 
     current_x, current_y = current_position
+
+    return 0 if current_x == target_x && current_y == target_y
 
     unless valid_move?(game, target_x, target_y)
       raise ArgumentError, "Target coordinates (#{target_x}, #{target_y}) are out of bounds."
