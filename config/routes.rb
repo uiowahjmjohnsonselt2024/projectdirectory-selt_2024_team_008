@@ -11,8 +11,10 @@ Rails.application.routes.draw do
   # Mount ActionCable server
   mount ActionCable.server => '/cable'
 
-  # Devise routes for user authentication
-  devise_for :users
+  # Devise routes for user authentication and omni auth
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
@@ -65,9 +67,27 @@ Rails.application.routes.draw do
     end
   end
 
+
   get 'inventory', to: 'inventory#show', as: 'inventory'
 
+  get 'instructions', to: 'instructions#show', as: 'instructions'
+
   get 'pause_menu', to: 'pause_menu#index', as: 'pause_menu'
+
+
+  resources :npc_task, only: [:create] do
+    member do
+      post :answer_riddle
+    end
+  end
+
+
+
+  post '/npc_task/chat', to: 'npc_task#chat'
+
+  get 'npc_task', to: 'npc_task#show', as: 'npc_task'
+
+
   # Catch-all route for unknown paths
   # match '*unmatched', to: 'errors#redirect_to_main_menu', via: :all, constraints: ->(req) {
   #   req.format.html? &&

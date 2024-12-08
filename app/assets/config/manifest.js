@@ -34,9 +34,14 @@
 //= link welcome.js
 //= link welcome.css
 
+//= link instructions.js
+//= link instructions.css
+
 //= link pause_menu.js
 //= link pause_menu.css
 //= link_directory ../stylesheets/devise .css
 
 //=link mysteryBox.png
 //=link redHat.png
+
+//= link npc_task.css

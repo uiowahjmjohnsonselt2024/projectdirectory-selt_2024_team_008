@@ -10,6 +10,10 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
 
+    env:
+      CURRENCY_CONVERSION_API_KEY: ${{ secrets.CURRENCY_CONVERSION_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -35,11 +39,7 @@ jobs:
           bin/rails db:migrate
 
       - name: Run RSpec tests
-        env:
-          CURRENCY_CONVERSION_API_KEY: ${{ secrets.CURRENCY_CONVERSION_API_KEY }}
         run: bundle exec rspec
 
       - name: Run Cucumber tests
-        env:
-          CURRENCY_CONVERSION_API_KEY: ${{ secrets.CURRENCY_CONVERSION_API_KEY }}
         run: bundle exec cucumber
