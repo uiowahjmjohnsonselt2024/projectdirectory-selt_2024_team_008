@@ -3,7 +3,6 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_game, only: [:show, :game_state, :ensure_membership]
-  before_action :ensure_membership, only: [:game_state]
 
   def index
     @games = Game.includes(:server).all # Preload associated servers for faster queries
@@ -30,6 +29,14 @@ class GamesController < ApplicationController
       membership.game = @game # Update the game association if needed
       membership.save! if membership.new_record? || membership.changed?
 
+      # Set the creator's initial position on the grid
+      initial_x, initial_y = 0, 0
+      @game.update_grid(initial_x, initial_y, current_user.username)
+
+      # Assign a color to the creator
+      @game.assign_color(current_user.username)
+      @game.save!
+
       redirect_to game_path(@game), notice: "Game successfully created!"
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -52,7 +59,12 @@ class GamesController < ApplicationController
 
     render json: {
       grid: @game.grid,
-      user_position: position
+      user_colors: @game.user_colors, # Include user colors
+      positions: @game.grid.each_with_index.flat_map do |row, y|
+        row.map.with_index do |username, x|
+          { x: x, y: y, username: username, color: @game.user_colors[username] } if username
+        end
+      end.compact
     }, status: :ok
   end
 
@@ -67,6 +79,9 @@ class GamesController < ApplicationController
 
     # Ensure membership for both the game and the server
     membership = Membership.find_or_initialize_by(user: current_user, game: @game, server: @server)
+
+    @game.assign_color(current_user.username) # Assign a color if not already assigned
+    @game.save! # Ensure changes are saved
 
     if membership.new_record? && membership.save
       render json: { message: "Membership ensured for game and server" }, status: :ok

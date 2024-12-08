@@ -8,17 +8,22 @@ class GameLogicChannel < ApplicationCable::Channel
       stop_all_streams
       stream_for game
 
-      # Notify all players that a user has joined
-      # broadcast_system_message("#{current_user.username} has joined the game.", game)
+      # Check if the user is a member of the game
+      membership = Membership.find_or_initialize_by(user: current_user, game: game)
+      membership.save! unless membership.persisted?
+
+      # Assign a color to the user if they don't already have one
+      game.assign_color(current_user.username)
+      game.save!
+
+      # Initialize the user's position if not already set
+      unless game.grid.flatten.include?(current_user.username)
+        # Default to the top-left corner or any other starting position logic
+        game.update_grid(0, 0, current_user.username)
+      end
 
       # Send the current game state to the new subscriber
-      # transmit_game_state(game)
-      # Send the current game state to the new subscriber
-      GameLogicChannel.broadcast_to(
-        game,
-        type: 'game_state',
-        grid: game.grid
-      )
+      transmit_game_state(game)
     else
       reject
     end
@@ -66,12 +71,12 @@ class GameLogicChannel < ApplicationCable::Channel
         if current_position
           old_x, old_y = current_position
           game.grid[old_y][old_x] = nil
-          updates << { x: old_x, y: old_y, username: nil }
+          updates << { x: old_x, y: old_y, username: nil, color: nil }
         end
 
         # Update grid with new position
         game.update_grid(x, y, current_user.username)
-        updates << { x: x, y: y, username: current_user.username }
+        updates << { x: x, y: y, username: current_user.username, color: game.user_colors[current_user.username] }
 
         # Broadcast updates together
         GameLogicChannel.broadcast_to(
@@ -136,7 +141,17 @@ class GameLogicChannel < ApplicationCable::Channel
   end
 
   def transmit_game_state(game)
-    transmit({ type: 'game_state', grid: game.grid })
+    positions = game.grid.each_with_index.flat_map do |row, y|
+      row.each_with_index.map do |username, x|
+        { x: x, y: y, username: username, color: game.user_colors[username] } if username
+      end
+    end.compact
+
+    GameLogicChannel.broadcast_to(
+      game,
+      type: 'game_state',
+      positions: positions
+    )
   end
 
   def broadcast_system_message(message, game)

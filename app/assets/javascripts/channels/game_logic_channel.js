@@ -99,12 +99,14 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
     console.log(`data.type: ${data.type}`);
     switch (data.type) {
         case "game_state":
-            updateGrid(data.grid);
+            if (data.positions) {
+                updateGrid(data.positions)
+            }
             break;
         case "tile_updates":
             // Update only the specific tile when a tile update is received
             if (data.updates) {
-                data.updates.forEach(update => updateTile(update.x, update.y, update.username));
+                data.updates.forEach(update => updateTile(update.x, update.y, update.username, update.color));
             }
             break;
         case "balance_update":
@@ -205,75 +207,30 @@ const updateShardBalance = (newBalance) => {
     }
 };
 
-// Update the grid dynamically
-const updateGrid = (grid = [], visited = {}) => {
-    // Clear all grid cells
-    document.querySelectorAll(".grid-cell").forEach((cell) => {
-        cell.innerHTML = ""; // Clear content
-        cell.classList.remove("occupied");
-        // cell.style.backgroundColor = "";
-    });
-
-    // Update the visited state
-    grid.forEach((row, y) => {
-        row?.forEach((value, x) => {
-            if (value) {
-                // Mark the tile as visited
-                if (!visited[y]) visited[y] = {};
-                visited[y][x] = value; // Track the player who visited this tile
-            }
-        });
-    });
-
-    // Apply the visited styling
-    Object.keys(visited).forEach((y) => {
-        Object.keys(visited[y]).forEach((x) => {
-            const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
-            if (cell) {
-                cell.classList.add("visited"); // Apply visited styling
-                const userId = visited[y][x];
-                const color = getUserColor(userId);
-                console.log(`Setting visited color for cell at (${x}, ${y}) to ${color}`);
-                cell.style.backgroundColor = color; // Set visited colo
-            }
-        });
-    });
-
-    // Update the grid with the current player positions
-    grid.forEach((row, y) => {
-        row?.forEach((value, x) => {
-            if (value) {
-                const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
-                if (cell) {
-                    cell.innerHTML = `<span>${value}</span>`; // Display the player
-                    cell.classList.add("occupied"); // Mark as occupied
-                    const color = getUserColor(value);
-                    console.log(`Setting occupied color for cell at (${x}, ${y}) to ${color}`);
-                    cell.style.backgroundColor = color; // Set player color
-                }
-            }
-        });
+const updateGrid = (positions) => {
+    positions.forEach(pos => {
+        updateTile(pos.x, pos.y, pos.username, pos.color);
     });
 };
 
-const updateTile = (x, y, username) => {
+const updateTile = (x, y, username, color) => {
+    console.log(`updateTile data: x:${x}, y:${y}, username:${username}, color:${color} `)
     // Find the target tile based on coordinates
     const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
 
     // Clear the tile if the username is empty (optional)
-    if (!username && cell) {
-        cell.innerHTML = "";
-        cell.classList.remove("occupied");
-        cell.style.backgroundColor = "";
-        return;
-    }
-
-    // Update the tile with the user's username
     if (cell) {
+        if (!username) {
+            // Clear the tile
+            cell.innerHTML = "";
+            // cell.classList.remove("occupied");
+            cell.className = "grid-cell"; // Reset to default
+            return;
+        }
+
+        // Update the tile with the user's username and color class
         cell.innerHTML = `<span>${username}</span>`;
-        cell.classList.add("occupied");
-        const color = getUserColor(username);
-        cell.style.backgroundColor = color;
+        cell.className = `grid-cell ${color} occupied`;
     } else {
         console.warn(`Tile at (${x}, ${y}) not found.`);
     }
@@ -326,13 +283,14 @@ const fetchGameState = async (gameId) => {
         if (!response.ok) throw new Error(`Failed to fetch game state: ${response.statusText}`);
 
         const jsonData = await response.json();
-        if (jsonData.grid && jsonData.user_position !== undefined) {
-            console.log("Fetched game state:", jsonData.grid, jsonData.user_position);
-            updateGrid(jsonData.grid); // Update the grid UI
-            if (jsonData.user_position) {
-                lastPosition.x = jsonData.user_position[0];
-                lastPosition.y = jsonData.user_position[1];
-            }
+        if (jsonData.positions) {
+            console.log("Fetched game state:", jsonData.positions);
+
+            // updateGrid(jsonData.grid); // Update the grid UI
+
+            // Update the grid with all positions
+            jsonData.positions.forEach(pos => updateTile(pos.x, pos.y, pos.username, pos.color));
+
         } else {
             console.error("Unexpected response from game_state:", jsonData);
         }
@@ -345,7 +303,7 @@ document.addEventListener("turbolinks:load", async () => {
     const gameElement = document.getElementById("game-element");
     if (gameElement) {
         const gameId = gameElement.dataset.gameId;
-        // await fetchGameState(gameId); // Fetch the grid state on page load
+        await fetchGameState(gameId); // Fetch the grid state on page load
         await initializeGameLogicChannel();
     }
 });
