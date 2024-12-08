@@ -75,6 +75,14 @@ class GameLogicChannel < ApplicationCable::Channel
       # Deduct shards for multi-tile moves
       if distance > 1
         current_user.shard_account.update!(balance: current_user.shard_account.balance - cost)
+
+        # Broadcast balance update
+        GameLogicChannel.broadcast_to(
+          game,
+          type: 'balance_update',
+          user_id: current_user.id,
+          balance: current_user.shard_account.balance
+        )
       end
 
       # Prepare updates for the frontend
