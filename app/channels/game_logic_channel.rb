@@ -8,9 +8,13 @@ class GameLogicChannel < ApplicationCable::Channel
       stop_all_streams
       stream_for game
 
-      # Check if the user is a member of the game
-      membership = Membership.find_or_initialize_by(user: current_user, game: game)
-      membership.save! unless membership.persisted?
+      # Ensure a unique membership record for the user
+      begin
+        Membership.find_or_initialize_by(user: current_user, game: game, server: game.server)
+        # Rails.logger.debug "Membership created or found: #{membership.inspect}"
+      rescue ActiveRecord::RecordNotUnique
+        Rails.logger.info("Membership already exists for user #{current_user.id} in game #{game.id}")
+      end
 
       # Assign a color to the user if they don't already have one
       game.assign_color(current_user.username)
@@ -20,6 +24,7 @@ class GameLogicChannel < ApplicationCable::Channel
       unless game.grid.flatten.include?(current_user.username)
         # Default to the top-left corner or any other starting position logic
         game.update_grid(0, 0, current_user.username)
+        game.reload
       end
 
       # Send the current game state to the new subscriber
