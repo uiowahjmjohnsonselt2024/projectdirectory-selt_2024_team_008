@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_07_034619) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_08_011405) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -22,6 +22,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_07_034619) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "grid"
+    t.json "user_colors", default: {}
     t.index ["creator_id"], name: "index_games_on_creator_id"
     t.index ["server_id"], name: "index_games_on_server_id"
   end
