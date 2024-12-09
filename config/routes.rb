@@ -72,7 +72,6 @@ Rails.application.routes.draw do
 
   get 'instructions', to: 'instructions#show', as: 'instructions'
 
-  get 'pause_menu', to: 'pause_menu#index', as: 'pause_menu'
 
 
   resources :npc_task, only: [:create] do
