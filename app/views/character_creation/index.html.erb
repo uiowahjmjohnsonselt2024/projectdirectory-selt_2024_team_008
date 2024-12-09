@@ -55,9 +55,9 @@
 
       </div>
       <div class="equipped-item-box">
-        <p>Accessories</p>
+        <p>Shoes</p>
         <img
-          src="<%= @avatar&.accessories.present? ? asset_path(@avatar.accessories.images) : asset_path('empty_slot.png') %>"
+          src="<%= @avatar&.shoes.present? ? asset_path(@avatar.shoes.images) : asset_path('empty_slot.png') %>"
           alt="Shoes"
           class="equipped-item"
           />
@@ -72,7 +72,10 @@
     <div class="inventory-item">
       <h3><%= user_item.item.item_name %></h3>
       <img src="<%= asset_path(user_item.item.images || 'empty_slot.png') %>" alt="<%= user_item.item.item_name %>" />
-      <p><%= button_to "Equip", "#", class: "btn equip-btn", method: :get %></p>
+      <p>
+        <%= button_to "Equip", equip_item_character_creation_index_path(item_id: user_item.item.id), class: "btn equip-btn", method: :patch %>
+      </p>
+
     </div>
   <% end %>
 </div>
