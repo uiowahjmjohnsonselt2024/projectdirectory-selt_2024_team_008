@@ -24,6 +24,9 @@
           alt="Hat"
           class="equipped-item"
           />
+        <% if @avatar&.hat.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'hat'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
       </div>
       <div class="equipped-item-box">
         <p>Top</p>
@@ -32,6 +35,9 @@
           alt="Top"
           class="equipped-item"
           />
+        <% if @avatar&.top.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'top'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
       </div>
       <div class="equipped-item-box">
         <p>Bottoms</p>
@@ -40,6 +46,10 @@
           alt="Bottoms"
           class="equipped-item"
           />
+        <% if @avatar&.bottoms.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'bottoms'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
+
       </div>
     </div>
     <div class="equipped-column">
@@ -50,6 +60,9 @@
           alt="Accessories"
           class="equipped-item"
           />
+        <% if @avatar&.accessories.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'accessories'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
       </div>
       <div class="equipped-item-box">
 
@@ -61,6 +74,9 @@
           alt="Shoes"
           class="equipped-item"
           />
+        <% if @avatar&.shoes.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'shoes'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
       </div>
     </div>
   </div>

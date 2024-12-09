@@ -7,7 +7,6 @@ class CharacterCreationController < ApplicationController
     avatar = current_user.avatar
     item = Item.find(params[:item_id])
 
-    # Determine which slot to update based on the item's type
     case item.item_type
     when 'hat'
       avatar.update(hat_id: item.id)
@@ -21,7 +20,18 @@ class CharacterCreationController < ApplicationController
       avatar.update(accessories_id: item.id)
     end
 
-    # Redirect to the same page to see the updated avatar
     redirect_to character_creation_path, notice: "#{item.item_name} has been equipped!"
+  end
+
+  def unequip_item
+    avatar = current_user.avatar
+    slot = params[:slot]
+
+    if %w[hat top bottoms shoes accessories].include?(slot)
+      avatar.update("#{slot}_id" => nil)
+      redirect_to character_creation_index_path, notice: "#{slot.capitalize} has been unequipped!"
+    else
+      redirect_to character_creation_index_path, alert: "Invalid slot!"
+    end
   end
 end

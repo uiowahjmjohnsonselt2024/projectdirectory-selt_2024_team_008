@@ -106,3 +106,17 @@
 .equip-btn:hover {
     background-color: #218838;
 }
+
+
+.unequip-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.unequip-btn:hover {
+    background-color: #c0392b;
+}
