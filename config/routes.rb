@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
   root 'welcome#home'
+  get 'welcome', to: 'welcome#home', as: 'welcome'
 
   # match '*unmatched', to: 'errors#handle_invalid_route', via: :all, constraints: ->(req) {
   #   !ShardsOfTheGrid::Application.valid_route?(req.path, req.method) &&
