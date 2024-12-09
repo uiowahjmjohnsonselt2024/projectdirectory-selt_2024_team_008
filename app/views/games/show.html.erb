@@ -7,22 +7,32 @@
   <%= javascript_include_tag "channels/game_logic_channel" %>
 <% end %>
 
+<!-- Title -->
+<!--<div class="title">Playing...</div>-->
+
 <div id="server-id" data-server-id="<%= @server.id %>" data-user-id="<%= current_user.id %>"></div>
+<div id="game-element" data-game-id="<%= @game.id %>" data-user-id="<%= current_user.id %>"></div>
 
 <div class="header">
-
+  <!-- Left-side content -->
   <!-- Right-side content -->
   <div class="chat-room-container">
     <button id="chatRoomButton" class="chat-room-button">Open Chat Room</button>
   </div>
 </div>
 
+<div id="flash-messages"></div>
+
 <div class="game-details">
   <h1>Debug Info:</h1>
   <p>Game: <%= @game.name %></p>
   <p>Status: <%= @game.status %></p>
   <p>Creator id: <%= @game.creator_id %></p>
-  <p>Creator user: <%= @server.original_creator_username %></p>
+  <p>Creator user: <%= @server.original_creator_username%></p>
+  <p>Logged in user: <%= current_user.username %></p>
+  <p>User id: <%= current_user.id %></p>
+
+
 </div>
 
 <div class="game-container">
@@ -32,11 +42,11 @@
       <div class="grid-row">
         <% row.each_with_index do |cell, x| %>
           <div
-            class="grid-cell"
+            class="grid-cell <%= 'occupied' if cell.present? %>"
             data-x="<%= x %>"
             data-y="<%= y %>">
             <% if cell.present? %>
-              <img src="<%= image_path('sprite.png') %>" alt="Player" class="sprite">
+              <span><%= cell %></span>
             <% else %>
               &nbsp;
             <% end %>
@@ -47,15 +57,9 @@
   </div>
 </div>
 
-<!-- Pause Menu Embedded -->
-<div class="pause-button" id="pauseButton" style="display: none;">
-  <div class="pause-button-header">
-    <button class="pause-button-close" id="pauseButtonClose">Close</button>
-  </div>
-  <iframe
-    src="<%= pause_menu_path %>"
-    style="width: 100%; height: 95%; border: 1px solid #111111;">
-  </iframe>
+<!-- Button to Open/Close Chat Room -->
+<div class="chat-room-toggle">
+  <button class="chat-room-button" id="chatRoomToggle">Open Chat Room</button>
 </div>
 
 <!-- Chat Room Embedded -->
@@ -69,4 +73,5 @@
     title="Chat Room for <%= @server.name %>"
     style="width: 100%; height: 95%; border: 1px solid #111111;">
   </iframe>
+</div>
 </div>
