@@ -12,7 +12,7 @@ class Game < ApplicationRecord
   validates :creator_id, presence: true, unless: -> { User.reassigning? }
   validates :server_id, presence: true, unless: -> { User.reassigning? }
 
-  attribute :grid, :json, default: -> { Array.new(6) { Array.new(6, nil) } }
+  attribute :grid, :json, default: -> { Array.new(10) { Array.new(10, nil) } }
   attribute :user_colors, :json, default: -> { {} }
 
   before_create :initialize_user_colors
@@ -46,6 +46,32 @@ class Game < ApplicationRecord
 
   def tile_empty?(x, y)
     grid[y][x].nil?
+  end
+
+  def visible_grid_for_user(username)
+    position = find_user_position(username)
+    return nil unless position
+
+    x, y = position
+    x_range = [(x - 3), 0].max..[(x + 2), 19].min
+    y_range = [(y - 3), 0].max..[(y + 2), 19].min
+
+    grid[y_range].map { |row| row[x_range] }
+  end
+
+  def assign_starting_position(username)
+    Rails.logger.debug "Game users: #{users.pluck(:username)}"
+    Rails.logger.debug "Assigning position for username: #{username}"
+    user_index = users.index(username)
+    starting_positions = [
+      [0, 0], [14, 0], [0, 14], [14, 14]
+    ]
+    position = starting_positions[user_index % starting_positions.length]
+    update_grid(position[0], position[1], username)
+  end
+
+  def expanded_map_view
+    grid
   end
 
   private

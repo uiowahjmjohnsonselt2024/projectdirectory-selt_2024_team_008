@@ -54,13 +54,15 @@ class GamesController < ApplicationController
 
   def game_state
     position = @game.find_user_position(current_user.username)
-    Rails.logger.debug "Game state grid: #{@game.grid.inspect}"
+    visible_grid = @game.visible_grid_for_user(current_user.username)
+    # Rails.logger.debug "Game state grid: #{@game.grid.inspect}"
     Rails.logger.debug "User position: #{position.inspect}"
 
     render json: {
-      grid: @game.grid,
+      visible_grid: visible_grid,
       user_colors: @game.user_colors, # Include user colors
-      positions: @game.grid.each_with_index.flat_map do |row, y|
+      current_position: position,
+      positions: visible_grid.each_with_index.flat_map do |row, y|
         row.map.with_index do |username, x|
           { x: x, y: y, username: username, color: @game.user_colors[username] } if username
         end
