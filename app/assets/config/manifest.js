@@ -45,5 +45,3 @@
 //=link redHat.png
 
 //= link npc_task.css
-
-//= link game_logic.css
