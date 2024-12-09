@@ -15,6 +15,9 @@
 
 <div class="header">
   <!-- Left-side content -->
+  <div class="pause-button-container">
+    <button id="pauseButton" class="pause-button">Open Pause Menu</button>
+  </div>
   <!-- Right-side content -->
   <div class="chat-room-container">
     <button id="chatRoomButton" class="chat-room-button">Open Chat Room</button>
@@ -57,9 +60,16 @@
   </div>
 </div>
 
-<!-- Button to Open/Close Chat Room -->
-<div class="chat-room-toggle">
-  <button class="chat-room-button" id="chatRoomToggle">Open Chat Room</button>
+
+<!-- Pause Menu Embedded -->
+<div class="pause-button" id="pauseButton" style="display: none;">
+  <div class="pause-button-header">
+    <button class="pause-button-close" id="pauseButtonClose">Close</button>
+  </div>
+  <iframe
+    src="<%= pause_menu_path%>"
+    style="width: 100%; height: 95%; border: 1px solid #111111;">
+  </iframe>
 </div>
 
 <!-- Chat Room Embedded -->
@@ -73,5 +83,4 @@
     title="Chat Room for <%= @server.name %>"
     style="width: 100%; height: 95%; border: 1px solid #111111;">
   </iframe>
-</div>
 </div>
