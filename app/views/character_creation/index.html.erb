@@ -6,3 +6,52 @@
     <%= button_to "Go Somewhere", "#", class: "btn add-funds-btn", method: :get %>
   </div>
 </div>
+<div class="character-display">
+  <div class="character-image-box">
+    <img
+      src="<%= @avatar&.avatar_image.present? ? 'data:image/png;base64,' + @avatar.avatar_image_base64 : asset_path('default_avatar.png') %>"
+      alt="Character Avatar"
+      class="character-image"
+      />
+  </div>
+
+  <div class="equipped-items-grid">
+    <div class="equipped-column">
+      <div class="equipped-item-box">
+        <p>Hat</p>
+        <img
+          src="<%= @avatar&.hat.present? ? asset_path(@avatar.hat.images) : asset_path('empty_slot.png') %>"
+          alt="Hat"
+          class="equipped-item"
+          />
+      </div>
+      <div class="equipped-item-box">
+        <p>Top</p>
+        <img
+          src="<%= @avatar&.top.present? ? asset_path(@avatar.top.images) : asset_path('empty_slot.png') %>"
+          alt="Top"
+          class="equipped-item"
+          />
+      </div>
+      <div class="equipped-item-box">
+        <p>Bottoms</p>
+        <img
+          src="<%= @avatar&.bottoms.present? ? asset_path(@avatar.bottoms.images) : asset_path('empty_slot.png') %>"
+          alt="Bottoms"
+          class="equipped-item"
+          />
+      </div>
+    </div>
+    <div class="equipped-column">
+      <div class="equipped-item-box">
+        <p>Accessories</p>
+        <img
+          src="<%= @avatar&.accessories.present? ? asset_path(@avatar.accessories.images) : asset_path('empty_slot.png') %>"
+          alt="Accessories"
+          class="equipped-item"
+          />
+      </div>
+    </div>
+  </div>
+</div>
+
