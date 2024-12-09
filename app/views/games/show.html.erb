@@ -15,9 +15,6 @@
 
 <div class="header">
   <!-- Left-side content -->
-  <div class="logout-container">
-    <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton", class: "logout-button" %>
-  </div>
   <div class="shard-balance-display">
     <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
   </div>
@@ -83,7 +80,7 @@
 <!-- Pause Menu Embedded -->
 <div class="pause-menu" id="pauseMenu" style="display: none;">
   <div class="pause-menu-header">
-    <span>Paused</span>
+    <span>Options</span>
     <button class="pause-menu-close" id="pauseMenuClose">Close</button>
   </div>
   <div class="pause-menu-content">

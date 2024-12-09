@@ -1,3 +1,9 @@
-<div class="logout-container">
-  <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton" %>
-</div>
+<% if controller_name == "games" && action_name == "show" %>
+  <div class="pause-container">
+    <button id="pauseMenuToggle" class="pause-menu-button">Options</button>
+  </div>
+<% else %>
+  <div class="logout-container">
+    <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton", class: "logout-button" %>
+  </div>
+<% end %>
