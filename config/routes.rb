@@ -54,8 +54,11 @@ Rails.application.routes.draw do
       post :buy_item
       get :buy_shards
       post :convert_currency
+      get :has_card # Endpoint to check if a card exists
     end
+    resource :card, only: [:new, :create, :edit, :update, :destroy]
   end
+  resource :card, only: [:new, :create, :edit, :update, :destroy]
 
   resources :shop, only: [:index, :show]
 

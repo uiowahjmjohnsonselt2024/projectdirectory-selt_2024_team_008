@@ -6,14 +6,9 @@ class ShardAccount < ApplicationRecord
 
   # Validations to ensure data integrity
   validates :balance, numericality: { greater_than_or_equal_to: 0 }
+  # we want to be able to check if user has a payment method set up
+  has_one :card, dependent: :destroy
 
-  SHARD_PACKAGES = [
-    { price: 7.50, shards: 10 },
-    { price: 15.00, shards: 20 },
-    { price: 30.00, shards: 40 },
-    { price: 75.00, shards: 100 },
-    { price: 150.00, shards: 200 }
-  ].freeze
   def create
     @balance = 0
   end
@@ -43,8 +38,6 @@ class ShardAccount < ApplicationRecord
   end
 
   protected
-
-  # @CONVERSION_API_KEY
 
   def self.fetch_exchange_rate(currency)
     if ENV['CURRENCY_CONVERSION_API_KEY'].blank?
