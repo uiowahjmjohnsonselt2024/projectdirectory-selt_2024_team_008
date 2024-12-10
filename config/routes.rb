@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
-  root 'welcome#home'
+  root 'tic_tac_toe#index'
 
   # match '*unmatched', to: 'errors#handle_invalid_route', via: :all, constraints: ->(req) {
   #   !ShardsOfTheGrid::Application.valid_route?(req.path, req.method) &&
@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   # Define main_menu with role constraints
   get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
+  get 'tic_tac_toe', to: 'tic_tac_toe#index', as: 'tic_tac_toe'
   # Server routes
   resources :servers, only: [:index, :create, :show] do
     resources :messages, only: [:index, :create]

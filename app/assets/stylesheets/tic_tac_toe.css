@@ -1,0 +1,16 @@
+/* Tic Tac Toe Container */
+.tic-tac-toe-container {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Title */
+.tic-tac-toe-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
