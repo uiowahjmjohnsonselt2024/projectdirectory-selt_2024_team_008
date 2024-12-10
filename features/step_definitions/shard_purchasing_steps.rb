@@ -1,7 +1,7 @@
 # features/step_definitions/shard_purchasing_steps.rb
 
 Given("I am on the shard purchasing page") do
-  visit buy_shards_shard_accounts_path # Replace `shard_purchasing_path` with your actual route helper
+  visit buy_shards_shard_accounts_path
 end
 
 Given('a "Mystery Box" item exists') do
@@ -27,10 +27,6 @@ Then("I should see a currency dropdown with options {string}") do |options|
   dropdown_options.each do |option|
     expect(page).to have_select("currency", with_options: [option])
   end
-end
-
-When("I click the {string} button") do |button_text|
-  click_button(button_text)
 end
 
 When("I enter {string} into the {string} field") do |value, field_label|
@@ -71,3 +67,21 @@ When("I accept the popup message") do
   page.driver.browser.accept_js_confirms
 end
 
+And(/^I do not have a saved payment method$/) do
+  expect(@user.shard_account.card.present?).to eq(false)
+end
+
+Given(/^I have a valid payment method$/) do
+  @user.shard_account.build_card(card_number_encrypted: 'encrypted', expiry_date: '12/25', cvv_encrypted: '111', billing_address: '100 main st')
+  # Validate card before saving
+  if @user.shard_account.card.valid?
+    @user.shard_account.card.save
+    # p @user.shard_account.card # Should show saved card with id
+  else
+    p @user.shard_account.card.errors.full_messages
+  end
+  expect(@user.shard_account.card.save).to eq(true)
+  expect(@user.shard_account.card.present?).to eq(true)
+  # p @user.shard_account.card
+  @user.shard_account.save
+end
