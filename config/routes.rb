@@ -81,11 +81,19 @@ Rails.application.routes.draw do
     end
   end
 
-
-
   post '/npc_task/chat', to: 'npc_task#chat'
 
   get 'npc_task', to: 'npc_task#show', as: 'npc_task'
+
+  resources :math_task, only: [:create] do
+    member do
+      post :answer_math
+    end
+  end
+
+  post '/math_task/chat', to: 'math_task#chat'
+
+  get 'math_task', to: 'math_task#show', as: 'math_task'
 
 
   # Catch-all route for unknown paths

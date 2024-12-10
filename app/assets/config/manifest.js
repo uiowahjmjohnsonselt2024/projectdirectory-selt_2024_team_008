@@ -45,3 +45,4 @@
 //=link redHat.png
 
 //= link npc_task.css
+//= link math_task.css
