@@ -34,6 +34,7 @@ class GamesController < ApplicationController
       # Set the creator's initial position on the grid
       initial_x, initial_y = 0, 0
       @game.update_grid(initial_x, initial_y, current_user.username)
+      @game.purchase_tile(initial_x, initial_y, current_user.username)
 
       # Assign a color to the creator
       @game.assign_color(current_user.username)
@@ -53,19 +54,30 @@ class GamesController < ApplicationController
   end
 
   def game_state
-    position = @game.find_user_position(current_user.username)
-    Rails.logger.debug "Game state grid: #{@game.grid.inspect}"
-    Rails.logger.debug "User position: #{position.inspect}"
+    positions = @game.grid.each_with_index.flat_map do |row, y|
+      row.map.with_index do |tile, x|
+        # Ensure tile keys are symbols or access using string keys
+        owner = tile[:owner] || tile["owner"]
+        occupant = tile[:occupant] || tile["occupant"]
+        color = tile[:color] || tile["color"]
 
-    render json: {
-      grid: @game.grid,
-      user_colors: @game.user_colors, # Include user colors
-      positions: @game.grid.each_with_index.flat_map do |row, y|
-        row.map.with_index do |username, x|
-          { x: x, y: y, username: username, color: @game.user_colors[username] } if username
+        if owner || occupant # Include tiles with owners or occupants
+          {
+            x: x,
+            y: y,
+            owner: owner,
+            occupant: occupant,
+            color: color
+          }
         end
-      end.compact
-    }, status: :ok
+      end
+    end.compact # Remove nil entries
+
+    Rails.logger.debug "Game state grid: #{@game.grid.inspect}"
+    Rails.logger.debug "Generated positions: #{positions.inspect}"
+    Rails.logger.debug "Number of positions sent: #{positions.size}"
+
+    render json: { positions: positions }, status: :ok
   end
 
   def ensure_membership

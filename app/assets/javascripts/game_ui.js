@@ -23,10 +23,10 @@ document.addEventListener("turbolinks:load", () => {
             }
         });
 
-        cell.addEventListener("click", () => {
-            const x = cell.dataset.x;
-            const y = cell.dataset.y;
-            console.log(`Cell clicked at (${x}, ${y})`);
-        });
+        // cell.addEventListener("click", () => {
+        //     const x = cell.dataset.x;
+        //     const y = cell.dataset.y;
+        //     console.log(`Cell clicked at (${x}, ${y})`);
+        // });
     });
 });

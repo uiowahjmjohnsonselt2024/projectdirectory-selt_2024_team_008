@@ -107,7 +107,9 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
             // Update only the specific tile when a tile update is received
             if (data.updates) {
                 requestAnimationFrame(() => {
-                    data.updates.forEach(update => updateTile(update.x, update.y, update.username, update.color));
+                    data.updates.forEach(({ x, y, owner, occupant, color }) => {
+                        updateTile(x, y, owner, occupant, color);
+                    });
                 });
             }
             break;
@@ -130,6 +132,7 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
 
 // Handle move logic
 const handleMove = (x, y, lastPosition, userId, channel) => {
+    console.log("Inside handle move")
     const distance = calculateDistance(lastPosition, { x, y });
 
     if (distance === Infinity) {
@@ -160,7 +163,9 @@ const handleMove = (x, y, lastPosition, userId, channel) => {
 
     // Clear the previous position in the grid
     if (lastPosition.x !== null && lastPosition.y !== null) {
-        updateTile(lastPosition.x, lastPosition.y, null); // Clear the previous tile
+        const previousCell = document.querySelector(`.grid-cell[data-x='${lastPosition.x}'][data-y='${lastPosition.y}']`);
+        const owner = previousCell.dataset.owner; // Assume owner info is stored in a data attribute
+        updateTile(lastPosition.x, lastPosition.y, owner, null, previousCell.className); // Retain owner and color
     }
 
     channel.perform("make_move", { x, y, user_id: userId });
@@ -168,6 +173,8 @@ const handleMove = (x, y, lastPosition, userId, channel) => {
     // Update the local last position
     lastPosition.x = x;
     lastPosition.y = y;
+    console.log(`Last Position: x:${lastPosition.x} y:${lastPosition.y}`)
+    console.log(`New position: ${x}, ${y} `)
 };
 
 // Attach click listeners to grid cells
@@ -176,13 +183,25 @@ const attachGridCellListeners = (lastPosition) => {
         cell.addEventListener("click", () => {
             const x = parseInt(cell.dataset.x, 10);
             const y = parseInt(cell.dataset.y, 10);
+            console.log(`Tile (${x},${y}) clicked`);
 
-            if (lastPosition.x === null || lastPosition.y === null) {
-                lastPosition.x = x;
-                lastPosition.y = y;
+            if (!cell.classList.contains("occupied")) {
+                // Calculate distance and cost
+                const distance = calculateDistance(lastPosition, { x, y });
+                const cost = distance > 1 ? calculateShardCost(distance) + SHARD_COST_PER_TILE : SHARD_COST_PER_TILE;
+                console.log(`Distance: ${distance} Cost: ${cost}`);
+
+                const confirmMessage = `Do you want to purchase this tile? Distance: ${distance} tile(s), Cost: ${cost} Shard(s)`;
+                const confirmPurchase = confirm(confirmMessage);
+
+                if (confirmPurchase) {
+                    // gameLogicSubscription.
+                    gameLogicSubscription.makeMove(x, y);
+                    // gameLogicSubscription.perform("make_move", { x, y });
+                }
+            } else {
+                console.log("Implement later")
             }
-
-            gameLogicSubscription.makeMove(x, y);
         });
     });
 };
@@ -217,32 +236,32 @@ const updateShardBalance = (newBalance) => {
 };
 
 const updateGrid = (positions) => {
-    positions.forEach(pos => {
-        updateTile(pos.x, pos.y, pos.username, pos.color);
+    positions.forEach(({ x, y, owner, occupant, color }) => {
+        if (owner || occupant || color) {
+            updateTile(x, y, owner, occupant, color);
+        }
     });
 };
 
-const updateTile = (x, y, username, color) => {
-    console.log(`updateTile data: x:${x}, y:${y}, username:${username}, color:${color} `)
-    // Find the target tile based on coordinates
+const updateTile = (x, y, owner, occupant, color) => {
+    if (!owner && !occupant && !color) return;
+
+    console.log(`updateTile data: x:${x}, y:${y}, owner:${owner}, occupant:${occupant}, color:${color}`);
     const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+    if (!cell) return;
 
-    // Clear the tile if the username is empty (optional)
-    if (cell) {
-        if (!username) {
-            // Clear the tile
-            cell.innerHTML = "";
-            // cell.classList.remove("occupied");
-            cell.className = "grid-cell"; // Reset to default
-            return;
-        }
+    // Reset the tile's content and classes
+    cell.className = "grid-cell";
+    cell.innerHTML = "";
 
-        // Update the tile with the user's username and color class
-        cell.innerHTML = `<span>${username}</span>`;
-        cell.className = `grid-cell ${color} occupied`;
-        console.log(`Updated tile at (${x}, ${y}) with username=${username}, color=${color}`);
-    } else {
-        console.warn(`Tile at (${x}, ${y}) not found.`);
+    if (color) cell.classList.add(color);
+
+    if (occupant) {
+        cell.innerHTML = `<span class="occupant">${occupant}</span>`;
+        cell.classList.add("occupied");
+    } else if (owner) {
+        // Add owner information only if no occupant
+        cell.innerHTML = `<span>Owned by ${owner}</span>`;
     }
 };
 
@@ -293,16 +312,17 @@ const fetchGameState = async (gameId) => {
         if (!response.ok) throw new Error(`Failed to fetch game state: ${response.statusText}`);
 
         const jsonData = await response.json();
-        if (jsonData.positions) {
-            console.log("Fetched game state:", jsonData.positions);
+        const { positions } = jsonData;
 
-            // updateGrid(jsonData.grid); // Update the grid UI
+        if (Array.isArray(positions) && positions.length > 0) {
+            console.log("Fetched game state:", positions);
 
             // Update the grid with all positions
-            jsonData.positions.forEach(pos => updateTile(pos.x, pos.y, pos.username, pos.color));
-
+            positions.forEach(({ x, y, owner, occupant, color }) => {
+                updateTile(x, y, owner, occupant, color);
+            });
         } else {
-            console.error("Unexpected response from game_state:", jsonData);
+            console.warn("No positions received from game state.");
         }
     } catch (error) {
         console.error("Error fetching game state:", error);
@@ -310,6 +330,12 @@ const fetchGameState = async (gameId) => {
 };
 
 document.addEventListener("turbolinks:load", async () => {
+    document.querySelectorAll(".grid-cell").forEach((cell) => {
+        // Reset cell content and classes
+        cell.className = "grid-cell"; // Reset classes
+        cell.innerHTML = "";         // Clear invalid spans or leftover HTML
+    });
+
     const gameElement = document.getElementById("game-element");
     if (gameElement) {
         const gameId = gameElement.dataset.gameId;
