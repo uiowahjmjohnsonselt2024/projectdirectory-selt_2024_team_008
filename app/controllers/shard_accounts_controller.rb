@@ -1,11 +1,11 @@
 class ShardAccountsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_shard_account, only: [:show, :edit, :update, :destroy]
 
   def new_add_funds
     # This action renders the form for adding funds
   end
 
-  before_action :authenticate_user!
   def convert_currency
     amount = params[:amount].to_i
     currency = params[:currency]
@@ -27,6 +27,10 @@ class ShardAccountsController < ApplicationController
 
 
   def add_funds
+    unless current_user.shard_account.card.present?
+      render json: { success: false, error: 'Please add payment method' }, status: :unprocessable_entity and return
+    end
+
     deposit_amount = params[:amount].to_i
     currency = params[:currency] || 'USD'
 
@@ -41,27 +45,34 @@ class ShardAccountsController < ApplicationController
 
       if shard_account.save
         if request.format.json? || request.headers['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
-          render json: { success: true, new_balance: shard_account.balance }, status: :ok
+          render json: { success: true, new_balance: shard_account.balance }, status: :ok and return
         else
           flash[:success] = "Successfully added #{shards} shards to your account."
-          redirect_to shop_index_path
+          redirect_to shop_index_path and return
         end
       else
         if request.format.json? || request.headers['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
-          render json: { success: false, error: 'Failed to update shard balance.' }, status: :unprocessable_entity
+          render json: { success: false, error: 'Failed to update shard balance.' }, status: :unprocessable_entity and return
         else
           flash[:error] = "Failed to add shards to your account."
-          redirect_to shop_index_path
+          redirect_to shop_index_path and return
         end
       end
     else
       if request.format.json? || request.headers['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
-        render json: { success: false, error: 'Invalid deposit amount.' }, status: :unprocessable_entity
+        render json: { success: false, error: 'Invalid deposit amount.' }, status: :unprocessable_entity and return
       else
         flash[:error] = "Invalid deposit amount."
-        redirect_to shop_index_path
+        redirect_to shop_index_path and return
       end
     end
+  end
+
+
+  def has_card
+    has_card = current_user.shard_account&.card.present?
+    Rails.logger.info "HAS CARD #{has_card}"
+    render json: { has_card: has_card }
   end
 
   def buy_item

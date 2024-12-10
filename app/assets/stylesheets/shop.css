@@ -113,6 +113,10 @@
     box-sizing: border-box;
 }
 
+.center-align {
+    text-align: center;
+}
+
 /* Buttons */
 .return-btn, .add-funds-btn {
     background-color: green;
@@ -231,7 +235,8 @@ h2 {
 }
 
 #convert-button,
-#buy-button {
+#buy-button,
+#add-payment-button {
     width: 100%;
     margin-top: 15px;
     padding: 10px 0;
@@ -241,13 +246,18 @@ h2 {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
     transition: background-color 0.3s;
 }
 
 #convert-button:hover,
-#buy-button:hover {
+#buy-button:hover,
+#add-payment-button:hover {
     background-color: darkgreen;
 }
+
 
 #conversion-result {
     font-size: 1rem;

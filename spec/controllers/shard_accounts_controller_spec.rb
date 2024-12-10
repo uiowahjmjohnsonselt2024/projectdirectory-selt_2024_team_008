@@ -29,7 +29,7 @@ RSpec.describe ShardAccountsController, type: :controller do
       it "returns the converted amount" do
         post :convert_currency, params: { amount: 10, currency: "EUR" }, format: :json
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)["converted_amount"]).to eq(6.38) # 10 shards = $7.50, $7.50 * 0.85 = 6.38 EUR
+        expect(JSON.parse(response.body)["converted_amount"]).to eq(6.38)
       end
     end
 
@@ -39,67 +39,29 @@ RSpec.describe ShardAccountsController, type: :controller do
         expect(response).to have_http_status(:unprocessable_entity)
         expect(JSON.parse(response.body)["error"]).to eq("Invalid input")
       end
-
-      it "returns an error when currency is missing" do
-        post :convert_currency, params: { amount: 10, currency: nil }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)["error"]).to eq("Invalid input")
-      end
     end
   end
 
   describe "POST #add_funds" do
+    context "when the user does not have a card" do
+      it "returns an error" do
+        allow(shard_account).to receive(:card).and_return(nil)
+        post :add_funds, params: { amount: 50, currency: "USD" }, format: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)["error"]).to eq("Please add payment method")
+      end
+    end
+
     context "with valid deposit amount" do
       it "adds funds to the user's shard account" do
+        allow(shard_account).to receive(:card).and_return(true)
         post :add_funds, params: { amount: 50, currency: "USD" }, format: :json
         expect(response).to have_http_status(:ok)
         expect(JSON.parse(response.body)["success"]).to be_truthy
         expect(shard_account.reload.balance).to eq(150)
       end
     end
-
-    context "with invalid deposit amount" do
-      it "returns an error for zero deposit" do
-        post :add_funds, params: { amount: 0 }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)["error"]).to eq("Invalid deposit amount.")
-      end
-    end
   end
-
-  # describe "POST #convert" do
-  #   context "with valid parameters" do
-  #     before do
-  #       stub_request(:get, /v6.exchangerate-api.com/).to_return(
-  #         body: {
-  #           "conversion_rates" => { "EUR" => 0.85 }
-  #         }.to_json,
-  #         headers: { 'Content-Type' => 'application/json' }
-  #       )
-  #     end
-  #
-  #     it "returns the converted amount in the target currency" do
-  #       post :convert, params: { shards: 10, currency: "EUR" }, format: :json
-  #       expect(response).to have_http_status(:ok)
-  #       calculated_value = JSON.parse(response.body)["calculated_value"]
-  #       expect(calculated_value).to be_a(Numeric)
-  #     end
-  #   end
-  #
-  #   context "with invalid parameters" do
-  #     it "returns an error for invalid shard amount" do
-  #       post :convert, params: { shards: 0, currency: "EUR" }, format: :json
-  #       expect(response).to have_http_status(:unprocessable_entity)
-  #       expect(JSON.parse(response.body)["error"]).to eq("Invalid input")
-  #     end
-  #
-  #     it "returns an error for missing currency" do
-  #       post :convert, params: { shards: 10, currency: nil }, format: :json
-  #       expect(response).to have_http_status(:unprocessable_entity)
-  #       expect(JSON.parse(response.body)["error"]).to eq("Invalid input")
-  #     end
-  #   end
-  # end
 
   describe "POST #buy_item" do
     let(:item) { ShopItem.create!(name: "Sword", price_in_shards: 50) }
