@@ -64,7 +64,7 @@ RSpec.describe "GamesController", type: :request do
 
     context "when the game does not exist" do
       it "redirects to root path with an alert" do
-        get game_path(id: 999)
+        get game_path(id: 999, format: :html)
         expect(response).to redirect_to(root_path)
         follow_redirect!
         expect(response.body).to include("Game not found.")

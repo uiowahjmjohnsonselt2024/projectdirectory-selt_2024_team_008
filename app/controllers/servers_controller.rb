@@ -25,26 +25,6 @@ class ServersController < ApplicationController
     @messages = @server.messages.order(:created_at)
   end
 
-  def ensure_membership
-    @server = Server.find_by(id: params[:id])
-
-    unless @server
-      return render json: { error: "Server not found" }, status: :not_found
-    end
-
-    if @server.memberships.exists?(user: current_user)
-      render json: { message: "Membership already exists" }, status: :ok
-    else
-      membership = @server.memberships.new(user: current_user)
-
-      if membership.save
-        render json: { message: "Membership ensured" }, status: :ok
-      else
-        render json: { error: "Unable to create membership: #{membership.errors.full_messages.join(', ')}" }, status: :unprocessable_entity
-      end
-    end
-  end
-
   def update_status
     return render json: { error: 'User not authenticated' }, status: :unauthorized unless user_signed_in?
 

@@ -39,7 +39,13 @@ Rails.application.routes.draw do
   end
 
   # Game routes
-  resources :games, only: [:create, :index, :show]
+  resources :games, only: [:create, :show, :index] do
+    resources :memberships, only: [:create, :destroy], defaults: { format: :json }
+    member do
+      get :game_state, defaults: { format: :json }
+      post :ensure_membership, defaults: { format: :json }
+    end
+  end
 
   resources :shard_accounts, only: [] do
     collection do
@@ -69,7 +75,6 @@ Rails.application.routes.draw do
 
   get 'instructions', to: 'instructions#show', as: 'instructions'
 
-  get 'pause_menu', to: 'pause_menu#index', as: 'pause_menu'
 
 
   resources :npc_task, only: [:create] do

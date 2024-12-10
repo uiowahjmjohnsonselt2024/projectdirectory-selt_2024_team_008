@@ -61,47 +61,6 @@ RSpec.describe "ServersController", type: :request do
     end
   end
 
-  describe "POST /servers/:id/ensure_membership" do
-    it "ensures membership if user is not a member" do
-      new_server = create(:server, creator: create(:user)) # Different creator user
-      expect { post ensure_membership_server_path(new_server) }.to change(Membership, :count).by(1)
-      expect(response).to have_http_status(:ok)
-      expect(json_response["message"]).to eq("Membership ensured")
-      expect(new_server.memberships.exists?(user: user)).to be_truthy
-    end
-
-    it "returns error if server is not found" do
-      post ensure_membership_server_path(id: 999)
-      expect(response).to have_http_status(:not_found)
-      expect(json_response["error"]).to eq("Server not found")
-    end
-
-    it "returns error if unable to create membership" do
-      # Mock save failure and populate errors for Membership
-      allow_any_instance_of(Membership).to receive(:save).and_return(false)
-      allow_any_instance_of(Membership).to receive(:errors).and_return(double(full_messages: ["Test error"]))
-
-      # Mock the `memberships` association on Server
-      allow_any_instance_of(Server).to receive(:add_creator_to_memberships).and_return(nil)
-
-      post ensure_membership_server_path(server)
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(json_response["error"]).to include("Unable to create membership: Test error")
-    end
-
-    it "returns a success message if membership already exists" do
-      # Ensure the user is already a member
-      Membership.find_or_create_by!(user: user, server: server)
-
-      # Make the request
-      post ensure_membership_server_path(server)
-
-      # Assertions
-      expect(response).to have_http_status(:ok)
-      expect(json_response["message"]).to eq("Membership already exists")
-    end
-  end
-
   describe "POST /servers/:id/update_status" do
     context "authenticated user" do
       it "updates status to online and broadcasts" do

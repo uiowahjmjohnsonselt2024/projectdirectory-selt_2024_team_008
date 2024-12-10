@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
+  Rails.application.config.assets.version = '1.0'
+
   # Configure 'rails notes' to inspect Cucumber files
   config.annotations.register_directories('features')
   config.annotations.register_extensions('feature') { |tag| /#\s*(#{tag}):?\s*(.*)$/ }

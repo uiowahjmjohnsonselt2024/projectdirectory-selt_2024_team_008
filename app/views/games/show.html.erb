@@ -1,28 +1,30 @@
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag "game_logic", media: "all" %>
+  <%= stylesheet_link_tag "game_ui", media: "all" %>
 <% end %>
 
 <% content_for :javascripts do %>
-  <%= javascript_include_tag "game_logic" %>
+  <%= javascript_include_tag "game_ui" %>
+  <%= javascript_include_tag "channels/game_logic_channel" %>
 <% end %>
 
 <!-- Title -->
 <!--<div class="title">Playing...</div>-->
 
 <div id="server-id" data-server-id="<%= @server.id %>" data-user-id="<%= current_user.id %>"></div>
+<div id="game-element" data-game-id="<%= @game.id %>" data-user-id="<%= current_user.id %>"></div>
 
 <div class="header">
   <!-- Left-side content -->
-  <div class="logout-container">
-    <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton", class: "logout-button" %>
+  <div class="shard-balance-display">
+    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
   </div>
-
   <!-- Right-side content -->
   <div class="chat-room-container">
     <button id="chatRoomButton" class="chat-room-button">Open Chat Room</button>
   </div>
 </div>
 
+<div id="flash-messages"></div>
 
 <div class="game-details">
   <h1>Debug Info:</h1>
@@ -30,7 +32,8 @@
   <p>Status: <%= @game.status %></p>
   <p>Creator id: <%= @game.creator_id %></p>
   <p>Creator user: <%= @server.original_creator_username%></p>
-<!--  <p>Creator user: <%#= @server.original_creator_username%></p>-->
+  <p>Logged in user: <%= current_user.username %></p>
+  <p>User id: <%= current_user.id %></p>
 
 
 </div>
@@ -42,14 +45,12 @@
       <div class="grid-row">
         <% row.each_with_index do |cell, x| %>
           <div
-            class="grid-cell"
+            class="grid-cell <%= 'occupied' if cell.present? %>"
             data-x="<%= x %>"
             data-y="<%= y %>">
             <% if cell.present? %>
-              <!-- Example: Render player or item if the cell is occupied -->
-              <img src="<%= image_path('sprite.png') %>" alt="Player" class="sprite">
+              <span><%= cell %></span>
             <% else %>
-              <!-- Empty cell -->
               &nbsp;
             <% end %>
           </div>
@@ -57,6 +58,7 @@
       </div>
     <% end %>
   </div>
+</div>
 
   <!-- Button to Open/Close Chat Room -->
   <div class="chat-room-toggle">
@@ -74,5 +76,16 @@
       title="Chat Room for <%= @server.name %>"
       style="width: 100%; height: 95%; border: 1px solid #111111;">
     </iframe>
+  </div>
+<!-- Pause Menu Embedded -->
+<div class="pause-menu" id="pauseMenu" style="display: none;">
+  <div class="pause-menu-header">
+    <span>Options</span>
+    <button class="pause-menu-close" id="pauseMenuClose">Close</button>
+  </div>
+  <div class="pause-menu-content">
+    <%= button_to "Inventory", inventory_path, method: :get, class: "button"%>
+    <%= button_to "How To Play", instructions_path, method: :get, class: "button"%>
+    <%= button_to "Exit", games_path, method: :get, class: "button"%>
   </div>
 </div>
