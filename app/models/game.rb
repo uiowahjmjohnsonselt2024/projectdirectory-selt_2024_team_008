@@ -60,7 +60,28 @@ class Game < ApplicationRecord
     tile&.occupant.nil?
   end
 
+  def find_farthest_tile
+    occupied_or_owned_tiles = tiles.where.not(occupant: nil).or(tiles.where.not(owner: nil))
+    if occupied_or_owned_tiles.empty?
+      # If no tiles are occupied or owned, default to the top-left corner
+      return tiles.find_by(x: 0, y: 0)
+    end
+
+    # Calculate distances for all tiles
+    tiles.reject { |tile| tile.occupant.present? || tile.owner.present? }
+         .max_by do |tile|
+      # Compute the minimum distance from this tile to any occupied or owned tile
+      occupied_or_owned_tiles.map do |occupied_tile|
+        distance(tile.x, tile.y, occupied_tile.x, occupied_tile.y)
+      end.min
+    end
+  end
+
   private
+
+  def distance(x1, y1, x2, y2)
+    [(x1 - x2).abs, (y1 - y2).abs].max
+  end
 
   def initialize_user_colors
     self.user_colors ||= {}
