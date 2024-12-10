@@ -1,0 +1,99 @@
+<div class="CharacterCreation">
+  <div class="top-navigation">
+    <%= button_to "Return to Inventory", inventory_path, class: "btn return-btn", method: :get %>
+
+
+    <%= button_to "Go Somewhere", "#", class: "btn add-funds-btn", method: :get %>
+  </div>
+</div>
+
+<div class="character-display">
+  <div class="character-image-box">
+    <img
+      src="<%= @avatar&.avatar_image.present? ? 'data:image/png;base64,' + Base64.strict_encode64(@avatar.avatar_image) : asset_path('defaultAvatar.png') %>"
+      alt="Character Avatar"
+      class="character-image"
+      />
+  </div>
+  <%= button_to "Generate Avatar", generate_avatar_character_creation_index_path, method: :patch, class: "btn generate-avatar-btn" %>
+
+  <div class="equipped-items-grid">
+    <div class="equipped-column">
+      <div class="equipped-item-box">
+        <p>Hat</p>
+        <img
+          src="<%= @avatar&.hat.present? ? asset_path(@avatar.hat.images) : asset_path('empty_slot.png') %>"
+          alt="Hat"
+          class="equipped-item"
+          />
+        <% if @avatar&.hat.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'hat'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
+      </div>
+      <div class="equipped-item-box">
+        <p>Top</p>
+        <img
+          src="<%= @avatar&.top.present? ? asset_path(@avatar.top.images) : asset_path('empty_slot.png') %>"
+          alt="Top"
+          class="equipped-item"
+          />
+        <% if @avatar&.top.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'top'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
+      </div>
+      <div class="equipped-item-box">
+        <p>Bottoms</p>
+        <img
+          src="<%= @avatar&.bottoms.present? ? asset_path(@avatar.bottoms.images) : asset_path('empty_slot.png') %>"
+          alt="Bottoms"
+          class="equipped-item"
+          />
+        <% if @avatar&.bottoms.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'bottoms'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
+
+      </div>
+    </div>
+    <div class="equipped-column">
+      <div class="equipped-item-box">
+        <p>Accessories</p>
+        <img
+          src="<%= @avatar&.accessories.present? ? asset_path(@avatar.accessories.images) : asset_path('empty_slot.png') %>"
+          alt="Accessories"
+          class="equipped-item"
+          />
+        <% if @avatar&.accessories.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'accessories'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
+      </div>
+      <div class="equipped-item-box">
+
+      </div>
+      <div class="equipped-item-box">
+        <p>Shoes</p>
+        <img
+          src="<%= @avatar&.shoes.present? ? asset_path(@avatar.shoes.images) : asset_path('empty_slot.png') %>"
+          alt="Shoes"
+          class="equipped-item"
+          />
+        <% if @avatar&.shoes.present? %>
+          <%= button_to "Unequip", unequip_item_character_creation_index_path(slot: 'shoes'), method: :patch, class: "btn unequip-btn" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="inventory-grid">
+  <% @user_items.each do |user_item| %>
+    <% next if user_item.item.item_name == "Mystery Box" %>
+    <div class="inventory-item">
+      <h3><%= user_item.item.item_name %></h3>
+      <img src="<%= asset_path(user_item.item.images || 'empty_slot.png') %>" alt="<%= user_item.item.item_name %>" />
+      <p>
+        <%= button_to "Equip", equip_item_character_creation_index_path(item_id: user_item.item.id), class: "btn equip-btn", method: :patch %>
+      </p>
+
+    </div>
+  <% end %>
+</div>
