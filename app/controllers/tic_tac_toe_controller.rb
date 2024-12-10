@@ -8,6 +8,7 @@ class TicTacToeController < ApplicationController
 
   end
 
+
   def set_game
     @game = Game.find_by(id: params[:id])
     unless @game
