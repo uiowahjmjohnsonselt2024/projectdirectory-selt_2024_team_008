@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_10_073602) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_10_080408) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -153,7 +153,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_10_073602) do
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
-  add_foreign_key "tiles", "games"
+  add_foreign_key "tiles", "games", on_delete: :cascade
   add_foreign_key "user_items", "items"
   add_foreign_key "user_items", "users"
 end
