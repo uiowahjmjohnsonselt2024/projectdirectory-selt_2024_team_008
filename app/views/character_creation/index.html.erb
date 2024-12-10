@@ -6,14 +6,16 @@
     <%= button_to "Go Somewhere", "#", class: "btn add-funds-btn", method: :get %>
   </div>
 </div>
+
 <div class="character-display">
   <div class="character-image-box">
     <img
-      src="<%= @avatar&.avatar_image.present? ? 'data:image/png;base64,' + @avatar.avatar_image_base64 : asset_path('default_avatar.png') %>"
+      src="<%= @avatar&.avatar_image.present? ? 'data:image/png;base64,' + Base64.strict_encode64(@avatar.avatar_image) : asset_path('defaultAvatar.png') %>"
       alt="Character Avatar"
       class="character-image"
       />
   </div>
+  <%= button_to "Generate Avatar", generate_avatar_character_creation_index_path, method: :patch, class: "btn generate-avatar-btn" %>
 
   <div class="equipped-items-grid">
     <div class="equipped-column">

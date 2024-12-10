@@ -92,6 +92,10 @@ Rails.application.routes.draw do
     patch :unequip_item, on: :collection
   end
 
+  resources :character_creation, only: [:index] do
+    patch :generate_avatar, on: :collection
+  end
+
 
   post '/npc_task/chat', to: 'npc_task#chat'
 
