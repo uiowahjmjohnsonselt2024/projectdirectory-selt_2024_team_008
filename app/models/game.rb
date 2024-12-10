@@ -5,6 +5,7 @@ class Game < ApplicationRecord
 
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
+  has_many :tiles, dependent: :destroy
 
   enum status: { waiting: 0, in_progress: 1, completed: 2 }
 
@@ -12,10 +13,10 @@ class Game < ApplicationRecord
   validates :creator_id, presence: true, unless: -> { User.reassigning? }
   validates :server_id, presence: true, unless: -> { User.reassigning? }
 
-  attribute :grid, :json, default: -> { Array.new(6) { Array.new(6, nil) } }
   attribute :user_colors, :json, default: -> { {} }
 
   before_create :initialize_user_colors
+  after_create :initialize_grid
 
   # Assign a color to a user if they don't already have one
   def assign_color(username)
@@ -29,29 +30,48 @@ class Game < ApplicationRecord
     user_colors[username]
   end
 
-  def update_grid(x, y, username)
-    grid.each_with_index do |row, row_index|
-      row.map! { |cell| cell == username ? nil : cell }
+  # Update a tile's occupant and owner
+  def update_tile(x, y, username)
+    tile = tiles.find_by(x: x, y: y)
+    return unless tile
+
+    ActiveRecord::Base.transaction do
+      # Clear any previous position for the username
+      tiles.where(occupant: username).update_all(occupant: nil)
+
+      # Update the new tile
+      tile.update!(
+        occupant: username,
+        owner: tile.owner || username,
+        color: user_colors[username] || assign_color(username)
+      )
     end
-    grid[y][x] = username
-    save!
   end
 
+  # Find the position of a user on the grid
   def find_user_position(username)
-    position = grid.flatten.index(username)
-    return nil unless position
-
-    [position % grid.first.size, position / grid.first.size]
+    tile = tiles.find_by(occupant: username)
+    tile ? [tile.x, tile.y] : nil
   end
 
+  # Check if a tile is empty
   def tile_empty?(x, y)
-    grid[y][x].nil?
+    tile = tiles.find_by(x: x, y: y)
+    tile&.occupant.nil?
   end
 
   private
 
   def initialize_user_colors
     self.user_colors ||= {}
+  end
+
+  def initialize_grid
+    (0...10).each do |y|
+      (0...10).each do |x|
+        tiles.create!(x: x, y: y, owner: nil, occupant: nil, color: nil)
+      end
+    end
   end
 
 end
