@@ -32,6 +32,13 @@ class User < ApplicationRecord
   after_create :assign_starting_mystery_boxes
   before_destroy :reassign_creator_roles
 
+  has_one :avatar, dependent: :destroy
+  after_create :create_default_avatar
+
+  def create_default_avatar
+    build_avatar.save
+  end
+
   # Override Devise's find_for_database_authentication method
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
