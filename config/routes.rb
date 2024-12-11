@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # Only using this to start, will change later
-  root 'tic_tac_toe#index'
+  root 'welcome#home'
 
   # match '*unmatched', to: 'errors#handle_invalid_route', via: :all, constraints: ->(req) {
   #   !ShardsOfTheGrid::Application.valid_route?(req.path, req.method) &&
@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     member do
       get :game_state, defaults: { format: :json }
       post :ensure_membership, defaults: { format: :json }
+      get 'tic_tac_toe', to: 'tic_tac_toe#index', as: 'tic_tac_toe'
     end
   end
 

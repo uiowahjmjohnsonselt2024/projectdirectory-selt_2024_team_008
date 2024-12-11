@@ -1,10 +1,11 @@
 class TicTacToeController < ApplicationController
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
 
   respond_to :html, :json
   def index
     @shard_balance = current_user.shard_account.balance
   end
+
   def play
     move = params[:move].to_i
     board = params[:board]
@@ -20,6 +21,7 @@ class TicTacToeController < ApplicationController
       if cpu_move_result[:status] != "continue"
         update_shards(cpu_move_result[:status])
       end
+      result = cpu_move_result || result
     end
     render json: {
       board: result[:board],
@@ -38,7 +40,7 @@ class TicTacToeController < ApplicationController
     board[move] = current_turn
     if winner?(board, current_turn)
       status = current_turn == "X" ? "win" : "loss"
-      message = current_turn = "X" ? "YOU WIN! You Just gained 50 Shards." : "YOU LOSE! You Just lost 25 Shards."
+      message = current_turn == "X" ? "YOU WIN! You Just gained 50 Shards." : "YOU LOSE! You Just lost 25 Shards."
     elsif board_full?(board)
       status = "draw"
       message = "It was a draw. Please Press 'Go Back' to try again."
@@ -76,7 +78,7 @@ class TicTacToeController < ApplicationController
   # Determines if the player or the CPU won the game
   def winner?(board, player)
     # List of all winning positions for either the user or the CPU
-    winning_posiitons = [
+    winning_positions = [
       [0,1,2], [3,4,5], [6,7,8],
       [0,3,6], [1,4,7], [2,5,8],
       [0,4,8], [2,4,6]
@@ -84,7 +86,7 @@ class TicTacToeController < ApplicationController
 
 
     # Checks each winning position with the input of the user and CPU after every move.
-    winning_posiitons.each do |player_input|
+    winning_positions.each do |player_input|
       return true if player_input.all? { |i| board[i] == player}
     end
     false
