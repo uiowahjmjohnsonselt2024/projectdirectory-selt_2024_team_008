@@ -6,9 +6,6 @@ class TicTacToeController < ApplicationController
     @shard_balance = current_user.shard_account.balance
   end
 
-
-
-
   def process_game_logic(move, board, current turn)
 
   end
@@ -29,8 +26,8 @@ class TicTacToeController < ApplicationController
 
 
     # Checks each winning position with the input of the user and CPU after every move.
-    winning_posiitons.each do |input|
-      return true if input.all? { |i| board[i] == player}
+    winning_posiitons.each do |player_input|
+      return true if player_input.all? { |i| board[i] == player}
     end
     false
   end
