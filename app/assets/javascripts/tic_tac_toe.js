@@ -4,14 +4,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const turns = { X: "O", O: "X" };
     let currentTurn = "X";
     let board = Array(9).fill(null);
-
+    const messageDisplay = document.querySelector(".game-message");
+    const shardBalanceDisplay = document.querySelector(".shard-balance-display p");
     // Handling cell(and individual square) clicks by user
     boardContainer.addEventListener("click", () => {
         const cell = event.target;
         if (cell.classList.contains("cell") && !cell.textContent) {
             const cellIndex = cell.dataset.index;
-
-            // Update UI optimistically
             cell.textContent = currentTurn;
             board[cellIndex] = currentTurn;
 

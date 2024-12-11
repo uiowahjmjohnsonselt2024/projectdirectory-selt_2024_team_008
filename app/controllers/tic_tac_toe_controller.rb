@@ -6,8 +6,45 @@ class TicTacToeController < ApplicationController
     @shard_balance = current_user.shard_account.balance
   end
 
-  def process_game_logic(move, board, currentTurn)
+  def play
+    move = params[:move].to_i
+    board = params[:board]
+    current_turn = params[:current_turn]
+    board = board.map{ |v| v == "" ? nil : v } # Maps each of the empty spaces with nil or leaves the number how it was originally
 
+    result = process_game_logic(move, board, current_turn)
+
+    if result[:status] != "continue"
+      update_shards(result[:status])
+       render json: {
+        board: result[:board],
+        status: result[:status],
+        message: result[:message],
+        new_shard_balance: current_user.shard_account.balance
+       }
+    else{
+    }
+    end
+    rescue StandardError => e
+      render json: { error: "An error occurred: #{e.message}" }, status: :internal_server_error
+  end
+
+# In this function, if there is a winner, then dispay you won. If loser, then display you lose.
+# If the board is full, then the status would be that there is a draw.
+  def process_game_logic(move, board, current_turn)
+
+    board[move] = current_turn
+    if winner?(board, current_turn)
+      status = current_turn == "X" ? "win" : "loss"
+      message = current_turn = "X" ? "YOU WIN! You Just gained 50 Shards." : "YOU LOSE! You Just lost 25 Shards."
+    elsif board_full?(board)
+      status = "draw"
+      message = "It was a draw. Please Press 'Go Back' to try again."
+    else
+      status = "continue"
+      message = ""
+    end
+    { board: board, status: status, message: message } # Updates the hash
   end
 
   #Checks if the board is filled. If so game will turn out to be a Scratch (as long as nobody won on the last move)
@@ -30,6 +67,14 @@ class TicTacToeController < ApplicationController
       return true if player_input.all? { |i| board[i] == player}
     end
     false
+  end
+
+  def update_shards(status)
+    if status == "win"
+      current_user.shard_account.increment!(:balance, 100)
+    elsif status == "loss"
+      current_user.shard_account.decrement!(:balance, 50)
+    end
   end
 
 end

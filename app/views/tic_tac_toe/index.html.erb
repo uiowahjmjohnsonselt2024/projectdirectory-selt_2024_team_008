@@ -8,6 +8,10 @@
 
 <div class="tic-tac-toe-container">
   <h1>Tic Tac Toe</h1>
+  <div class="shard-balance-display">
+    <p>Shard Balance: <%= @shard_balance %> Shards</p>
+  </div>
+  <div class="game-message"></div>
   <div class="board">
     <% 9.times do |index| %>
       <div class="cell" data-index="<%= index %>"></div>
