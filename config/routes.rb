@@ -78,6 +78,7 @@ Rails.application.routes.draw do
   resources :npc_task, only: [:create] do
     member do
       post :answer_riddle
+      post :wordle_task
     end
   end
 

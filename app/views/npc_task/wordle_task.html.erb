@@ -1,0 +1,28 @@
+<%= stylesheet_link_tag 'wordle_task', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+<div class="top-navigation">
+  <%= button_to "Return", main_menu_path, class: "btn return-btn", method: :get %>
+  <div class="shard-balance-display">
+    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
+  </div>
+  <%= button_to "Add Shards", buy_shards_shard_accounts_path, class: "btn add-funds-btn", method: :get %>
+</div>
+
+<div class="npc-task-container">
+  <div class="npc-photo">
+    <img src="<%= asset_path('npc_wordle.png') %>" alt="NPC Photo">
+  </div>
+
+  <div class="npc-chat-container">
+    <div class="chat-history" id="chat-history">
+      <p><strong>NPC:</strong> Welcome to Wordle! Press "Start" to begin guessing the word.</p>
+    </div>
+
+    <button id="start-interaction" class="btn return-btn">Start Interaction</button>
+
+    <form class="npc-response-form hidden" id="npc-response-form" action="#" method="POST">
+      <textarea id="user-response" class="response-textarea" placeholder="Type your answer here..."></textarea>
+      <button type="submit" class="response-submit">Send</button>
+    </form>
+  </div>
+</div>
