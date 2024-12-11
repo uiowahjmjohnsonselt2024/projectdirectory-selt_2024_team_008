@@ -10,7 +10,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema[7.0].define(version: 2024_12_09_161110) do
   create_table "avatars", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -28,6 +27,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_161110) do
     t.index ["shoes_id"], name: "index_avatars_on_shoes_id"
     t.index ["top_id"], name: "index_avatars_on_top_id"
     t.index ["user_id"], name: "index_avatars_on_user_id"
+  end
 
   create_table "cards", force: :cascade do |t|
     t.integer "shard_account_id", null: false
@@ -156,6 +156,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_161110) do
   add_foreign_key "avatars", "items", column: "shoes_id"
   add_foreign_key "avatars", "items", column: "top_id"
   add_foreign_key "avatars", "users"
+  add_foreign_key "cards", "shard_accounts"
   add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "memberships", "games", on_delete: :cascade
@@ -164,7 +165,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_161110) do
   add_foreign_key "messages", "servers", on_delete: :cascade
   add_foreign_key "messages", "users", on_delete: :nullify
   add_foreign_key "servers", "games", on_delete: :cascade
-  add_foreign_key "cards", "shard_accounts"
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
   add_foreign_key "user_items", "items"
