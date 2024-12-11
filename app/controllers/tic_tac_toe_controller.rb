@@ -6,7 +6,7 @@ class TicTacToeController < ApplicationController
     @shard_balance = current_user.shard_account.balance
   end
 
-  def process_game_logic(move, board, current turn)
+  def process_game_logic(move, board, currentTurn)
 
   end
 
