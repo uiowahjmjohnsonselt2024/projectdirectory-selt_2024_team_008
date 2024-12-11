@@ -15,15 +15,18 @@ class TicTacToeController < ApplicationController
 
     if result[:status] != "continue"
       update_shards(result[:status])
-       render json: {
-        board: result[:board],
-        status: result[:status],
-        message: result[:message],
-        new_shard_balance: current_user.shard_account.balance
-       }
-    else{
-    }
+    else
+      cpu_move_result = cpu_turn(result[:board])
+      if cpu_move_result[:status] != "continue"
+        update_shards(cpu_move_result[:status])
+      end
     end
+    render json: {
+      board: result[:board],
+      status: result[:status],
+      message: result[:message],
+      new_shard_balance: current_user.shard_account.balance
+    }
     rescue StandardError => e
       render json: { error: "An error occurred: #{e.message}" }, status: :internal_server_error
   end
@@ -46,13 +49,32 @@ class TicTacToeController < ApplicationController
     { board: board, status: status, message: message } # Updates the hash
   end
 
+  # Handles the CPU's turn.
+  def cpu_turn(board)
+    empty_indices = board.each_index.select {|i| board[i].nil?}
+    cpu_move = empty_indices.sample # Allows for a random spot to be chosen
+
+    # Since the CPU always will attempt to go last every time, the cpu move will still be nil if nothing happened.
+    if cpu_move.nil?
+      return {board: board, status: "draw", message: "It was a draw. Please Press 'Go Back' to try again."}
+    end
+    board[cpu_move] = "O"
+    if winner?(board, "O")
+      {board: board, status: "loss", message: "YOU LOSE! You Just lost 25 Shards."}
+    elsif board_full?(board)
+      {board:board, status: "draw", message: "It was a draw. Please Press 'Go Back' to try again."}
+    else
+      {board: board, status: "continue", message: ""}
+    end
+  end
+
   #Checks if the board is filled. If so game will turn out to be a Scratch (as long as nobody won on the last move)
   def board_full?(board)
     board.all?
   end
 
+  # Determines if the player or the CPU won the game
   def winner?(board, player)
-
     # List of all winning positions for either the user or the CPU
     winning_posiitons = [
       [0,1,2], [3,4,5], [6,7,8],
@@ -67,7 +89,7 @@ class TicTacToeController < ApplicationController
     end
     false
   end
-
+  # Updates the user's shard count depending on a win or a loss
   def update_shards(status)
     if status == "win"
       current_user.shard_account.increment!(:balance, 50)
