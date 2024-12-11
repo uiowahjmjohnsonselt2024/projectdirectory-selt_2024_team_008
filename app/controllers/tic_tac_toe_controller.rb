@@ -1,11 +1,10 @@
 class TicTacToeController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
 
   respond_to :html, :json
   def index
     @shard_balance = current_user.shard_account.balance
   end
-
   def play
     move = params[:move].to_i
     board = params[:board]
@@ -29,7 +28,7 @@ class TicTacToeController < ApplicationController
       render json: { error: "An error occurred: #{e.message}" }, status: :internal_server_error
   end
 
-# In this function, if there is a winner, then dispay you won. If loser, then display you lose.
+# In this function, if there is a winner, then display you won. If loser, then display you lose.
 # If the board is full, then the status would be that there is a draw.
   def process_game_logic(move, board, current_turn)
 
@@ -71,9 +70,9 @@ class TicTacToeController < ApplicationController
 
   def update_shards(status)
     if status == "win"
-      current_user.shard_account.increment!(:balance, 100)
+      current_user.shard_account.increment!(:balance, 50)
     elsif status == "loss"
-      current_user.shard_account.decrement!(:balance, 50)
+      current_user.shard_account.decrement!(:balance, 25)
     end
   end
 
