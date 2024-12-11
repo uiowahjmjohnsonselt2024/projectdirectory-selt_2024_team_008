@@ -58,6 +58,13 @@ class GameLogicChannel < ApplicationCable::Channel
     x = data['x'].to_i
     y = data['y'].to_i
     current_position = game.find_user_position(current_user.username)
+    distance = calculate_distance(game, x, y)
+
+    if distance.nil?
+      # Trigger an "enter tile" action
+      trigger_tile_action(game, x, y)
+      return
+    end
 
     # Validate the move before proceeding
     unless valid_move?(game, x, y)
@@ -155,7 +162,7 @@ class GameLogicChannel < ApplicationCable::Channel
 
     current_x, current_y = current_position
 
-    return 0 if current_x == target_x && current_y == target_y
+    return nil if current_x == target_x && current_y == target_y
 
     unless valid_move?(game, target_x, target_y)
       raise ArgumentError, "Target coordinates (#{target_x}, #{target_y}) are out of bounds."
@@ -166,8 +173,12 @@ class GameLogicChannel < ApplicationCable::Channel
   end
 
   def calculate_shard_cost(distance)
-    # CAN BE CHANGED: 2 shards per tile beyond the first
-    (distance - 1) * SHARD_COST_PER_TILE
+    # CAN BE CHANGED
+    if distance == nil
+      0
+    else
+      SHARD_COST_PER_TILE * [1, distance.to_i].max
+    end
   end
 
   def transmit_game_state(game)
@@ -187,6 +198,17 @@ class GameLogicChannel < ApplicationCable::Channel
       game,
       type: 'game_state',
       positions: positions
+    )
+  end
+
+  def trigger_tile_action(game, x, y)
+    # Add logic for what happens when a player enters their current tile
+    GameLogicChannel.broadcast_to(
+      game,
+      type: 'tile_action',
+      x: x,
+      y: y,
+      message: "Player has entered the tile at (#{x}, #{y})."
     )
   end
 

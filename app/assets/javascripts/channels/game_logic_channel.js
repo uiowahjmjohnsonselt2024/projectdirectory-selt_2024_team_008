@@ -114,11 +114,16 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
                             update.y,
                             update.username,
                             update.color,
-                            update.owner // Pass the owner to updateTile
+                            update.owner
                         );
                     });
+                    refreshGridCellListeners();
                 });
             }
+            break;
+
+        case "tile_action":
+            handleTileAction(data);
             break;
 
         case "balance_update":
@@ -148,6 +153,15 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
 // Handle move logic
 const handleMove = (x, y, lastPosition, userId, channel) => {
     const distance = calculateDistance(lastPosition, { x, y });
+
+    // Check if the user clicked on the current tile
+    if (lastPosition.x === x && lastPosition.y === y) {
+        console.log("User clicked on their current tile.");
+
+        // Trigger a tile action instead of a move
+        channel.perform("make_move", { x, y, user_id: userId });
+        return;
+    }
 
     if (distance === Infinity) {
         showFlashMessage("Invalid move! You can only move vertically or horizontally.", "alert");
@@ -216,6 +230,22 @@ const handleMove = (x, y, lastPosition, userId, channel) => {
     // Update the local last position
     lastPosition.x = x;
     lastPosition.y = y;
+};
+
+// Handle entering a tile
+const handleTileAction = (data) => {
+    const { x, y, message } = data;
+
+    // Display message or update UI for the tile
+    const tile = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+    if (tile) {
+        tile.classList.add("active-tile");
+
+        // Optionally remove the "active-tile" class after some time
+        setTimeout(() => {
+            tile.classList.remove("active-tile");
+        }, 3000);
+    }
 };
 
 // Attach click listeners to grid cells
@@ -364,9 +394,20 @@ document.addEventListener("turbolinks:load", async () => {
         if (!gameLogicSubscription) await initializeGameLogicChannel();
     }
 });
+
 document.addEventListener("turbolinks:before-visit", () => {
     if (gameLogicSubscription) {
         gameLogicSubscription.unsubscribe();
         gameLogicSubscription = null;
     }
 });
+
+const refreshGridCellListeners = () => {
+    document.querySelectorAll(".grid-cell").forEach((cell) => {
+        cell.addEventListener("click", () => {
+            const x = parseInt(cell.dataset.x, 10);
+            const y = parseInt(cell.dataset.y, 10);
+            gameLogicSubscription.makeMove(x, y);
+        });
+    });
+};

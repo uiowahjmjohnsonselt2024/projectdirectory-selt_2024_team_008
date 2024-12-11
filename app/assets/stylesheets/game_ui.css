@@ -17,6 +17,7 @@
     align-items: center;
     justify-content: center;
     background-color: #f0f0f0;
+    box-sizing: border-box;
 }
 
 .grid-cell img.sprite {
@@ -67,6 +68,11 @@
 .grid-cell.occupied { /* Highlight for current position */
     font-weight: bold;
     /*background-color: inherit !important;*/
+}
+
+.active-tile {
+    border: 3px solid yellow;
+    animation: highlight 0.3s ease-in-out;
 }
 
 /* Shake animation */
