@@ -58,11 +58,9 @@
     background-color: #cbf0f8 !important; /* Light blue */
 }
 
-.grid-cell.visited {
-    /* Light color for visited tiles */
-    /*color: #888;*/
-    font-style: italic;
-    /*background-color: inherit !important;*/
+.grid-cell.owned {
+    border-width: 3px;
+    border-style: solid;
 }
 
 .grid-cell.occupied { /* Highlight for current position */
