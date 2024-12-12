@@ -57,6 +57,7 @@ const initializeGameLogicChannel = async () => {
 
     const gameId = gameElement.dataset.gameId;
     const userId = parseInt(gameElement.dataset.userId, 10);
+    const username = gameElement.dataset.username
 
     try {
         // Ensure membership before subscribing
@@ -82,7 +83,7 @@ const initializeGameLogicChannel = async () => {
                 },
 
                 makeMove(x, y) {
-                    handleMove(x, y, lastPosition, userId, this);
+                    handleMove(x, y, lastPosition, userId, this, username);
                 },
             }
         );
@@ -151,14 +152,31 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
 };
 
 // Handle move logic
-const handleMove = (x, y, lastPosition, userId, channel) => {
-    const distance = calculateDistance(lastPosition, { x, y });
+const handleMove = (x, y, lastPosition, userId, channel, username) => {
+    let distance = calculateDistance(lastPosition, { x, y });
 
-    // Check if the user clicked on the current tile
+    // Prevent duplicate confirmations for the same tile.
+    const activeTiles = document.querySelectorAll('.grid-cell.confirming');
+    const isAlreadyConfirming = Array.from(activeTiles).some(
+        (tile) => parseInt(tile.dataset.x, 10) === x && parseInt(tile.dataset.y, 10) === y
+    );
+
+    if (isAlreadyConfirming) {
+        console.log("Action already in progress for this tile.");
+        return; // Exit to prevent duplicate interactions.
+    }
+
+    // Add 'confirming' class to target tile temporarily.
+    const targetCell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+    if (targetCell) {
+        targetCell.classList.add('confirming');
+        setTimeout(() => targetCell.classList.remove('confirming'), 5000); // 5-sec safety period.
+    }
+
     if (lastPosition.x === x && lastPosition.y === y) {
         console.log("User clicked on their current tile.");
 
-        // Trigger a tile action instead of a move
+        // Trigger a tile action
         channel.perform("make_move", { x, y, user_id: userId });
         return;
     }
@@ -171,65 +189,47 @@ const handleMove = (x, y, lastPosition, userId, channel) => {
     const shardCost = calculateShardCost(distance);
     const currentShardBalance = parseInt(document.querySelector('.shard-balance-display p').textContent.match(/\d+/)[0], 10);
 
-    console.log(`Distance: ${distance} Cost: ${shardCost}`);
-
-    // if (distance >= 1 && shardCost > currentShardBalance) {
-    //     triggerShardBalanceShake();
-    //     showFlashMessage("Insufficient shards to make this move!", "alert");
-    //     return;
-    // }
-
-    // if (distance > 1) {
-    //     const confirmMove = confirm(`Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`);
-    //     if (!confirmMove) return;
-    // }
-
     if (shardCost > currentShardBalance) {
         triggerShardBalanceShake();
         showFlashMessage("Insufficient shards to make this move!", "alert");
         return;
     }
 
-    // Check if the target cell is occupied
-    const targetCell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
-    if (targetCell && targetCell.classList.contains("occupied")) {
-        showFlashMessage("Invalid move! The target cell is already occupied.", "alert");
-        return;
-    }
-
-    if (targetCell && targetCell.textContent.includes("Owned by")) {
-        const owner = targetCell.textContent.replace("Owned by ", "").trim();
-        if (owner !== currentUser.username) {
-            showFlashMessage("Invalid move! You can only move to your owned tiles.", "alert");
-            return;
-        }
-    }
-
-    // Check if the tile is unowned
+    // Confirmation handling for unowned tile:
     if (targetCell && !targetCell.textContent.includes("Owned by")) {
         const confirmOwnership = confirm(
             `This tile is unowned. Claiming it will cost ${shardCost} shards. Do you want to proceed?`
         );
 
         if (!confirmOwnership) return;
-    } else if (targetCell && targetCell.textContent.includes("Owned by")) {
+
+        // Proceed with move.
+        channel.perform("make_move", { x, y, user_id: userId });
+        lastPosition.x = x; // Update last position
+        lastPosition.y = y;
+        return;
+    }
+
+    // Handle movement to owned tiles
+    if (targetCell && targetCell.textContent.includes("Owned by")) {
         const owner = targetCell.textContent.replace("Owned by ", "").trim();
-        if (owner !== currentUser.username) {
-            showFlashMessage("Invalid move! You can only move to tiles you own.", "alert");
+        if (owner === username) {
+            console.log(`Distance: ${distance}`);
+
+            distance -= 1;
+            if (distance > 1) {
+                const confirmMove = confirm(`Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`);
+                if (!confirmMove) return;
+            }
+
+            channel.perform("make_move", {x, y, user_id: userId});
+            lastPosition.x = x; // Update last position
+            lastPosition.y = y;
             return;
         }
+        // Tile is owned by someone else, show an error message.
+        showFlashMessage("Invalid move! You can only move to tiles you own.", "alert");
     }
-
-    // Clear the previous position in the grid
-    if (lastPosition.x !== null && lastPosition.y !== null) {
-        updateTile(lastPosition.x, lastPosition.y, null); // Clear the previous tile
-    }
-
-    channel.perform("make_move", { x, y, user_id: userId });
-
-    // Update the local last position
-    lastPosition.x = x;
-    lastPosition.y = y;
 };
 
 // Handle entering a tile
