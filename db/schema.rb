@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_10_080408) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -102,6 +102,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_10_080408) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image_source"
+    t.string "task_type"
+    t.datetime "task_last_completed"
     t.index ["game_id", "x", "y"], name: "index_tiles_on_game_id_and_x_and_y", unique: true
     t.index ["game_id"], name: "index_tiles_on_game_id"
   end
