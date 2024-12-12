@@ -43,3 +43,6 @@
 //=link redHat.png
 
 //= link npc_task.css
+
+//= link tic_tac_toe.js
+//= link tic_tac_toe.css
