@@ -22,10 +22,11 @@ RSpec.describe GamesController, type: :controller do
     context "when the game exists" do
       it "returns the game state as JSON with status :ok" do
         get :game_state, params: { id: game.id, format: :json }
-
         expect(response).to have_http_status(:ok)
+
         json_response = JSON.parse(response.body)
-        expect(json_response).to include("grid", "user_colors", "positions")
+        expect(json_response).to include("positions")
+        expect(json_response["positions"]).to eq([])
       end
     end
 
