@@ -97,15 +97,16 @@ class GamesController < ApplicationController
 
   def set_game
     @game = Game.find_by(id: params[:id])
-    Rails.logger.debug "Loaded game: #{@game.inspect}"
-    Rails.logger.debug "Loaded tiles: #{@game.tiles.inspect}"
 
     unless @game
       respond_to do |format|
         format.html { redirect_to root_path, alert: "Game not found." }
         format.json { render json: { error: "Game not found" }, status: :not_found }
       end
+      return
     end
+    Rails.logger.debug "Loaded game: #{@game.inspect}"
+    Rails.logger.debug "Loaded tiles: #{@game.tiles.inspect}"
   end
 
   def game_params
