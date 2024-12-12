@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   # Define main_menu with role constraints
   get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
+  get 'tic_tac_toe', to: 'tic_tac_toe#index', as: 'tic_tac_toe'
   # Server routes
   resources :servers, only: [:index, :create, :show] do
     resources :messages, only: [:index, :create]
@@ -45,6 +46,7 @@ Rails.application.routes.draw do
     member do
       get :game_state, defaults: { format: :json }
       post :ensure_membership, defaults: { format: :json }
+      get 'tic_tac_toe', to: 'tic_tac_toe#index', as: 'tic_tac_toe'
     end
   end
 
@@ -81,7 +83,6 @@ Rails.application.routes.draw do
     end
   end
 
-
   get 'character_creation', to: 'character_creation#index'
   resources :character_creation, only: [:index] do
     patch :equip_item, on: :collection
@@ -95,10 +96,19 @@ Rails.application.routes.draw do
     patch :generate_avatar, on: :collection
   end
 
-
   post '/npc_task/chat', to: 'npc_task#chat'
 
   get 'npc_task', to: 'npc_task#show', as: 'npc_task'
+
+  resources :math_task, only: [:create] do
+    member do
+      post :answer_math
+    end
+  end
+
+  post '/math_task/chat', to: 'math_task#chat'
+
+  get 'math_task', to: 'math_task#show', as: 'math_task'
 
 
   # Catch-all route for unknown paths

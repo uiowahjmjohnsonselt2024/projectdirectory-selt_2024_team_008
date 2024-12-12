@@ -1,0 +1,20 @@
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'tic_tac_toe', media: 'all' %>
+<% end %>
+
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'tic_tac_toe' %>
+<% end %>
+
+<div class="tic-tac-toe-container">
+  <h1>Tic Tac Toe</h1>
+  <div class="shard-balance-display">
+    <p>Shard Balance: <%= @shard_balance %> Shards</p>
+  </div>
+  <div class="game-message"></div>
+  <div class="board">
+    <% 9.times do |index| %>
+      <div class="cell" data-index="<%= index %>"></div>
+    <% end %>
+  </div>
+</div>
