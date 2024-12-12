@@ -11,7 +11,11 @@
 <!--<div class="title">Playing...</div>-->
 
 <div id="server-id" data-server-id="<%= @server.id %>" data-user-id="<%= current_user.id %>"></div>
-<div id="game-element" data-game-id="<%= @game.id %>" data-user-id="<%= current_user.id %>"></div>
+<div
+  id="game-element" data-game-id="<%= @game.id %>"
+  data-user-id="<%= current_user.id %>"
+  data-username="<%= current_user.username %>">
+</div>
 
 <div class="header">
   <!-- Left-side content -->
