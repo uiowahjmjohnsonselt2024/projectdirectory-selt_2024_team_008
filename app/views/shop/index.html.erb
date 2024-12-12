@@ -1,9 +1,13 @@
 <div class="top-navigation">
-  <%= button_to "Return to Menu", main_menu_path, class: "btn return-btn", method: :get %>
-  <div class="shard-balance-display">
+  <div class="nav-left">
+    <%= button_to "Return to Menu", main_menu_path, class: "btn return-btn", method: :get %>
+  </div>
+  <div class="nav-center shard-balance-display">
     <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
   </div>
-  <%= button_to "Add Funds", buy_shards_shard_accounts_path, class: "btn add-funds-btn", method: :get %>
+  <div class="nav-right">
+
+  </div>
 </div>
 
 <div class="shop-container">
@@ -12,7 +16,7 @@
     <%= button_to "Go Here For Mystery Boxes", open_mystery_boxes_path, class: "btn add-funds-btn", method: :get %>
   </div>
   <div class="shop-item">
-    <%= button_to "Go Here For Mystery Boxes", open_mystery_boxes_path, class: "btn add-funds-btn", method: :get %>
+    <%= button_to "    Add Funds    ", buy_shards_shard_accounts_path, class: "btn add-funds-btn", method: :get %>
   </div>
 </div>
 

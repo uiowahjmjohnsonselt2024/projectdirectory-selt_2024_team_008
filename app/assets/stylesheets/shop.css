@@ -268,3 +268,27 @@ h2 {
     margin-top: 10px;
     text-align: center;
 }
+
+
+.top-navigation {
+    display: flex;
+    align-items: center;
+}
+
+.nav-left, .nav-center, .nav-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-left {
+    justify-content: flex-start; /* Keep the Return button on the left */
+}
+
+.nav-right {
+    justify-content: flex-end; /* Add Funds button (if present) goes to the right */
+}
+
+.shard-balance-display {
+    text-align: center;
+}
