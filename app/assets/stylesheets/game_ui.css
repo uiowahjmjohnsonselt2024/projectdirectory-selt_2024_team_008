@@ -69,7 +69,7 @@
 }
 
 .active-tile {
-    border: 3px solid yellow;
+    border: 3px solid yellow !important;
     animation: highlight 0.3s ease-in-out;
 }
 
