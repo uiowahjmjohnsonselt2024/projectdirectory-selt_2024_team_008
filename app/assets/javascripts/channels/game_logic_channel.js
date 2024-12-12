@@ -7,13 +7,13 @@ let lastPosition = { x: null, y: null };
 const SHARD_COST_PER_TILE = 2;
 
 const userColors = {};
-const getUserColor = (userId) => {
-    if (!userColors[userId]) {
-        // Generate a unique pastel color for each user
-        const hue = Math.floor(Math.random() * 360);
-        userColors[userId] = `hsl(${hue}, 70%, 80%)`;
-    }
-    return userColors[userId];
+const tileColorMapping = {
+    "tile-color-1": "#f28b82", // Light red
+    "tile-color-2": "#fbbc04", // Light orange
+    "tile-color-3": "#fff475", // Light yellow
+    "tile-color-4": "#ccff90", // Light green
+    "tile-color-5": "#a7ffeb", // Light cyan
+    "tile-color-6": "#cbf0f8", // Light blue
 };
 
 const ensureGameMembership = async (gameId) => {
@@ -186,7 +186,7 @@ const handleMove = (x, y, lastPosition, userId, channel, username) => {
         return;
     }
 
-    const shardCost = calculateShardCost(distance);
+    let shardCost = calculateShardCost(distance);
     const currentShardBalance = parseInt(document.querySelector('.shard-balance-display p').textContent.match(/\d+/)[0], 10);
 
     if (shardCost > currentShardBalance) {
@@ -196,7 +196,7 @@ const handleMove = (x, y, lastPosition, userId, channel, username) => {
     }
 
     // Confirmation handling for unowned tile:
-    if (targetCell && !targetCell.textContent.includes("Owned by")) {
+    if (targetCell && !targetCell.classList.contains(("owned"))) {
         const confirmOwnership = confirm(
             `This tile is unowned. Claiming it will cost ${shardCost} shards. Do you want to proceed?`
         );
@@ -211,16 +211,17 @@ const handleMove = (x, y, lastPosition, userId, channel, username) => {
     }
 
     // Handle movement to owned tiles
-    if (targetCell && targetCell.textContent.includes("Owned by")) {
-        const owner = targetCell.textContent.replace("Owned by ", "").trim();
+    if (targetCell && targetCell.classList.contains("owned")) {
+        const owner = targetCell.dataset.owner;
         if (owner === username) {
             console.log(`Distance: ${distance}`);
 
             distance -= 1;
-            if (distance > 1) {
-                const confirmMove = confirm(`Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`);
-                if (!confirmMove) return;
-            }
+            shardCost -= 2;
+
+            const confirmMove = confirm(`Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`);
+            if (!confirmMove) return;
+
 
             channel.perform("make_move", {x, y, user_id: userId});
             lastPosition.x = x; // Update last position
@@ -310,15 +311,24 @@ const updateTile = (x, y, username, color, owner) => {
     if (cell) {
         if (!username && !owner) {
             cell.className = "grid-cell"; // Reset to default
+            cell.removeAttribute("data-owner");
             cell.innerHTML = "";
+            cell.style.borderColor = "";
             return;
         }
         if (username) {
             cell.innerHTML = `<span>${username}</span>`;
-            cell.className = `grid-cell ${color} occupied`;
-        } else if (owner) {
-            cell.className = `grid-cell ${color}`;
-            cell.innerHTML = `<span>Owned by ${owner}</span>`;
+            cell.className = `grid-cell occupied`;
+            cell.style.borderColor = "";
+        } else {
+            cell.innerHTML = "";
+            cell.classList.remove("occupied");
+        }
+
+        if (owner) {
+        cell.classList.add("owned");
+        cell.dataset.owner = owner;
+        cell.style.borderColor = tileColorMapping[color];
         }
     }
     console.log(`Updated tile at (${x}, ${y}) with username=${username}, color=${color}, owner=${owner}`);
