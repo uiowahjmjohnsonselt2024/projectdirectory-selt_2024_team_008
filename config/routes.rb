@@ -60,6 +60,8 @@ Rails.application.routes.draw do
   end
 
   resources :shop, only: [:index, :show]
+  post 'purchase_mystery_box', to: 'mystery_boxes#purchase', as: :purchase_mystery_box
+
 
   get '/mystery_box', to: 'mystery_boxes#open'
   post 'mystery_boxes/open_box', to: 'mystery_boxes#open_box', as: 'open_mystery_box'
