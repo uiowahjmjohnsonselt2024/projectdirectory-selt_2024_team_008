@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   # Define main_menu with role constraints
   get 'main_menu', to: 'main_menu#index', as: 'main_menu'
 
+  get 'tic_tac_toe', to: 'tic_tac_toe#index', as: 'tic_tac_toe'
   # Server routes
   resources :servers, only: [:index, :create, :show] do
     resources :messages, only: [:index, :create]
@@ -45,6 +46,7 @@ Rails.application.routes.draw do
     member do
       get :game_state, defaults: { format: :json }
       post :ensure_membership, defaults: { format: :json }
+      get 'tic_tac_toe', to: 'tic_tac_toe#index', as: 'tic_tac_toe'
     end
   end
 
