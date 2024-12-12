@@ -11,6 +11,24 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
+  create_table "avatars", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "hat_id"
+    t.integer "top_id"
+    t.integer "bottoms_id"
+    t.integer "shoes_id"
+    t.integer "accessories_id"
+    t.binary "avatar_image"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["accessories_id"], name: "index_avatars_on_accessories_id"
+    t.index ["bottoms_id"], name: "index_avatars_on_bottoms_id"
+    t.index ["hat_id"], name: "index_avatars_on_hat_id"
+    t.index ["shoes_id"], name: "index_avatars_on_shoes_id"
+    t.index ["top_id"], name: "index_avatars_on_top_id"
+    t.index ["user_id"], name: "index_avatars_on_user_id"
+  end
+
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -58,14 +76,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
-  create_table "riddles", force: :cascade do |t|
-    t.string "x"
-    t.string "y"
-    t.string "question"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "servers", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -75,6 +85,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.string "original_creator_username"
     t.string "original_creator_email"
     t.integer "original_creator_id"
+    t.index ["creator_id"], name: "index_servers_on_creator_id"
+    t.index ["game_id"], name: "index_servers_on_game_id"
   end
 
   create_table "shard_accounts", force: :cascade do |t|
@@ -142,6 +154,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "avatars", "items", column: "accessories_id"
+  add_foreign_key "avatars", "items", column: "bottoms_id"
+  add_foreign_key "avatars", "items", column: "hat_id"
+  add_foreign_key "avatars", "items", column: "shoes_id"
+  add_foreign_key "avatars", "items", column: "top_id"
+  add_foreign_key "avatars", "users"
   add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify

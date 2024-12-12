@@ -19,9 +19,6 @@
 
 <div class="header">
   <!-- Left-side content -->
-  <div class="logout-container">
-    <%= link_to "Log out", destroy_user_session_path, method: :delete, id: "logoutButton", class: "logout-button" %>
-  </div>
   <div class="shard-balance-display">
     <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
   </div>
@@ -83,5 +80,16 @@
       title="Chat Room for <%= @server.name %>"
       style="width: 100%; height: 95%; border: 1px solid #111111;">
     </iframe>
+  </div>
+<!-- Pause Menu Embedded -->
+<div class="pause-menu" id="pauseMenu" style="display: none;">
+  <div class="pause-menu-header">
+    <span>Options</span>
+    <button class="pause-menu-close" id="pauseMenuClose">Close</button>
+  </div>
+  <div class="pause-menu-content">
+    <%= button_to "Inventory", inventory_path, method: :get, class: "button"%>
+    <%= button_to "How To Play", instructions_path, method: :get, class: "button"%>
+    <%= button_to "Exit", games_path, method: :get, class: "button"%>
   </div>
 </div>
