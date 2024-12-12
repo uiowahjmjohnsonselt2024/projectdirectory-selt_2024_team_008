@@ -8,6 +8,7 @@
 # end
 
 Rails.application.routes.draw do
+  get 'character_creation/index'
   # Mount ActionCable server
   mount ActionCable.server => '/cable'
 
@@ -72,13 +73,25 @@ Rails.application.routes.draw do
 
   get 'instructions', to: 'instructions#show', as: 'instructions'
 
-  get 'pause_menu', to: 'pause_menu#index', as: 'pause_menu'
 
 
   resources :npc_task, only: [:create] do
     member do
       post :answer_riddle
     end
+  end
+
+  get 'character_creation', to: 'character_creation#index'
+  resources :character_creation, only: [:index] do
+    patch :equip_item, on: :collection
+  end
+  resources :character_creation, only: [:index] do
+    patch :equip_item, on: :collection
+    patch :unequip_item, on: :collection
+  end
+
+  resources :character_creation, only: [:index] do
+    patch :generate_avatar, on: :collection
   end
 
   post '/npc_task/chat', to: 'npc_task#chat'
