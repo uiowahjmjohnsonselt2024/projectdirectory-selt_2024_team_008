@@ -31,13 +31,17 @@ class GamesController < ApplicationController
       membership.game = @game # Update the game association if needed
       membership.save! if membership.new_record? || membership.changed?
 
-      # Set the creator's initial position on the grid
-      initial_x, initial_y = 0, 0
-      @game.update_grid(initial_x, initial_y, current_user.username)
-
-      # Assign a color to the creator
-      @game.assign_color(current_user.username)
-      @game.save!
+      # Assign initial position for the creator
+      initial_tile = @game.tiles.find_by(x: 0, y: 0)
+      if initial_tile && current_user.username.present?
+        initial_tile.update!(
+          owner: current_user.username,
+          occupant: current_user.username,
+          color: @game.assign_color(current_user.username)
+        )
+      else
+        Rails.logger.error "Failed to assign initial tile for the creator"
+      end
 
       redirect_to game_path(@game), notice: "Game successfully created!"
     end
@@ -50,20 +54,21 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])  # Find the game by ID
     @server = @game.server          # Fetch the associated server
+    @grid_rows = @game.tiles.order(:y, :x).group_by(&:y).values
   end
 
   def game_state
-    position = @game.find_user_position(current_user.username)
-    Rails.logger.debug "Game state grid: #{@game.grid.inspect}"
-    Rails.logger.debug "User position: #{position.inspect}"
+    @game.reload
 
     render json: {
-      grid: @game.grid,
-      user_colors: @game.user_colors, # Include user colors
-      positions: @game.grid.each_with_index.flat_map do |row, y|
-        row.map.with_index do |username, x|
-          { x: x, y: y, username: username, color: @game.user_colors[username] } if username
-        end
+      positions: @game.tiles.map do |tile|
+        {
+          x: tile.x,
+          y: tile.y,
+          username: tile.occupant,
+          owner: tile.owner,
+          color: tile.color
+        } if tile.occupant || tile.owner
       end.compact
     }, status: :ok
   end
@@ -92,12 +97,16 @@ class GamesController < ApplicationController
 
   def set_game
     @game = Game.find_by(id: params[:id])
+
     unless @game
       respond_to do |format|
         format.html { redirect_to root_path, alert: "Game not found." }
         format.json { render json: { error: "Game not found" }, status: :not_found }
       end
+      return
     end
+    Rails.logger.debug "Loaded game: #{@game.inspect}"
+    Rails.logger.debug "Loaded tiles: #{@game.tiles.inspect}"
   end
 
   def game_params

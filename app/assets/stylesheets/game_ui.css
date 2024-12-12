@@ -10,13 +10,14 @@
 }
 
 .grid-cell {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     border: 1px solid #000;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #f0f0f0;
+    box-sizing: border-box;
 }
 
 .grid-cell img.sprite {
@@ -57,16 +58,19 @@
     background-color: #cbf0f8 !important; /* Light blue */
 }
 
-.grid-cell.visited {
-    /* Light color for visited tiles */
-    /*color: #888;*/
-    font-style: italic;
-    /*background-color: inherit !important;*/
+.grid-cell.owned {
+    border-width: 3px;
+    border-style: solid;
 }
 
 .grid-cell.occupied { /* Highlight for current position */
     font-weight: bold;
     /*background-color: inherit !important;*/
+}
+
+.active-tile {
+    border: 3px solid yellow !important;
+    animation: highlight 0.3s ease-in-out;
 }
 
 /* Shake animation */

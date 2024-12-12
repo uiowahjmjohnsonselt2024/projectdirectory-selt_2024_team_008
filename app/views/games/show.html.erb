@@ -11,7 +11,11 @@
 <!--<div class="title">Playing...</div>-->
 
 <div id="server-id" data-server-id="<%= @server.id %>" data-user-id="<%= current_user.id %>"></div>
-<div id="game-element" data-game-id="<%= @game.id %>" data-user-id="<%= current_user.id %>"></div>
+<div
+  id="game-element" data-game-id="<%= @game.id %>"
+  data-user-id="<%= current_user.id %>"
+  data-username="<%= current_user.username %>">
+</div>
 
 <div class="header">
   <!-- Left-side content -->
@@ -41,16 +45,17 @@
 <div class="game-container">
   <!-- Game Grid -->
   <div class="game-grid">
-    <% @game.grid.each_with_index do |row, y| %>
+    <% @grid_rows.each do |row| %>
       <div class="grid-row">
-        <% row.each_with_index do |cell, x| %>
+        <% row.each do |tile| %>
           <div
-            class="grid-cell <%= 'occupied' if cell.present? %>"
-            data-x="<%= x %>"
-            data-y="<%= y %>">
-            <% if cell.present? %>
-              <span><%= cell %></span>
-            <% else %>
+            class="grid-cell <%= tile.occupant.present? ? 'occupied' : '' %>"
+            data-x="<%= tile.x %>"
+            data-y="<%= tile.y %>"
+            style="background-color: <%= tile.color || '#f0f0f0' %>;"
+          >
+            <% if tile.occupant.present? %>
+              <span><%= tile.occupant %></span>
             <% end %>
           </div>
         <% end %>

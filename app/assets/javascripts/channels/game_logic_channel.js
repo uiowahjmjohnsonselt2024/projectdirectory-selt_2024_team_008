@@ -7,13 +7,13 @@ let lastPosition = { x: null, y: null };
 const SHARD_COST_PER_TILE = 2;
 
 const userColors = {};
-const getUserColor = (userId) => {
-    if (!userColors[userId]) {
-        // Generate a unique pastel color for each user
-        const hue = Math.floor(Math.random() * 360);
-        userColors[userId] = `hsl(${hue}, 70%, 80%)`;
-    }
-    return userColors[userId];
+const tileColorMapping = {
+    "tile-color-1": "#f28b82", // Light red
+    "tile-color-2": "#fbbc04", // Light orange
+    "tile-color-3": "#fff475", // Light yellow
+    "tile-color-4": "#ccff90", // Light green
+    "tile-color-5": "#a7ffeb", // Light cyan
+    "tile-color-6": "#cbf0f8", // Light blue
 };
 
 const ensureGameMembership = async (gameId) => {
@@ -57,6 +57,7 @@ const initializeGameLogicChannel = async () => {
 
     const gameId = gameElement.dataset.gameId;
     const userId = parseInt(gameElement.dataset.userId, 10);
+    const username = gameElement.dataset.username
 
     try {
         // Ensure membership before subscribing
@@ -82,7 +83,7 @@ const initializeGameLogicChannel = async () => {
                 },
 
                 makeMove(x, y) {
-                    handleMove(x, y, lastPosition, userId, this);
+                    handleMove(x, y, lastPosition, userId, this, username);
                 },
             }
         );
@@ -103,71 +104,149 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
                 updateGrid(data.positions)
             }
             break;
+
         case "tile_updates":
-            // Update only the specific tile when a tile update is received
+            // Update only the specific tiles when a tile update is received
             if (data.updates) {
                 requestAnimationFrame(() => {
-                    data.updates.forEach(update => updateTile(update.x, update.y, update.username, update.color));
+                    data.updates.forEach(update => {
+                        updateTile(
+                            update.x,
+                            update.y,
+                            update.username,
+                            update.color,
+                            update.owner
+                        );
+                    });
+                    refreshGridCellListeners();
                 });
             }
             break;
+
+        case "tile_action":
+            handleTileAction(data);
+            break;
+
         case "balance_update":
             if (data.user_id === userId) {
                 updateShardBalance(data.balance);
             }
             break;
+
         case "balance_error":
             showFlashMessage(data.message, 'alert');
             triggerShardBalanceShake();
             break;
+
+        case "move_error":
+            showFlashMessage(data.message || "Invalid move.", "alert");
+            break;
+
         case "error":
             showFlashMessage(data.message || "An error occurred.", 'alert');
             break;
+
         default:
             console.warn(`Unhandled data type: ${data.type}`);
     }
 };
 
 // Handle move logic
-const handleMove = (x, y, lastPosition, userId, channel) => {
-    const distance = calculateDistance(lastPosition, { x, y });
+const handleMove = (x, y, lastPosition, userId, channel, username) => {
+    let distance = calculateDistance(lastPosition, { x, y });
+
+    // Prevent duplicate confirmations for the same tile.
+    const activeTiles = document.querySelectorAll('.grid-cell.confirming');
+    const isAlreadyConfirming = Array.from(activeTiles).some(
+        (tile) => parseInt(tile.dataset.x, 10) === x && parseInt(tile.dataset.y, 10) === y
+    );
+
+    if (isAlreadyConfirming) {
+        console.log("Action already in progress for this tile.");
+        return; // Exit to prevent duplicate interactions.
+    }
+
+    // Add 'confirming' class to target tile temporarily.
+    const targetCell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+    if (targetCell) {
+        targetCell.classList.add('confirming');
+        setTimeout(() => targetCell.classList.remove('confirming'), 5000); // 5-sec safety period.
+    }
+
+    if (lastPosition.x === x && lastPosition.y === y) {
+        console.log("User clicked on their current tile.");
+
+        // Trigger a tile action
+        channel.perform("make_move", { x, y, user_id: userId });
+        return;
+    }
 
     if (distance === Infinity) {
         showFlashMessage("Invalid move! You can only move vertically or horizontally.", "alert");
         return;
     }
 
-    const shardCost = calculateShardCost(distance);
+    let shardCost = calculateShardCost(distance);
     const currentShardBalance = parseInt(document.querySelector('.shard-balance-display p').textContent.match(/\d+/)[0], 10);
 
-    if (distance > 1 && shardCost > currentShardBalance) {
+    if (shardCost > currentShardBalance) {
         triggerShardBalanceShake();
         showFlashMessage("Insufficient shards to make this move!", "alert");
         return;
     }
 
-    if (distance > 1) {
-        const confirmMove = confirm(`Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`);
-        if (!confirmMove) return;
-    }
+    // Confirmation handling for unowned tile:
+    if (targetCell && !targetCell.classList.contains(("owned"))) {
+        const confirmOwnership = confirm(
+            `This tile is unowned. Claiming it will cost ${shardCost} shards. Do you want to proceed?`
+        );
 
-    // Check if the target cell is occupied
-    const targetCell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
-    if (targetCell && targetCell.classList.contains("occupied")) {
-        showFlashMessage("Invalid move! The target cell is already occupied.", "alert");
+        if (!confirmOwnership) return;
+
+        // Proceed with move.
+        channel.perform("make_move", { x, y, user_id: userId });
+        lastPosition.x = x; // Update last position
+        lastPosition.y = y;
         return;
     }
 
-    // Clear the previous position in the grid
-    if (lastPosition.x !== null && lastPosition.y !== null) {
-        updateTile(lastPosition.x, lastPosition.y, null); // Clear the previous tile
+    // Handle movement to owned tiles
+    if (targetCell && targetCell.classList.contains("owned")) {
+        const owner = targetCell.dataset.owner;
+        if (owner === username) {
+            console.log(`Distance: ${distance}`);
+
+            distance -= 1;
+            shardCost -= 2;
+
+            const confirmMove = confirm(`Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`);
+            if (!confirmMove) return;
+
+
+            channel.perform("make_move", {x, y, user_id: userId});
+            lastPosition.x = x; // Update last position
+            lastPosition.y = y;
+            return;
+        }
+        // Tile is owned by someone else, show an error message.
+        showFlashMessage("Invalid move! You can only move to tiles you own.", "alert");
     }
+};
 
-    channel.perform("make_move", { x, y, user_id: userId });
+// Handle entering a tile
+const handleTileAction = (data) => {
+    const { x, y, message } = data;
 
-    // Update the local last position
-    lastPosition.x = x;
-    lastPosition.y = y;
+    // Display message or update UI for the tile
+    const tile = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
+    if (tile) {
+        tile.classList.add("active-tile");
+
+        // Optionally remove the "active-tile" class after some time
+        setTimeout(() => {
+            tile.classList.remove("active-tile");
+        }, 3000);
+    }
 };
 
 // Attach click listeners to grid cells
@@ -200,12 +279,13 @@ const calculateDistance = (from, to) => {
         return Infinity; // Invalid move, return a high value
     }
 
-    return Math.max(horizontalDistance, verticalDistance);
+    return Math.max(horizontalDistance, verticalDistance) + 1;
 };
 
 // Calculate shard cost for a move
 const calculateShardCost = (distance) => {
-    return (distance - 1) * SHARD_COST_PER_TILE;
+    // Ensure the cost is at least the value of SHARD_COST_PER_TILE
+    return Math.max(1, distance) * SHARD_COST_PER_TILE;
 }
 
 // Update the shard balance display
@@ -218,32 +298,40 @@ const updateShardBalance = (newBalance) => {
 
 const updateGrid = (positions) => {
     positions.forEach(pos => {
-        updateTile(pos.x, pos.y, pos.username, pos.color);
+        updateTile(pos.x, pos.y, pos.username, pos.color, pos.owner);
     });
 };
 
-const updateTile = (x, y, username, color) => {
-    console.log(`updateTile data: x:${x}, y:${y}, username:${username}, color:${color} `)
+const updateTile = (x, y, username, color, owner) => {
+    console.log(`updateTile data: x:${x}, y:${y}, username:${username}, color:${color}, owner:${owner}`);
+
     // Find the target tile based on coordinates
     const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
 
-    // Clear the tile if the username is empty (optional)
     if (cell) {
-        if (!username) {
-            // Clear the tile
-            cell.innerHTML = "";
-            // cell.classList.remove("occupied");
+        if (!username && !owner) {
             cell.className = "grid-cell"; // Reset to default
+            cell.removeAttribute("data-owner");
+            cell.innerHTML = "";
+            cell.style.borderColor = "";
             return;
         }
+        if (username) {
+            cell.innerHTML = `<span>${username}</span>`;
+            cell.className = `grid-cell occupied`;
+            cell.style.borderColor = "";
+        } else {
+            cell.innerHTML = "";
+            cell.classList.remove("occupied");
+        }
 
-        // Update the tile with the user's username and color class
-        cell.innerHTML = `<span>${username}</span>`;
-        cell.className = `grid-cell ${color} occupied`;
-        console.log(`Updated tile at (${x}, ${y}) with username=${username}, color=${color}`);
-    } else {
-        console.warn(`Tile at (${x}, ${y}) not found.`);
+        if (owner) {
+        cell.classList.add("owned");
+        cell.dataset.owner = owner;
+        cell.style.borderColor = tileColorMapping[color];
+        }
     }
+    console.log(`Updated tile at (${x}, ${y}) with username=${username}, color=${color}, owner=${owner}`);
 };
 
 // Trigger the shake effect on shard balance display
@@ -296,11 +384,10 @@ const fetchGameState = async (gameId) => {
         if (jsonData.positions) {
             console.log("Fetched game state:", jsonData.positions);
 
-            // updateGrid(jsonData.grid); // Update the grid UI
-
             // Update the grid with all positions
-            jsonData.positions.forEach(pos => updateTile(pos.x, pos.y, pos.username, pos.color));
-
+            jsonData.positions.forEach(pos =>
+                updateTile(pos.x, pos.y, pos.username, pos.color, pos.owner)
+            );
         } else {
             console.error("Unexpected response from game_state:", jsonData);
         }
@@ -314,12 +401,23 @@ document.addEventListener("turbolinks:load", async () => {
     if (gameElement) {
         const gameId = gameElement.dataset.gameId;
         await fetchGameState(gameId); // Fetch the grid state on page load
-        await initializeGameLogicChannel();
+        if (!gameLogicSubscription) await initializeGameLogicChannel();
     }
 });
+
 document.addEventListener("turbolinks:before-visit", () => {
     if (gameLogicSubscription) {
         gameLogicSubscription.unsubscribe();
         gameLogicSubscription = null;
     }
 });
+
+const refreshGridCellListeners = () => {
+    document.querySelectorAll(".grid-cell").forEach((cell) => {
+        cell.addEventListener("click", () => {
+            const x = parseInt(cell.dataset.x, 10);
+            const y = parseInt(cell.dataset.y, 10);
+            gameLogicSubscription.makeMove(x, y);
+        });
+    });
+};

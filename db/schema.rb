@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_09_161110) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
   create_table "avatars", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "hat_id"
@@ -39,7 +39,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_161110) do
     t.datetime "ended_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "grid"
     t.json "user_colors", default: {}
     t.index ["creator_id"], name: "index_games_on_creator_id"
     t.index ["server_id"], name: "index_games_on_server_id"
@@ -106,6 +105,22 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_161110) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tiles", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.integer "x", null: false
+    t.integer "y", null: false
+    t.string "owner"
+    t.string "occupant"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_source"
+    t.string "task_type"
+    t.datetime "task_last_completed"
+    t.index ["game_id", "x", "y"], name: "index_tiles_on_game_id_and_x_and_y", unique: true
+    t.index ["game_id"], name: "index_tiles_on_game_id"
+  end
+
   create_table "user_items", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "item_id", null: false
@@ -147,14 +162,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_09_161110) do
   add_foreign_key "avatars", "users"
   add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
+  add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "memberships", "games", on_delete: :cascade
   add_foreign_key "memberships", "servers", on_delete: :cascade
+  add_foreign_key "memberships", "servers", on_delete: :cascade
   add_foreign_key "memberships", "users", on_delete: :nullify
+  add_foreign_key "messages", "servers", on_delete: :cascade
   add_foreign_key "messages", "servers", on_delete: :cascade
   add_foreign_key "messages", "users", on_delete: :nullify
   add_foreign_key "servers", "games", on_delete: :cascade
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
+  add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
+  add_foreign_key "tiles", "games", on_delete: :cascade
   add_foreign_key "user_items", "items"
   add_foreign_key "user_items", "users"
 end

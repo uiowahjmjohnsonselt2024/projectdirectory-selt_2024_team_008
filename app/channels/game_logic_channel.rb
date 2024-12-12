@@ -20,11 +20,18 @@ class GameLogicChannel < ApplicationCable::Channel
       game.assign_color(current_user.username)
       game.save!
 
-      # Initialize the user's position if not already set
-      unless game.grid.flatten.include?(current_user.username)
-        # Default to the top-left corner or any other starting position logic
-        game.update_grid(0, 0, current_user.username)
-        game.reload
+      unless game.tiles.exists?(occupant: current_user.username)
+        # Find the farthest tile for the new player
+        farthest_tile = game.find_farthest_tile
+        if farthest_tile
+          farthest_tile.update!(
+            occupant: current_user.username,
+            owner: current_user.username,
+            color: game.assign_color(current_user.username)
+          )
+        else
+          Rails.logger.error "Failed to find a suitable tile for new player"
+        end
       end
 
       # Send the current game state to the new subscriber
@@ -50,11 +57,27 @@ class GameLogicChannel < ApplicationCable::Channel
 
     x = data['x'].to_i
     y = data['y'].to_i
-    current_position = find_user_position(game, current_user.username)
+    current_position = game.find_user_position(current_user.username)
+    distance = calculate_distance(game, x, y)
+
+    if distance.nil?
+      # Trigger an "enter tile" action
+      trigger_tile_action(game, x, y)
+      return
+    end
 
     # Validate the move before proceeding
     unless valid_move?(game, x, y)
       return # Exit early if the move is invalid
+    end
+
+    target_tile = game.tiles.find_by(x: x, y: y)
+    return unless target_tile
+
+    # Restrict movement to owned tiles
+    if target_tile.owner.present? && target_tile.owner != current_user.username
+      transmit({ type: 'move_error', message: 'You can only move into tiles you own.' })
+      return
     end
 
     ActiveRecord::Base.transaction do
@@ -67,13 +90,13 @@ class GameLogicChannel < ApplicationCable::Channel
       Rails.logger.debug("Distance: #{distance}, Cost: #{cost}")
 
       # Check shard balance if move costs shards
-      if distance > 1 && current_user.shard_account.balance < cost
+      if distance > 0 && current_user.shard_account.balance < cost
         transmit({ type: 'balance_error', message: "Insufficient shards to move #{distance} tiles." })
         return
       end
 
       # Deduct shards for multi-tile moves
-      if distance > 1
+      if distance > 0
         current_user.shard_account.update!(balance: current_user.shard_account.balance - cost)
 
         # Broadcast balance update
@@ -91,13 +114,18 @@ class GameLogicChannel < ApplicationCable::Channel
       # Clear previous position
       if current_position
         old_x, old_y = current_position
-        game.grid[old_y][old_x] = nil
-        updates << { x: old_x, y: old_y, username: nil, color: nil }
+        old_tile = game.tiles.find_by(x: old_x, y: old_y)
+        old_tile.update!(occupant: nil) if old_tile
+        updates << { x: old_x, y: old_y, username: nil, color: old_tile&.color, owner: old_tile&.owner }
       end
 
-      # Update grid with new position
-      game.update_grid(x, y, current_user.username)
-      updates << { x: x, y: y, username: current_user.username, color: game.user_colors[current_user.username] }
+      # Update target tile with new position
+      target_tile.update!(
+        occupant: current_user.username,
+        owner: target_tile.owner || current_user.username,
+        color: game.user_colors[current_user.username]
+      )
+      updates << { x: x, y: y, username: current_user.username, color: target_tile.color }
 
       # Broadcast updates together
       GameLogicChannel.broadcast_to(
@@ -105,43 +133,36 @@ class GameLogicChannel < ApplicationCable::Channel
         type: 'tile_updates',
         updates: updates
       )
-
-
     end
   end
 
   private
 
   def valid_move?(game, target_x, target_y)
-    current_position = find_user_position(game, current_user.username)
+    current_position = game.find_user_position(current_user.username)
     return false unless current_position
 
     current_x, current_y = current_position
 
     # Check for valid tile bounds
-    return false unless target_x.between?(0, 5) && target_y.between?(0, 5)
+    return false unless target_x.between?(0, 9) && target_y.between?(0, 9)
 
     # Check for horizontal or vertical move
     valid_horizontal_or_vertical = (target_x == current_x || target_y == current_y)
     return false unless valid_horizontal_or_vertical
 
-    # Check if the target tile is empty
-    is_empty = game.grid[target_y][target_x].nil?
-
-    # Log reasons for invalidity
-    unless is_empty
-      Rails.logger.info("Tile (#{target_x}, #{target_y}) is occupied, move is invalid.")
-    end
-    is_empty
+    # Check ownership and occupancy
+    tile = game.tiles.find_by(x: target_x, y: target_y)
+    tile.present? && tile.occupant.nil? && (tile.owner.nil? || tile.owner == current_user.username)
   end
 
   def calculate_distance(game, target_x, target_y)
-    current_position = find_user_position(game, current_user.username)
+    current_position = game.find_user_position(current_user.username)
     return Float::INFINITY unless current_position
 
     current_x, current_y = current_position
 
-    return 0 if current_x == target_x && current_y == target_y
+    return nil if current_x == target_x && current_y == target_y
 
     unless valid_move?(game, target_x, target_y)
       raise ArgumentError, "Target coordinates (#{target_x}, #{target_y}) are out of bounds."
@@ -152,28 +173,42 @@ class GameLogicChannel < ApplicationCable::Channel
   end
 
   def calculate_shard_cost(distance)
-    # CAN BE CHANGED: 2 shards per tile beyond the first
-    (distance - 1) * SHARD_COST_PER_TILE
-  end
-
-  def find_user_position(game, username)
-    position = game.grid.flatten.index(username)
-    return nil unless position
-
-    [position % game.grid.first.size, position / game.grid.first.size]
+    # CAN BE CHANGED
+    if distance == nil
+      0
+    else
+      SHARD_COST_PER_TILE * [1, distance.to_i].max
+    end
   end
 
   def transmit_game_state(game)
-    positions = game.grid.each_with_index.flat_map do |row, y|
-      row.each_with_index.map do |username, x|
-        { x: x, y: y, username: username, color: game.user_colors[username] } if username
-      end
+    positions = game.tiles.map do |tile|
+      next unless tile.occupant || tile.owner
+
+        {
+          x: tile.x,
+          y: tile.y,
+          username: tile.occupant,
+          color: tile.color,
+          owner: tile.owner
+        }
     end.compact
 
     GameLogicChannel.broadcast_to(
       game,
       type: 'game_state',
       positions: positions
+    )
+  end
+
+  def trigger_tile_action(game, x, y)
+    # Add logic for what happens when a player enters their current tile
+    GameLogicChannel.broadcast_to(
+      game,
+      type: 'tile_action',
+      x: x,
+      y: y,
+      message: "Player has entered the tile at (#{x}, #{y})."
     )
   end
 
