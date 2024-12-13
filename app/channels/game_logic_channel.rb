@@ -197,7 +197,7 @@ class GameLogicChannel < ApplicationCable::Channel
           username: tile.occupant_user&.username,
           color: tile.color,
           owner: tile.owner,
-          occupant_avatar: tile.occupant_user&.avatar&.attached? ? Base64.encode64(tile.occupant_user.avatar.download) : nil
+          occupant_avatar: tile.occupant_user&.avatar&.avatar_image.present? ? Base64.encode64(tile.occupant_user.avatar.avatar_image) : nil
         }
     end.compact
 
