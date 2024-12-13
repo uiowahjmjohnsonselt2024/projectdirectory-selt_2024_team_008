@@ -1,0 +1,36 @@
+<div class="top-navigation">
+  <div class="nav-left">
+    <%= button_to "Return to Menu", main_menu_path, class: "btn return-btn", method: :get %>
+  </div>
+  <div class="nav-center shard-balance-display">
+    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
+  </div>
+  <div class="nav-right">
+
+  </div>
+</div>
+
+<div class="background-container">
+  <div class="background-scene"></div>
+</div>
+
+<h1 class="title">Leaderboard</h1>
+
+<table class="leaderboard-table">
+  <thead>
+  <tr>
+    <th>Rank</th>
+    <th>User</th>
+    <th>Balance (Shards)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @users.each_with_index do |user, index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= user.username %></td>
+      <td><%= number_to_currency(user.shard_account.balance, unit: 'Shards', format: "%n %u") %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
