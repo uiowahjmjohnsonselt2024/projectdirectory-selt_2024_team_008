@@ -1,6 +1,11 @@
 <div class="Inventory">
   <div class="top-navigation">
-    <%= button_to "Return to Shop", shop_index_path, class: "btn return-btn", method: :get %>
+
+    <%= link_to "Return", (params[:origin] || shop_index_path), class: "btn return-btn" %>
+
+
+
+
     <div class="shard-balance-display">
       <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
     </div>
