@@ -37,6 +37,12 @@
   <%= render "shared/logout" %>
 <% end %>
 
+<% if controller_name == "games" && action_name == "index" %>
+  <div class="back-button-container">
+    <%= link_to "Back to Main Menu", main_menu_path, class: "back-button" %>
+  </div>
+<% end %>
+
 <!-- Main Content -->
 <%= yield %>
 

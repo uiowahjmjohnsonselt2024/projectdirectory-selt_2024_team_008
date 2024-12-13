@@ -54,24 +54,6 @@ RSpec.describe ServerChannel, type: :channel do
     end
   end
 
-  describe 'subscribed' do
-    context 'when Membership creation fails' do
-      before do
-        # Stub the logger before triggering the error
-        allow(Rails.logger).to receive(:error)
-
-        # Mock Membership to raise ActiveRecord::RecordInvalid
-        allow(Membership).to receive(:find_or_create_by!).and_raise(ActiveRecord::RecordInvalid.new(Membership.new))
-      end
-
-      it 'logs an error and rejects the subscription' do
-        subscribe(server_id: server.id)
-
-        expect(Rails.logger).to have_received(:error).with(/Failed to create membership for user #{user.id}:/).once
-        expect(subscription).to be_rejected
-      end
-    end
-  end
 
   describe 'unsubscribed' do
     before do

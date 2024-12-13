@@ -102,4 +102,6 @@ Rails.application.configure do
     "https://selt-group008-final-project-f5f66b74f699.herokuapp.com"
   ]
 
+  config.action_controller.asset_host = 'https://selt-group008-final-project-f5f66b74f699.herokuapp.com'
+
 end

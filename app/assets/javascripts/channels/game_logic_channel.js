@@ -115,7 +115,8 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
                             update.y,
                             update.username,
                             update.color,
-                            update.owner
+                            update.owner,
+                            update.occupant_avatar
                         );
                     });
                     refreshGridCellListeners();
@@ -298,12 +299,12 @@ const updateShardBalance = (newBalance) => {
 
 const updateGrid = (positions) => {
     positions.forEach(pos => {
-        updateTile(pos.x, pos.y, pos.username, pos.color, pos.owner);
+        updateTile(pos.x, pos.y, pos.username, pos.color, pos.owner, pos.occupant_avatar);
     });
 };
 
-const updateTile = (x, y, username, color, owner) => {
-    console.log(`updateTile data: x:${x}, y:${y}, username:${username}, color:${color}, owner:${owner}`);
+const updateTile = (x, y, username, color, owner, occupantAvatar) => {
+    console.log(`updateTile data: x:${x}, y:${y}, username:${username}, color:${color}, owner:${owner}, avatar:${occupantAvatar ? 'present' : 'none'}`);
 
     // Find the target tile based on coordinates
     const cell = document.querySelector(`.grid-cell[data-x='${x}'][data-y='${y}']`);
@@ -317,10 +318,28 @@ const updateTile = (x, y, username, color, owner) => {
             return;
         }
         if (username) {
-            cell.innerHTML = `<span>${username}</span>`;
             cell.className = `grid-cell occupied`;
             cell.style.borderColor = "";
+
+            let avatarElement = cell.querySelector(".tile-avatar");
+            if (!avatarElement) {
+                avatarElement = document.createElement("img");
+                avatarElement.className = "tile-avatar";
+                cell.appendChild(avatarElement);
+            }
+
+            if (occupantAvatar) {
+                avatarElement.src = occupantAvatar.startsWith('/assets')
+                    ? `${window.location.origin}${occupantAvatar}`
+                    : occupantAvatar;
+            } else {
+                avatarElement.src = "/assets/defaultAvatar.png";
+            }
         } else {
+            const avatarElement = cell.querySelector(".tile-avatar");
+            if (avatarElement) {
+                avatarElement.remove();
+            }
             cell.innerHTML = "";
             cell.classList.remove("occupied");
         }

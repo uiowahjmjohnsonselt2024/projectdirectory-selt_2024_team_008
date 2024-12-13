@@ -1,0 +1,7 @@
+<div class="tile">
+  <% if tile.occupant_avatar %>
+    <img src="data:image/png;base64,<%= Base64.encode64(tile.occupant_avatar) %>" alt="Avatar" />
+  <% else %>
+    <span class="placeholder">No Avatar</span>
+  <% end %>
+</div>
