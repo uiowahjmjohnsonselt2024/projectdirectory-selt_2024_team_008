@@ -34,7 +34,7 @@ class GamesController < ApplicationController
         # Create a new membership if none exists (shouldn't happen often)
         Membership.create!(user: current_user, server: server, game: @game)
       end
-      
+
       # Assign initial position for the creator
       initial_tile = @game.tiles.find_by(x: 0, y: 0)
       if initial_tile && current_user.username.present?

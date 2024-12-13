@@ -48,11 +48,12 @@
     <% @grid_rows.each do |row| %>
       <div class="grid-row">
         <% row.each do |tile| %>
-          <div
-            class="grid-cell <%= tile.occupant_user.present? ? 'occupied' : '' %>"
+          <div class="grid-cell <%= tile.occupant_user.present? ? 'occupied' : '' %>"
             data-x="<%= tile.x %>"
             data-y="<%= tile.y %>"
-            style="background-color: <%= tile.color || '#f0f0f0' %>;"
+            style="background-color: <%= tile.color || '#f0f0f0' %>;
+              background-image: url(<%= asset_path(tile.image_source) %>);
+              background-size: cover;"
           >
             <% if tile.occupant_user.present? %>
               <img class="tile-avatar"

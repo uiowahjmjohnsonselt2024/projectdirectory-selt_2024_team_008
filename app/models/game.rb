@@ -88,9 +88,11 @@ class Game < ApplicationRecord
   end
 
   def initialize_grid
+    image_sources = %w[background1.png background2.png background3.png background4.png background5.png background6.png]
+
     (0...10).each do |y|
       (0...10).each do |x|
-        tiles.create!(x: x, y: y, owner: nil, occupant_id: nil, color: nil)
+        tiles.create!(x: x, y: y, owner: nil, occupant_id: nil, color: nil, image_source: image_sources.sample)
       end
     end
   end
