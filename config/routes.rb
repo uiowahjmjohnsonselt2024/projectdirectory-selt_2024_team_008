@@ -48,6 +48,7 @@ Rails.application.routes.draw do
       get :game_state, defaults: { format: :json }
       post :ensure_membership, defaults: { format: :json }
       get 'tic_tac_toe', to: 'tic_tac_toe#index', as: 'tic_tac_toe'
+      post 'tic_tac_toe/play', to: 'tic_tac_toe#play', as: 'tic_tac_toe_play'
     end
   end
 

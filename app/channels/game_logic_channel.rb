@@ -217,14 +217,25 @@ class GameLogicChannel < ApplicationCable::Channel
   end
 
   def trigger_tile_action(game, x, y)
-    # Add logic for what happens when a player enters their current tile
-    GameLogicChannel.broadcast_to(
-      game,
-      type: 'tile_action',
-      x: x,
-      y: y,
-      message: "Player has entered the tile at (#{x}, #{y})."
-    )
+    tile = game.tiles.find_by(x: x, y: y)
+    return unless tile
+
+    if tile.owner == current_user.username
+      # If the user owns this tile, instruct the frontend to go to Tic Tac Toe
+      GameLogicChannel.broadcast_to(
+        game,
+        type: 'enter_tic_tac_toe'
+      )
+    else
+      # If the tile is not owned by the user, we fall back to a generic message
+      GameLogicChannel.broadcast_to(
+        game,
+        type: 'tile_action',
+        x: x,
+        y: y,
+        message: "Player has entered the tile at (#{x}, #{y})."
+      )
+    end
   end
 
   def broadcast_system_message(message, game)
