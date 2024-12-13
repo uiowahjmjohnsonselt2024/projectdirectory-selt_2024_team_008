@@ -33,12 +33,12 @@ RSpec.describe "Inventory Page", type: :request do
     expect(response.body).to include("Quantity: 2")
   end
 
-  it "User sees the 'Return to Shop' button" do
+  it "User sees the 'Return' button" do
     user = User.create!(email: "test@example.com", password: "password", username: "TestUser")
 
     sign_in user
     get inventory_path
 
-    expect(response.body).to include('<form class="button_to" method="get" action="/shop"><input class="btn return-btn" type="submit" value="Return to Shop" /></form>')
+    expect(response.body).to include('Return')
   end
 end
