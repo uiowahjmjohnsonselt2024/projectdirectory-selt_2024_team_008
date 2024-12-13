@@ -29,6 +29,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.index ["user_id"], name: "index_avatars_on_user_id"
   end
 
+  create_table "cards", force: :cascade do |t|
+    t.integer "shard_account_id", null: false
+    t.string "card_number_encrypted"
+    t.string "expiry_date"
+    t.string "cvv_encrypted"
+    t.text "billing_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shard_account_id"], name: "index_cards_on_shard_account_id"
+  end
+
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -160,6 +171,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
   add_foreign_key "avatars", "items", column: "shoes_id"
   add_foreign_key "avatars", "items", column: "top_id"
   add_foreign_key "avatars", "users"
+  add_foreign_key "cards", "shard_accounts"
   add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
