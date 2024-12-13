@@ -49,13 +49,15 @@
       <div class="grid-row">
         <% row.each do |tile| %>
           <div
-            class="grid-cell <%= tile.occupant.present? ? 'occupied' : '' %>"
+            class="grid-cell <%= tile.occupant_user.present? ? 'occupied' : '' %>"
             data-x="<%= tile.x %>"
             data-y="<%= tile.y %>"
             style="background-color: <%= tile.color || '#f0f0f0' %>;"
           >
-            <% if tile.occupant.present? %>
-              <span><%= tile.occupant %></span>
+            <% if tile.occupant_user.present? %>
+              <img class="tile-avatar"
+                   src="<%= tile.occupant_avatar %>"
+                   alt="Avatar for <%= tile.occupant_user.username %>" />
             <% end %>
           </div>
         <% end %>

@@ -26,17 +26,21 @@ class GamesController < ApplicationController
 
       server.update!(game_id: @game.id)
 
-      # Automatically add the creator as a member of both the game and the server
-      membership = Membership.find_or_initialize_by(user: current_user, server: server)
-      membership.game = @game # Update the game association if needed
-      membership.save! if membership.new_record? || membership.changed?
-
+      # Find any existing server-only membership for the user and update it with the game_id
+      membership = Membership.find_by(user: current_user, server: server)
+      if membership
+        membership.update!(game: @game) # Update with the new game
+      else
+        # Create a new membership if none exists (shouldn't happen often)
+        Membership.create!(user: current_user, server: server, game: @game)
+      end
+      
       # Assign initial position for the creator
       initial_tile = @game.tiles.find_by(x: 0, y: 0)
       if initial_tile && current_user.username.present?
         initial_tile.update!(
           owner: current_user.username,
-          occupant: current_user.username,
+          occupant_id: current_user.id,
           color: @game.assign_color(current_user.username)
         )
       else
@@ -55,6 +59,14 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])  # Find the game by ID
     @server = @game.server          # Fetch the associated server
     @grid_rows = @game.tiles.order(:y, :x).group_by(&:y).values
+    @tiles = @game.tiles.includes(occupant_user: :avatar).map do |tile|
+      {
+        id: tile.id,
+        x: tile.x,
+        y: tile.y,
+        occupant_avatar: tile.occupant_avatar ? Base64.encode64(tile.occupant_avatar) : nil
+      }
+    end
   end
 
   def game_state
@@ -62,13 +74,16 @@ class GamesController < ApplicationController
 
     render json: {
       positions: @game.tiles.map do |tile|
-        {
-          x: tile.x,
-          y: tile.y,
-          username: tile.occupant,
-          owner: tile.owner,
-          color: tile.color
-        } if tile.occupant || tile.owner
+        if tile.occupant_user || tile.owner
+          {
+            x: tile.x,
+            y: tile.y,
+            username: tile.occupant_user&.username,
+            owner: tile.owner,
+            color: tile.color,
+            occupant_avatar: tile.occupant_avatar ? tile.occupant_avatar : nil
+          }
+        end
       end.compact
     }, status: :ok
   end
@@ -80,6 +95,8 @@ class GamesController < ApplicationController
 
     # Ensure membership for both the game and the server
     membership = Membership.find_or_initialize_by(user: current_user, game: @game, server: @server)
+    membership.game = @game
+    membership.save! if membership.changed?
 
     @game.assign_color(current_user.username) # Assign a color if not already assigned
     @game.save! # Ensure changes are saved

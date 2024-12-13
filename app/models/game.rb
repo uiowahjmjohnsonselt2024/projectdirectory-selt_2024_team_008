@@ -50,25 +50,25 @@ class Game < ApplicationRecord
 
   # Find the position of a user on the grid
   def find_user_position(username)
-    tile = tiles.find_by(occupant: username)
+    tile = tiles.joins(:occupant_user).find_by(users: { username: username })
     tile ? [tile.x, tile.y] : nil
   end
 
   # Check if a tile is empty
   def tile_empty?(x, y)
     tile = tiles.find_by(x: x, y: y)
-    tile&.occupant.nil?
+    tile&.occupant_id.nil?
   end
 
   def find_farthest_tile
-    occupied_or_owned_tiles = tiles.where.not(occupant: nil).or(tiles.where.not(owner: nil))
+    occupied_or_owned_tiles = tiles.where.not(occupant_id: nil).or(tiles.where.not(owner: nil))
     if occupied_or_owned_tiles.empty?
       # If no tiles are occupied or owned, default to the top-left corner
       return tiles.find_by(x: 0, y: 0)
     end
 
     # Calculate distances for all tiles
-    tiles.reject { |tile| tile.occupant.present? || tile.owner.present? }
+    tiles.reject { |tile| tile.occupant_id.present? || tile.owner.present? }
          .max_by do |tile|
       # Compute the minimum distance from this tile to any occupied or owned tile
       occupied_or_owned_tiles.map do |occupied_tile|
@@ -90,7 +90,7 @@ class Game < ApplicationRecord
   def initialize_grid
     (0...10).each do |y|
       (0...10).each do |x|
-        tiles.create!(x: x, y: y, owner: nil, occupant: nil, color: nil)
+        tiles.create!(x: x, y: y, owner: nil, occupant_id: nil, color: nil)
       end
     end
   end

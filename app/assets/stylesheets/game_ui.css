@@ -68,6 +68,13 @@
     /*background-color: inherit !important;*/
 }
 
+.tile-avatar {
+    width: 90%; /* Avatar fills the tile */
+    height: 90%;
+    object-fit: cover; /* Prevent distortion */
+    border-radius: 60%;
+}
+
 .active-tile {
     border: 3px solid yellow !important;
     animation: highlight 0.3s ease-in-out;
