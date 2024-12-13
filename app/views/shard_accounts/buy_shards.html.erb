@@ -28,5 +28,9 @@
   <button id="convert-button" class="button">Convert</button>
   <p id="conversion-result"></p>
 
-  <button id="buy-button" class="button">Buy</button>
+  <% if current_user.shard_account && current_user.shard_account.card.present? %>
+    <button id="buy-button" class="button">Buy</button>
+  <% else %>
+    <a href="<%= new_card_path %>" id="add-payment-button" class="button">Add Payment Method</a>
+  <% end %>
 </div>

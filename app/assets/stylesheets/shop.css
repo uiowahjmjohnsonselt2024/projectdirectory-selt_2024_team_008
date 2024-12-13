@@ -25,6 +25,18 @@
     background-color: darkgreen;
 }
 
+.shop-item .btn {
+    display: block; /* ensures each button takes its own line */
+    margin-bottom: 10px; /* adds vertical space between buttons */
+}
+
+.shop-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: flex-start; /* Align top edges */
+    gap: 20px; /* Space between the two boxes */
+    margin-top: 100px; /* Adjust so they appear below your fixed navigation */
+}
 /* Horizontal Layout for Tiles */
 .shard-options, .shop-items {
     display: flex;
@@ -35,6 +47,7 @@
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
+
 }
 
 /* General Tile Styling */
@@ -111,6 +124,10 @@
     z-index: 1000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
+}
+
+.center-align {
+    text-align: center;
 }
 
 /* Buttons */
@@ -231,7 +248,8 @@ h2 {
 }
 
 #convert-button,
-#buy-button {
+#buy-button,
+#add-payment-button {
     width: 100%;
     margin-top: 15px;
     padding: 10px 0;
@@ -241,17 +259,46 @@ h2 {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
     transition: background-color 0.3s;
 }
 
 #convert-button:hover,
-#buy-button:hover {
+#buy-button:hover,
+#add-payment-button:hover {
     background-color: darkgreen;
 }
+
 
 #conversion-result {
     font-size: 1rem;
     color: green;
     margin-top: 10px;
+    text-align: center;
+}
+
+
+.top-navigation {
+    display: flex;
+    align-items: center;
+}
+
+.nav-left, .nav-center, .nav-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-left {
+    justify-content: flex-start; /* Keep the Return button on the left */
+}
+
+.nav-right {
+    justify-content: flex-end; /* Add Funds button (if present) goes to the right */
+}
+
+.shard-balance-display {
     text-align: center;
 }

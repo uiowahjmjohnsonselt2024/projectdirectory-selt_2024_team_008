@@ -8,24 +8,25 @@ class GameLogicChannel < ApplicationCable::Channel
       stop_all_streams
       stream_for game
 
-      # Ensure a unique membership record for the user
-      begin
-        Membership.find_or_initialize_by(user: current_user, game: game, server: game.server)
-        # Rails.logger.debug "Membership created or found: #{membership.inspect}"
-      rescue ActiveRecord::RecordNotUnique
-        Rails.logger.info("Membership already exists for user #{current_user.id} in game #{game.id}")
+      # Find or create the membership record, updating the game if necessary
+      membership = Membership.find_by(user: current_user, server: game.server)
+
+      if membership
+        membership.update!(game: game)
+      else
+        Rails.logger.error("No server membership found for user #{current_user.id} and server #{game.server.id}")
       end
 
       # Assign a color to the user if they don't already have one
       game.assign_color(current_user.username)
       game.save!
 
-      unless game.tiles.exists?(occupant: current_user.username)
+      unless game.tiles.joins(:occupant_user).exists?(users: { username: current_user.username})
         # Find the farthest tile for the new player
         farthest_tile = game.find_farthest_tile
         if farthest_tile
           farthest_tile.update!(
-            occupant: current_user.username,
+            occupant_id: current_user.id,
             owner: current_user.username,
             color: game.assign_color(current_user.username)
           )
@@ -39,6 +40,9 @@ class GameLogicChannel < ApplicationCable::Channel
     else
       reject
     end
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("Failed to create or update membership for user #{current_user.id}: #{e.message}")
+      reject
   end
 
   def unsubscribed
@@ -115,17 +119,20 @@ class GameLogicChannel < ApplicationCable::Channel
       if current_position
         old_x, old_y = current_position
         old_tile = game.tiles.find_by(x: old_x, y: old_y)
-        old_tile.update!(occupant: nil) if old_tile
-        updates << { x: old_x, y: old_y, username: nil, color: old_tile&.color, owner: old_tile&.owner }
+        old_tile.update!(occupant_id: nil) if old_tile
+        updates << { x: old_x, y: old_y, username: old_tile&.occupant_user&.username, color: old_tile&.color, owner: old_tile&.owner, occupant_avatar: nil }
       end
 
       # Update target tile with new position
       target_tile.update!(
-        occupant: current_user.username,
+        occupant_id: current_user.id,
         owner: target_tile.owner || current_user.username,
         color: game.user_colors[current_user.username]
       )
-      updates << { x: x, y: y, username: current_user.username, color: target_tile.color }
+      occupant_avatar = ActionController::Base.helpers.asset_path('defaultAvatar.png')
+
+      updates << { x: x, y: y, username: current_user.username, color: target_tile.color,
+                   occupant_avatar: occupant_avatar }
 
       # Broadcast updates together
       GameLogicChannel.broadcast_to(
@@ -153,7 +160,7 @@ class GameLogicChannel < ApplicationCable::Channel
 
     # Check ownership and occupancy
     tile = game.tiles.find_by(x: target_x, y: target_y)
-    tile.present? && tile.occupant.nil? && (tile.owner.nil? || tile.owner == current_user.username)
+    tile.present? && tile.occupant_id.nil? && (tile.owner.nil? || tile.owner == current_user.username)
   end
 
   def calculate_distance(game, target_x, target_y)
@@ -182,22 +189,22 @@ class GameLogicChannel < ApplicationCable::Channel
   end
 
   def transmit_game_state(game)
-    positions = game.tiles.map do |tile|
-      next unless tile.occupant || tile.owner
-
+    tiles = game.tiles.includes(occupant_user: :avatar).map do |tile|
+      next unless tile.occupant_id || tile.owner
         {
           x: tile.x,
           y: tile.y,
-          username: tile.occupant,
+          username: tile.occupant_user&.username,
           color: tile.color,
-          owner: tile.owner
+          owner: tile.owner,
+          occupant_avatar: tile.occupant_user&.avatar&.avatar_image.present? ? Base64.encode64(tile.occupant_user.avatar.avatar_image) : nil
         }
     end.compact
 
     GameLogicChannel.broadcast_to(
       game,
       type: 'game_state',
-      positions: positions
+      positions: tiles
     )
   end
 

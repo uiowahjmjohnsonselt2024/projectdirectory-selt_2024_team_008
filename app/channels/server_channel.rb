@@ -3,8 +3,12 @@ class ServerChannel < ApplicationCable::Channel
     server = Server.find_by(id: params[:server_id])
 
     if server && current_user
-      # Ensure membership
-      Membership.find_or_create_by!(user: current_user, server: server)
+      Membership.transaction do
+        membership = Membership.lock("FOR UPDATE").find_by(user: current_user, server: server)
+
+        # Create a server-only membership if none exists
+        membership ||= Membership.create!(user: current_user, server: server)
+      end
 
       stop_all_streams
       stream_from "server_#{server.id}"

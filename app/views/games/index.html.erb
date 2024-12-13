@@ -1,5 +1,5 @@
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag "game_ui", media: "all" %>
+  <%= stylesheet_link_tag "game_index", media: "all" %>
 <% end %>
 
 <% content_for :javascripts do %>
@@ -7,10 +7,6 @@
   <%= javascript_include_tag "channels/game_logic_channel" %>
 <% end %>
 
-<!-- Moving background -->
-<div class="background-container">
-  <div class="background-scene"></div>
-</div>
 
 <!-- Button to Create New Game -->
 <div class="new-game">

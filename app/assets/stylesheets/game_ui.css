@@ -35,37 +35,45 @@
 }
 
 .tile-color-1 {
-    background-color: #f28b82 !important; /* Light red */
+    background-color: #ff6e6e !important; /* Light red */
 }
 
 .tile-color-2 {
-    background-color: #fbbc04 !important; /* Light orange */
+    background-color: #ffc947 !important; /* Light orange */
 }
 
 .tile-color-3 {
-    background-color: #fff475 !important; /* Light yellow */
+    background-color: #ffff8d !important; /* Light yellow */
 }
 
 .tile-color-4 {
-    background-color: #ccff90 !important; /* Light green */
+    background-color: #d4ff7f !important; /* Light green */
 }
 
 .tile-color-5 {
-    background-color: #a7ffeb !important; /* Light cyan */
+    background-color: #affff5 !important; /* Light cyan */
 }
 
 .tile-color-6 {
-    background-color: #cbf0f8 !important; /* Light blue */
+    background-color: #a3e6ff !important; /* Light blue */
 }
 
 .grid-cell.owned {
-    border-width: 3px;
+    border-width: 5px;
     border-style: solid;
+    box-shadow: 0 0 2px 2px;
 }
 
 .grid-cell.occupied { /* Highlight for current position */
     font-weight: bold;
     /*background-color: inherit !important;*/
+}
+
+.tile-avatar {
+    width: 90%; /* Avatar fills the tile */
+    height: 90%;
+    object-fit: cover; /* Prevent distortion */
+    border-radius: 60%;
 }
 
 .active-tile {

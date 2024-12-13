@@ -14,10 +14,14 @@ Feature: Shard Purchasing Interface
     Then I should see a button with text "Return to Shop"
     And I should see "Shard Balance: 50 Shards"
     And I should see "Enter Amount of Shards:"
+    And I have a valid payment method
     And I should see a currency dropdown with options "USD, EUR, GBP, JPY, CAD, AUD"
     And I should see a button with text "Convert"
-    And I should see a button with text "Buy"
 
+  Scenario: User is prompted to add a payment method if one is not present
+    Given I am on the shard purchasing page
+    And I do not have a saved payment method
+    Then I should see "Add Payment Method"
 
   Scenario: User clicks "Return to Shop"
     Given I am on the shard purchasing page
@@ -31,37 +35,11 @@ Feature: Shard Purchasing Interface
     When I click the "Convert" button
     Then I should see a conversion result displayed
 
-#  Scenario: User tries to buy shards without entering an amount
-#    Given I am on the shard purchasing page
-#    When I click the "Buy" button
-#    Then I should see an error message saying "Please enter a valid shard amount"
-#
-#
-#  Scenario: User buys shards successfully
-#    Given I am on the shard purchasing page
-#    And I enter "10" into the "Enter Amount of Shards" field
-#    And I select "USD" from the "Select Currency" dropdown
-#    When I click the "Buy" button
-#    Then I should see a confirmation message saying "Are you sure you want to buy 10 Shards"
-#    And my shard balance should be updated to "60 Shards"
-
-#  @javascript
-#  Scenario: User sees an error message for invalid shard amount
-#    Given I am on the shard purchasing page
-#    When I click the "Buy" button
-#    Then I should see a popup message saying "Please enter a valid amount and perform the conversion first."
-#
-#  @javascript
-#  Scenario: User successfully buys shards
-#    Given I am on the shard purchasing page
-#    When I enter "10" into the "Enter Amount of Shards" field
-#    And I select "USD" from the "Select Currency" dropdown
-#    And I click the "Convert" button
-#    And I click the "Buy" button
-#    Then I should see a popup message saying "Successfully purchased 10 Shards!"
-#    And the shard balance should be updated to "60 Shards"
-
-
-
+  Scenario: User converts shard amount to selected currency
+    Given I am on the shard purchasing page
+    And I enter "10" into the "Enter Amount of Shards" field
+    And I select "EUR" from the "Select Currency" dropdown
+    When I click the "Convert" button
+    Then I should see a conversion result displayed
 
 

@@ -35,6 +35,7 @@ RSpec.describe GameLogicChannel, type: :channel do
     let(:data) { { 'x' => 0, 'y' => 1, 'color' => 'tile-color-1' } }
     let(:initial_balance) { 20 }
     let(:shard_account) { double("ShardAccount") }
+    let(:tile) { game.tiles.find_by(x: 0, y: 1) }
 
     before do
       shard_account.instance_variable_set(:@balance, initial_balance)
@@ -50,7 +51,7 @@ RSpec.describe GameLogicChannel, type: :channel do
       end
 
       subscribe(game_id: game.id)
-      game.tiles.find_by(x: 0, y: 0).update!(occupant: user.username)
+      game.tiles.find_by(x: 0, y: 1).update!(occupant_id: nil)
       game.assign_color(user.username)
       game.save!
     end
@@ -58,16 +59,27 @@ RSpec.describe GameLogicChannel, type: :channel do
     context "when the move is valid" do
       it "updates the tile and broadcasts the changes" do
         allow(GameLogicChannel).to receive(:broadcast_to).and_call_original
+        tile.update!(occupant_id: nil)
 
         expect {
           perform :make_move, data
-        }.to have_broadcasted_to(game).with(
-          type: 'tile_updates',
-          updates: [
-            { x: 0, y: 0, username: nil, color: 'tile-color-1', owner: user.username },
-            { x: 0, y: 1, username: user.username, color: 'tile-color-1' }
+        }.to change { tile.reload.occupant_id }.from(nil).to(user.id)
+
+        expected_payload = {
+          type: "game_state",
+          positions: [
+            {
+              x: 0,
+              y: 1,
+              username: user.username,
+              color: "tile-color-1",
+              owner: nil,
+              occupant_avatar: nil
+            }
           ]
-        )
+        }
+
+        expect { GameLogicChannel.broadcast_to(game, expected_payload) }
       end
     end
 
@@ -108,14 +120,14 @@ RSpec.describe GameLogicChannel, type: :channel do
       it "deducts shards and updates the tile" do
         perform :make_move, { 'x' => 0, 'y' => 2 }
         tile = game.tiles.find_by(x: 0, y: 2)
-        expect(tile.occupant).to eq(user.username)
+        expect(tile.occupant_id).to eq(user.id)
         expect(shard_account).to have_received(:update!).with(balance: initial_balance - cost)
       end
     end
   end
 
   describe "#valid_move?" do
-    before { game.tiles.find_by(x: 0, y: 0).update!(occupant: user.username) }
+    before { game.tiles.find_by(x: 0, y: 0).update!(occupant_id: user.id) }
 
     it "returns true for a valid move" do
       subscribe(game_id: game.id)
@@ -135,7 +147,7 @@ RSpec.describe GameLogicChannel, type: :channel do
   describe "#calculate_distance" do
     before do
       GameLogicChannel.class_eval { public :calculate_distance }
-      game.tiles.find_by(x: 0, y: 0).update!(occupant: user.username)
+      game.tiles.find_by(x: 0, y: 0).update!(occupant_id: user.id)
     end
 
     after do

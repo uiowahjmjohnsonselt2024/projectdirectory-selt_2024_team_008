@@ -30,17 +30,17 @@
 
 <div id="flash-messages"></div>
 
-<div class="game-details">
-  <h1>Debug Info:</h1>
-  <p>Game: <%= @game.name %></p>
-  <p>Status: <%= @game.status %></p>
-  <p>Creator id: <%= @game.creator_id %></p>
-  <p>Creator user: <%= @server.original_creator_username%></p>
-  <p>Logged in user: <%= current_user.username %></p>
-  <p>User id: <%= current_user.id %></p>
-
-
-</div>
+<% if Rails.env.development? || Rails.env.test? %>
+  <div class="game-details">
+    <h1>Debug Info:</h1>
+    <p>Game: <%= @game.name %></p>
+    <p>Status: <%= @game.status %></p>
+    <p>Creator id: <%= @game.creator_id %></p>
+    <p>Creator user: <%= @server.original_creator_username%></p>
+    <p>Logged in user: <%= current_user.username %></p>
+    <p>User id: <%= current_user.id %></p>
+  </div>
+<% end %>
 
 <div class="game-container">
   <!-- Game Grid -->
@@ -48,14 +48,17 @@
     <% @grid_rows.each do |row| %>
       <div class="grid-row">
         <% row.each do |tile| %>
-          <div
-            class="grid-cell <%= tile.occupant.present? ? 'occupied' : '' %>"
+          <div class="grid-cell <%= tile.occupant_user.present? ? 'occupied' : '' %>"
             data-x="<%= tile.x %>"
             data-y="<%= tile.y %>"
-            style="background-color: <%= tile.color || '#f0f0f0' %>;"
+            style="background-color: <%= tile.color || '#f0f0f0' %>;
+              background-image: url(<%= asset_path(tile.image_source) %>);
+              background-size: cover;"
           >
-            <% if tile.occupant.present? %>
-              <span><%= tile.occupant %></span>
+            <% if tile.occupant_user.present? %>
+              <img class="tile-avatar"
+                   src="<%= tile.occupant_avatar %>"
+                   alt="Avatar for <%= tile.occupant_user.username %>" />
             <% end %>
           </div>
         <% end %>

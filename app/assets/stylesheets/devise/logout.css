@@ -12,9 +12,10 @@
     padding: 8px 16px;
     border-radius: 5px;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease !important;
 }
 
 #logoutButton:hover {
     background-color: #d0432b;
+    transform: scale(1.05);
 }

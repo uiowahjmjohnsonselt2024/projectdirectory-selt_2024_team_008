@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_13_020329) do
   create_table "avatars", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "hat_id"
@@ -27,6 +27,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.index ["shoes_id"], name: "index_avatars_on_shoes_id"
     t.index ["top_id"], name: "index_avatars_on_top_id"
     t.index ["user_id"], name: "index_avatars_on_user_id"
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.integer "shard_account_id", null: false
+    t.string "card_number_encrypted"
+    t.string "expiry_date"
+    t.string "cvv_encrypted"
+    t.text "billing_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shard_account_id"], name: "index_cards_on_shard_account_id"
   end
 
   create_table "games", force: :cascade do |t|
@@ -62,7 +73,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.index ["game_id"], name: "index_memberships_on_game_id"
     t.index ["server_id"], name: "index_memberships_on_server_id"
     t.index ["user_id", "game_id"], name: "index_memberships_on_user_id_and_game_id", unique: true
-    t.index ["user_id", "server_id"], name: "index_memberships_on_user_id_and_server_id", unique: true
+    t.index ["user_id", "server_id", "game_id"], name: "index_memberships_on_user_server_game", unique: true
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
@@ -76,6 +87,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "riddles", force: :cascade do |t|
+    t.string "x"
+    t.string "y"
+    t.string "question"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "servers", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -85,8 +104,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.string "original_creator_username"
     t.string "original_creator_email"
     t.integer "original_creator_id"
-    t.index ["creator_id"], name: "index_servers_on_creator_id"
-    t.index ["game_id"], name: "index_servers_on_game_id"
   end
 
   create_table "shard_accounts", force: :cascade do |t|
@@ -110,13 +127,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
     t.integer "x", null: false
     t.integer "y", null: false
     t.string "owner"
-    t.string "occupant"
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "image_source"
     t.string "task_type"
     t.datetime "task_last_completed"
+    t.integer "occupant_id"
     t.index ["game_id", "x", "y"], name: "index_tiles_on_game_id_and_x_and_y", unique: true
     t.index ["game_id"], name: "index_tiles_on_game_id"
   end
@@ -160,6 +177,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
   add_foreign_key "avatars", "items", column: "shoes_id"
   add_foreign_key "avatars", "items", column: "top_id"
   add_foreign_key "avatars", "users"
+  add_foreign_key "cards", "shard_accounts"
   add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "memberships", "games", on_delete: :cascade
@@ -171,6 +189,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
   add_foreign_key "tiles", "games", on_delete: :cascade
+  add_foreign_key "tiles", "users", column: "occupant_id"
   add_foreign_key "user_items", "items"
   add_foreign_key "user_items", "users"
 end

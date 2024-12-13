@@ -13,7 +13,7 @@ RSpec.describe Game, type: :model do
 
     before do
       tile = game.tiles.find_by(x: 3, y: 2) # Find tile at (3, 2)
-      tile.update!(occupant: "testuser")
+      tile.update!(occupant_id: 1)
     end
 
     it "returns the position of the user if present" do
@@ -28,7 +28,7 @@ RSpec.describe Game, type: :model do
   describe "#tile_empty?" do
     before do
       tile = game.tiles.find_by(x: 1, y: 1) # Find tile at (1, 1)
-      tile.update!(occupant: "testuser")
+      tile.update!(occupant_id: 1)
     end
 
     it "returns true if the tile is empty" do
