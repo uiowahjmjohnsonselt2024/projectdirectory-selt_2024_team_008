@@ -36,7 +36,17 @@ class User < ApplicationRecord
   after_create :create_default_avatar
 
   def create_default_avatar
-    build_avatar.save
+    avatar = build_avatar
+    image_path = Rails.root.join('app', 'assets', 'images', 'defaultAvatar.png')
+
+    if File.exist?(image_path)
+      avatar.avatar_image = File.binread(image_path)
+    else
+      Rails.logger.warn "Default avatar image not found at #{image_path}"
+    end
+
+    avatar.save
+
   end
 
   # Override Devise's find_for_database_authentication method
@@ -82,6 +92,7 @@ class User < ApplicationRecord
       Rails.logger.error("Failed to find or create Mystery Box item")
     end
   end
+
 
   def self.reassigning?
     Thread.current[:reassigning] || false

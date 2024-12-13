@@ -1,6 +1,9 @@
 <div class="tile">
-  <% if tile.occupant_avatar %>
-    <img src="data:image/png;base64,<%= Base64.encode64(tile.occupant_avatar) %>" alt="Avatar" />
+  <% if tile[:occupant_avatar].present? %>
+    <img src="<%= tile[:occupant_avatar] %>"
+         alt="Character Avatar"
+         class="tile-avatar"
+      />
   <% else %>
     <span class="placeholder">No Avatar</span>
   <% end %>

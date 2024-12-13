@@ -11,7 +11,7 @@ class Tile < ApplicationRecord
   # Fetch occupant avatar image
   def occupant_avatar
     if occupant_user&.avatar&.avatar_image
-      Base64.encode64(occupant_user.avatar.avatar_image)
+      "data:image/png;base64,#{Base64.strict_encode64(occupant_user.avatar.avatar_image)}"
     else
       ActionController::Base.helpers.asset_path('defaultAvatar.png')
     end
