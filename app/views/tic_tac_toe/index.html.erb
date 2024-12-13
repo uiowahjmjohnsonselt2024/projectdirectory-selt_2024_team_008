@@ -6,6 +6,10 @@
   <%= javascript_include_tag 'tic_tac_toe' %>
 <% end %>
 
+<script>
+    const gameId = <%= @game.id %>;
+</script>
+
 <div class="tic-tac-toe-container">
   <h1>Tic Tac Toe</h1>
   <div class="shard-balance-display">

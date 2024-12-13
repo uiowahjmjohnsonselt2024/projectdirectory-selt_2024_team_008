@@ -162,16 +162,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_12_044840) do
   add_foreign_key "avatars", "users"
   add_foreign_key "games", "servers", on_delete: :cascade
   add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
-  add_foreign_key "games", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "memberships", "games", on_delete: :cascade
-  add_foreign_key "memberships", "servers", on_delete: :cascade
   add_foreign_key "memberships", "servers", on_delete: :cascade
   add_foreign_key "memberships", "users", on_delete: :nullify
   add_foreign_key "messages", "servers", on_delete: :cascade
-  add_foreign_key "messages", "servers", on_delete: :cascade
   add_foreign_key "messages", "users", on_delete: :nullify
   add_foreign_key "servers", "games", on_delete: :cascade
-  add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "servers", "users", column: "creator_id", on_delete: :nullify
   add_foreign_key "shard_accounts", "users"
   add_foreign_key "tiles", "games", on_delete: :cascade

@@ -126,6 +126,13 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
         case "tile_action":
             handleTileAction(data);
             break;
+        case "enter_tic_tac_toe":
+            const gameElement = document.getElementById("game-element");
+            if (gameElement) {
+                const gameId = gameElement.dataset.gameId;
+                window.location.href = `/games/${gameId}/tic_tac_toe`;
+            }
+            break;
 
         case "balance_update":
             if (data.user_id === userId) {
