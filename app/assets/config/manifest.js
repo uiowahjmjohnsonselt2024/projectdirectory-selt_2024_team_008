@@ -17,6 +17,7 @@
 //= link chat_room.js
 //= link chat_room.css
 
+//= link game_index.css
 //= link game_ui.js
 //= link game_ui.css
 
