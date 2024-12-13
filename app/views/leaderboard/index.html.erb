@@ -6,7 +6,6 @@
     <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
   </div>
   <div class="nav-right">
-
   </div>
 </div>
 
@@ -28,7 +27,16 @@
   <% @users.each_with_index do |user, index| %>
     <tr>
       <td><%= index + 1 %></td>
-      <td><%= user.username %></td>
+      <td>
+        <div class="avatar-container">
+          <% if user.avatar && user.avatar.avatar_image_base64.present? %>
+            <%= image_tag "data:image/png;base64,#{user.avatar.avatar_image_base64}", alt: "#{user.username}'s avatar", class: "avatar" %>
+          <% else %>
+            <%= image_tag "defaultAvatar.png", alt: "Default avatar", class: "avatar" %>
+          <% end %>
+          <span class="username"><%= user.username %></span>
+        </div>
+      </td>
       <td><%= number_to_currency(user.shard_account.balance, unit: 'Shards', format: "%n %u") %></td>
     </tr>
   <% end %>

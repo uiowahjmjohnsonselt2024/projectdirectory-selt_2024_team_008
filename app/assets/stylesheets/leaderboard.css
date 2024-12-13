@@ -30,3 +30,21 @@
 .leaderboard-table td {
     font-size: 1rem;
 }
+
+.avatar-container {
+    display: flex;
+    align-items: center;  /* Vertically center the avatar and username */
+    gap: 10px;  /* Space between avatar and username */
+}
+
+.avatar {
+    width: 40px;  /* Resize avatar */
+    height: 40px;  /* Resize avatar */
+    border-radius: 50%;  /* Make the avatar circular */
+    object-fit: cover;  /* Ensure the image fits within the circle */
+}
+
+.username {
+    font-size: 14px;  /* Adjust the font size for the username */
+    font-weight: bold;
+}
