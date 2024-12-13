@@ -129,7 +129,11 @@ class GameLogicChannel < ApplicationCable::Channel
         owner: target_tile.owner || current_user.username,
         color: game.user_colors[current_user.username]
       )
-      occupant_avatar = ActionController::Base.helpers.asset_path('defaultAvatar.png')
+      occupant_avatar = if current_user.avatar&.avatar_image
+                          "data:image/png;base64,#{Base64.strict_encode64(current_user.avatar.avatar_image)}"
+                        else
+                          ActionController::Base.helpers.asset_path('defaultAvatar.png')
+                        end
 
       updates << { x: x, y: y, username: current_user.username, color: target_tile.color,
                    occupant_avatar: occupant_avatar }
@@ -197,7 +201,11 @@ class GameLogicChannel < ApplicationCable::Channel
           username: tile.occupant_user&.username,
           color: tile.color,
           owner: tile.owner,
-          occupant_avatar: tile.occupant_user&.avatar&.avatar_image.present? ? Base64.encode64(tile.occupant_user.avatar.avatar_image) : nil
+          occupant_avatar: if tile.occupant_user&.avatar&.avatar_image.present?
+                             "data:image/png;base64,#{Base64.strict_encode64(tile.occupant_user.avatar.avatar_image)}"
+                           else
+                             ActionController::Base.helpers.asset_path('defaultAvatar.png')
+                           end
         }
     end.compact
 
