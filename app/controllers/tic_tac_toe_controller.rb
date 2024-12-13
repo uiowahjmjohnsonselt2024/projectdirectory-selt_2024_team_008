@@ -53,7 +53,7 @@ class TicTacToeController < ApplicationController
 
     if winner?(board, current_turn)
       status = current_turn == "X" ? "win" : "loss"
-      message = current_turn == "X" ? "YOU WIN! You Just gained 50 Shards." : "YOU LOSE! You Just lost 25 Shards."
+      message = current_turn == "X" ? "YOU WIN! You Just gained 4 Shards." : "YOU LOSE! You Just lost 2 Shards."
     elsif board_full?(board)
       status = "draw"
       message = "It was a draw. Please Press 'Go Back' to try again."
@@ -75,7 +75,7 @@ class TicTacToeController < ApplicationController
 
     board[cpu_move] = "O"
     if winner?(board, "O")
-      { board: board, status: "loss", message: "YOU LOSE! You Just lost 25 Shards." }
+      { board: board, status: "loss", message: "YOU LOSE! You Just lost 2 Shards." }
     elsif board_full?(board)
       { board: board, status: "draw", message: "It was a draw. Please Press 'Go Back' to try again." }
     else
@@ -99,9 +99,9 @@ class TicTacToeController < ApplicationController
 
   def update_shards(status)
     if status == "win"
-      current_user.shard_account.increment!(:balance, 50)
+      current_user.shard_account.increment!(:balance, 4)
     elsif status == "loss"
-      current_user.shard_account.decrement!(:balance, 25)
+      current_user.shard_account.decrement!(:balance, 2)
     end
   end
 end
