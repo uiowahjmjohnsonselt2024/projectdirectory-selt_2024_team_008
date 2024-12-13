@@ -48,7 +48,7 @@ RSpec.describe GamesController, type: :controller do
 
         expect(response).to have_http_status(:ok)
         json_response = JSON.parse(response.body)
-        expect(json_response["message"]).to eq("Membership ensured for game and server")
+        expect(json_response["message"]).to eq("Membership already exists for game and server")
       end
 
       it "returns a message if the user is already a member" do
@@ -67,7 +67,7 @@ RSpec.describe GamesController, type: :controller do
 
         expect(response).to have_http_status(:ok)
         json_response = JSON.parse(response.body)
-        expect(json_response["message"]).to eq("Membership ensured for game and server")
+        expect(json_response["message"]).to eq("Membership already exists for game and server")
       end
     end
 
