@@ -30,17 +30,17 @@
 
 <div id="flash-messages"></div>
 
-<div class="game-details">
-  <h1>Debug Info:</h1>
-  <p>Game: <%= @game.name %></p>
-  <p>Status: <%= @game.status %></p>
-  <p>Creator id: <%= @game.creator_id %></p>
-  <p>Creator user: <%= @server.original_creator_username%></p>
-  <p>Logged in user: <%= current_user.username %></p>
-  <p>User id: <%= current_user.id %></p>
-
-
-</div>
+<% if Rails.env.development? || Rails.env.test? %>
+  <div class="game-details">
+    <h1>Debug Info:</h1>
+    <p>Game: <%= @game.name %></p>
+    <p>Status: <%= @game.status %></p>
+    <p>Creator id: <%= @game.creator_id %></p>
+    <p>Creator user: <%= @server.original_creator_username%></p>
+    <p>Logged in user: <%= current_user.username %></p>
+    <p>User id: <%= current_user.id %></p>
+  </div>
+<% end %>
 
 <div class="game-container">
   <!-- Game Grid -->
