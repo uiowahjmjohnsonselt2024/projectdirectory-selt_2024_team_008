@@ -62,7 +62,7 @@ const initializeGameLogicChannel = async () => {
     try {
         // Ensure membership before subscribing
         await ensureGameMembership(gameId);
-        await fetchGameState(gameId);
+        await fetchGameState(gameId, username);
 
         console.log("After ensure membership")
 
@@ -180,6 +180,8 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
 const handleMove = (x, y, lastPosition, userId, channel, username) => {
     let distance = calculateDistance(lastPosition, { x, y });
 
+    console.log(`Making a move from (${lastPosition.x}, ${lastPosition.y}) to (${x}, ${y})`);
+
     // Prevent duplicate confirmations for the same tile.
     const activeTiles = document.querySelectorAll('.grid-cell.confirming');
     const isAlreadyConfirming = Array.from(activeTiles).some(
@@ -198,7 +200,7 @@ const handleMove = (x, y, lastPosition, userId, channel, username) => {
         setTimeout(() => targetCell.classList.remove('confirming'), 5000); // 5-sec safety period.
     }
 
-    if (lastPosition.x === x && lastPosition.y === y) {
+    if (lastPosition.x === x && lastPosition.y === y || distance === 0) {
         console.log("User clicked on their current tile.");
 
         // Trigger a tile action
@@ -244,6 +246,8 @@ const handleMove = (x, y, lastPosition, userId, channel, username) => {
             distance -= 1;
             shardCost -= 2;
 
+            if (distance < 1) {return}
+
             const confirmMove = confirm(`Moving ${distance} tiles will cost ${shardCost} shards. Proceed?`);
             if (!confirmMove) return;
 
@@ -281,10 +285,10 @@ const attachGridCellListeners = (lastPosition) => {
             const x = parseInt(cell.dataset.x, 10);
             const y = parseInt(cell.dataset.y, 10);
 
-            if (lastPosition.x === null || lastPosition.y === null) {
-                lastPosition.x = x;
-                lastPosition.y = y;
-            }
+            // if (lastPosition.x === null || lastPosition.y === null) {
+            //     lastPosition.x = x;
+            //     lastPosition.y = y;
+            // }
 
             gameLogicSubscription.makeMove(x, y);
         });
@@ -418,7 +422,7 @@ const showFlashMessage = (message, type = "alert") => {
     }, 3000);
 };
 
-const fetchGameState = async (gameId) => {
+const fetchGameState = async (gameId, username) => {
     try {
         const response = await fetch(`/games/${gameId}/game_state`);
         if (!response.ok) throw new Error(`Failed to fetch game state: ${response.statusText}`);
@@ -431,6 +435,27 @@ const fetchGameState = async (gameId) => {
             jsonData.positions.forEach(pos =>
                 updateTile(pos.x, pos.y, pos.username, pos.color, pos.owner)
             );
+
+            // Find the current user's position
+            const currentUserPosition = jsonData.positions.find(pos => pos.username === username);
+
+            if (currentUserPosition) {
+                // Set the current user's last position
+                lastPosition.x = currentUserPosition.x;
+                lastPosition.y = currentUserPosition.y;
+
+                // Persist the position in localStorage
+                localStorage.setItem("lastPosition", JSON.stringify(lastPosition));
+
+                console.log(`Last position for ${username} set to: (${lastPosition.x}, ${lastPosition.y})`);
+            } else {
+                // No position found; it's the user's first move
+                lastPosition.x = null;
+                lastPosition.y = null;
+                localStorage.removeItem("lastPosition");
+
+                console.log(`No last position found for ${username}. Awaiting first move.`);
+            }
         } else {
             console.error("Unexpected response from game_state:", jsonData);
         }
@@ -440,10 +465,12 @@ const fetchGameState = async (gameId) => {
 };
 
 document.addEventListener("turbolinks:load", async () => {
+    lastPosition = { x: null, y: null };
     const gameElement = document.getElementById("game-element");
+    const username = gameElement.dataset.username;
     if (gameElement) {
         const gameId = gameElement.dataset.gameId;
-        await fetchGameState(gameId); // Fetch the grid state on page load
+        await fetchGameState(gameId, username); // Fetch the grid state on page load
         if (!gameLogicSubscription) await initializeGameLogicChannel();
     }
 });
