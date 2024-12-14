@@ -26,5 +26,5 @@ Feature: Shop Interface
 
   Scenario: User navigates to mystery boxes
     Given I am on the shop page
-    When I click the "Go Here For Mystery Boxes" button
+    When I click the "Open Mystery Boxes" button
     Then I should be redirected to the mystery boxes page
