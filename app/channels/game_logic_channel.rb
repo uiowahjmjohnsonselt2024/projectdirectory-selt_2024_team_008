@@ -239,7 +239,12 @@ class GameLogicChannel < ApplicationCable::Channel
   def trigger_tile_action(game, x, y)
     tile = game.tiles.find_by(x: x, y: y)
     return unless tile
+    last_completed = tile.task_last_completed
+    if last_completed.nil? || (Time.current - last_completed) > 30.seconds
+      # Update the timestamp for the task
+      tile.update!(task_last_completed: Time.current)
 
+      # Broadcast the task type to the frontend
       GameLogicChannel.broadcast_to(
         game,
         type: 'tile_action',
@@ -248,7 +253,18 @@ class GameLogicChannel < ApplicationCable::Channel
         task_type: tile.task_type,
         message: "Player has entered the tile at (#{x}, #{y})."
       )
+    else
+      # Broadcast a message that the task is not ready yet
+      GameLogicChannel.broadcast_to(
+        game,
+        type: 'task_unavailable',
+        x: x,
+        y: y,
+        message: "Task on this tile is not available yet. Please wait."
+      )
+    end
   end
+
 
   def broadcast_system_message(message, game)
     GameLogicChannel.broadcast_to(game, { type: 'system', message: message })
