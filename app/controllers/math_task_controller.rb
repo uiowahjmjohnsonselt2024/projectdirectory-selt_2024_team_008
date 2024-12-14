@@ -43,14 +43,14 @@ class MathTaskController < ApplicationController
         shard_account.save!
         Rails.logger.info("ShardAccount After Increment: #{shard_account.balance}")
         new_shard_balance = shard_account.balance
-        math_message = "correct"
+        math_message = "That's correct! You gained 4 shards."
       else
         shard_account = current_user.shard_account
         shard_account.balance -= 2
         shard_account.save!
         Rails.logger.info("ShardAccount After Increment: #{shard_account.balance}")
         new_shard_balance = shard_account.balance
-        math_message = "wrong answer"
+        math_message = "Sorry. That's the wrong answer. You lose 2 shards."
       end
       render json: { math_message: math_message, new_shard_balance: new_shard_balance }
     end
