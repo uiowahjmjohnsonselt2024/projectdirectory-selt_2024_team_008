@@ -64,11 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     npcMessageElement.innerHTML = `<strong>NPC:</strong> ${data.npc_message}`;
                     chatHistory.appendChild(npcMessageElement);
 
-                    if (data.npc_message.toLowerCase().includes("correct")) {
-                        responseForm.classList.add("hidden");
-                        startButton.disabled = true;
-                        userResponse.disabled = true;
-                    }
+                    responseForm.classList.add("hidden");
+                    startButton.disabled = true;
+                    userResponse.disabled = true;
 
                     if (data.new_shard_balance !== undefined) {
                         shardBalanceDisplay.textContent = `Shard Balance: ${data.new_shard_balance} Shards`;
