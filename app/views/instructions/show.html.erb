@@ -6,6 +6,10 @@
   <%= javascript_include_tag 'instructions' %>
 <% end %>
 
+<div class="top-navigation">
+  <%= button_to "Return", game_path(@game), class: "btn return-btn", method: :get %>
+</div>
+
 <div class="background-container">
   <div class="background-scene"></div>
 </div>
