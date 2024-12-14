@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         userResponse.disabled = true;
                     }
 
-                    if (data.new_shard_balance !== undefined) {
+                    if (data.new_shard_balance != undefined) {
                         shardBalanceDisplay.textContent = `Shard Balance: ${data.new_shard_balance} Shards`;
                     }
 
