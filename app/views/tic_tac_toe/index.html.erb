@@ -10,6 +10,10 @@
     const gameId = <%= @game.id %>;
 </script>
 
+<div class="top-navigation">
+  <%= button_to "Return", game_path(@game), class: "btn return-btn", method: :get %>
+</div>
+
 <div class="tic-tac-toe-container">
   <h1>Tic Tac Toe</h1>
   <div class="shard-balance-display">
