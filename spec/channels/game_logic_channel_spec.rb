@@ -140,7 +140,9 @@ RSpec.describe GameLogicChannel, type: :channel do
       subscribe(game_id: game.id)
       channel = subscription
 
-      expect(channel.send(:valid_move?, game, 10, 10)).to be false
+      expect {
+        channel.send(:valid_move?, game, 10, 10)
+      }.to raise_error(ArgumentError, "Target coordinates (10, 10) are out of bounds.")
     end
   end
 

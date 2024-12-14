@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         responseForm.classList.remove("hidden"); // Show form
 
         // Fetch the first riddle
-        fetch("/math_task/chat", {
+        fetch(`/games/${gameId}/math_task/chat`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
-            fetch("/math_task/chat", {
+            fetch(`/games/${gameId}/math_task/chat`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

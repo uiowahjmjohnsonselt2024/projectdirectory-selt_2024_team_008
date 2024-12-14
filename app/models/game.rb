@@ -89,10 +89,19 @@ class Game < ApplicationRecord
 
   def initialize_grid
     image_sources = %w[background1.png background2.png background3.png background4.png background5.png background6.png]
+    task_types = %w[MATH NPC TIC]
 
     (0...10).each do |y|
       (0...10).each do |x|
-        tiles.create!(x: x, y: y, owner: nil, occupant_id: nil, color: nil, image_source: image_sources.sample)
+        tiles.create!(
+          x: x,
+          y: y,
+          owner: nil,
+          occupant_id: nil,
+          color: nil,
+          image_source: image_sources.sample,
+          task_type: task_types.sample
+        )
       end
     end
   end

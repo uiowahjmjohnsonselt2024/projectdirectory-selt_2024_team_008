@@ -154,17 +154,39 @@ class GameLogicChannel < ApplicationCable::Channel
     return false unless current_position
 
     current_x, current_y = current_position
+    Rails.logger.debug "Current position: (#{current_x}, #{current_y}), Target position: (#{target_x}, #{target_y})"
 
     # Check for valid tile bounds
-    return false unless target_x.between?(0, 9) && target_y.between?(0, 9)
+    unless target_x.between?(0, 9) && target_y.between?(0, 9)
+      raise ArgumentError, "Target coordinates (#{target_x}, #{target_y}) are out of bounds."
+    end
+
 
     # Check for horizontal or vertical move
     valid_horizontal_or_vertical = (target_x == current_x || target_y == current_y)
-    return false unless valid_horizontal_or_vertical
+    unless valid_horizontal_or_vertical
+      Rails.logger.debug "Invalid move: Target is not horizontal or vertical to the current position"
+      return false
+    end
 
     # Check ownership and occupancy
     tile = game.tiles.find_by(x: target_x, y: target_y)
-    tile.present? && tile.occupant_id.nil? && (tile.owner.nil? || tile.owner == current_user.username)
+    if tile.nil?
+      Rails.logger.debug "No tile found at target position (#{target_x}, #{target_y})"
+      return false
+    end
+
+    if tile.occupant_id.present? && tile.occupant_id != current_user.id
+      Rails.logger.debug "Tile at target position (#{target_x}, #{target_y}) is already occupied by another user"
+      return false
+    end
+
+    unless tile.owner.nil? || tile.owner == current_user.username
+      Rails.logger.debug "Tile at target position (#{target_x}, #{target_y}) does not belong to current user"
+      return false
+    end
+
+    true
   end
 
   def calculate_distance(game, target_x, target_y)
@@ -175,9 +197,7 @@ class GameLogicChannel < ApplicationCable::Channel
 
     return nil if current_x == target_x && current_y == target_y
 
-    unless valid_move?(game, target_x, target_y)
-      raise ArgumentError, "Target coordinates (#{target_x}, #{target_y}) are out of bounds."
-    end
+    return unless valid_move?(game, target_x, target_y)
 
     # Calculate Chebyshev distance
     [ (target_x - current_x).abs, (target_y - current_y).abs ].max
@@ -220,22 +240,14 @@ class GameLogicChannel < ApplicationCable::Channel
     tile = game.tiles.find_by(x: x, y: y)
     return unless tile
 
-    if tile.owner == current_user.username
-      # If the user owns this tile, instruct the frontend to go to Tic Tac Toe
-      GameLogicChannel.broadcast_to(
-        game,
-        type: 'enter_tic_tac_toe'
-      )
-    else
-      # If the tile is not owned by the user, we fall back to a generic message
       GameLogicChannel.broadcast_to(
         game,
         type: 'tile_action',
         x: x,
         y: y,
+        task_type: tile.task_type,
         message: "Player has entered the tile at (#{x}, #{y})."
       )
-    end
   end
 
   def broadcast_system_message(message, game)
