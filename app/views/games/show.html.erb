@@ -91,8 +91,8 @@
     <button class="pause-menu-close" id="pauseMenuClose">Close</button>
   </div>
   <div class="pause-menu-content">
-    <%= button_to "Inventory", inventory_path, method: :get, class: "button"%>
-    <%= button_to "How To Play", instructions_path, method: :get, class: "button"%>
-    <%= button_to "Exit", games_path, method: :get, class: "button"%>
+    <%= link_to "Inventory", inventory_path(origin: request.fullpath), class: "btn add-funds-btn" %>
+    <%= link_to "How To Play", instructions_path(origin: request.fullpath), class: "btn add-funds-btn"%>
+    <%= button_to "Exit", games_path, method: :get, class: "btn add-funds-btn"%>
   </div>
 </div>

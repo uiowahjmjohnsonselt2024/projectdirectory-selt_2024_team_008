@@ -87,14 +87,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_13_020329) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
-  create_table "riddles", force: :cascade do |t|
-    t.string "x"
-    t.string "y"
-    t.string "question"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "servers", force: :cascade do |t|
     t.string "name", null: false
     t.integer "creator_id"
@@ -104,6 +96,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_13_020329) do
     t.string "original_creator_username"
     t.string "original_creator_email"
     t.integer "original_creator_id"
+    t.index ["creator_id"], name: "index_servers_on_creator_id"
+    t.index ["game_id"], name: "index_servers_on_game_id"
   end
 
   create_table "shard_accounts", force: :cascade do |t|

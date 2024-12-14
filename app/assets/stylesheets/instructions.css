@@ -21,3 +21,19 @@ body {
 body.instructions .title{
     font-size: 6rem;
 }
+
+
+.top-navigation .return-btn {
+    background-color: green; /* Example button background color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.top-navigation .return-btn:hover {
+    background-color: darkgreen; /* Darker shade for hover effect */
+}

@@ -92,7 +92,6 @@ Rails.application.routes.draw do
 
   get 'leaderboard', to: 'leaderboard#index'
 
-
   resources :npc_task, only: [:create] do
     member do
       post :answer_riddle
