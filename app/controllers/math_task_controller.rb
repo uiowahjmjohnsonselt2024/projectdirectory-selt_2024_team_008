@@ -37,17 +37,20 @@ class MathTaskController < ApplicationController
       # Validate user's answer
       solution_param = params[:solution]
       user_num = user_message.to_i
-      if user_num == 0
-        math_message = "You either entered 0 which is wrong or you did not enter a number."
-      elsif user_num == solution_param
+      if user_num == solution_param
         shard_account = current_user.shard_account
-        shard_account.balance += 50
+        shard_account.balance += 4
         shard_account.save!
         Rails.logger.info("ShardAccount After Increment: #{shard_account.balance}")
         new_shard_balance = shard_account.balance
-        math_message = "correct"
+        math_message = "That's correct! You gained 4 shards."
       else
-        math_message = "wrong answer"
+        shard_account = current_user.shard_account
+        shard_account.balance -= 2
+        shard_account.save!
+        Rails.logger.info("ShardAccount After Increment: #{shard_account.balance}")
+        new_shard_balance = shard_account.balance
+        math_message = "Sorry. That's the wrong answer. You lose 2 shards."
       end
       render json: { math_message: math_message, new_shard_balance: new_shard_balance }
     end

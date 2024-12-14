@@ -65,14 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     npcMessageElement.classList.add("math-message");
                     npcMessageElement.innerHTML = `<strong>NPC:</strong> ${data.math_message}`;
                     chatHistory.appendChild(npcMessageElement);
+                    responseForm.classList.add("hidden");
+                    startButton.disabled = true;
+                    userResponse.disabled = true;
 
-                    if (data.math_message.toLowerCase().includes("correct")) {
-                        responseForm.classList.add("hidden");
-                        startButton.disabled = true;
-                        userResponse.disabled = true;
-                    }
-
-                    if (data.new_shard_balance !== undefined) {
+                    if (data.new_shard_balance != undefined) {
                         shardBalanceDisplay.textContent = `Shard Balance: ${data.new_shard_balance} Shards`;
                     }
 
