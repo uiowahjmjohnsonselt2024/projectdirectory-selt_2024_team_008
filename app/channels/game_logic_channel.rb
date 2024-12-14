@@ -157,7 +157,10 @@ class GameLogicChannel < ApplicationCable::Channel
     Rails.logger.debug "Current position: (#{current_x}, #{current_y}), Target position: (#{target_x}, #{target_y})"
 
     # Check for valid tile bounds
-    return false unless target_x.between?(0, 9) && target_y.between?(0, 9)
+    unless target_x.between?(0, 9) && target_y.between?(0, 9)
+      raise ArgumentError, "Target coordinates (#{target_x}, #{target_y}) are out of bounds."
+    end
+
 
     # Check for horizontal or vertical move
     valid_horizontal_or_vertical = (target_x == current_x || target_y == current_y)
