@@ -201,7 +201,7 @@
     display: flex;
     align-items: center; /* Center text alignment */
     justify-content: center; /* Vertical alignment */
-    padding: 15px 25px; /* Larger padding for bigger buttons */
+    padding: 10px 20px; /* Larger padding for bigger buttons */
     font-size: 2rem; /* Increase font size for button text */
     font-weight: bold;
     text-align: center;
