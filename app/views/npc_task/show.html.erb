@@ -1,9 +1,10 @@
 <%= stylesheet_link_tag 'npc_task', media: 'all', 'data-turbolinks-track': 'reload' %>
+
 <script>
     const gameId = <%= @game.id %>;
 </script>
 <div class="top-navigation">
-  <%= button_to "Return", main_menu_path, class: "btn return-btn", method: :get %>
+  <%= button_to "Return", game_path(@game), class: "btn return-btn", method: :get %>
   <div class="shard-balance-display">
     <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
   </div>
@@ -22,7 +23,8 @@
 
     <button id="start-interaction" class="btn return-btn">Start Interaction</button>
 
-    <form class="npc-response-form hidden" id="npc-response-form" action="#" method="POST">
+    <form class="npc-response-form hidden" id="npc-response-form" action="<%= npc_task_chat_game_path(@game) %>" method="POST">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
       <textarea id="user-response" class="response-textarea" placeholder="Type your answer here..."></textarea>
       <button type="submit" class="response-submit">Send</button>
     </form>

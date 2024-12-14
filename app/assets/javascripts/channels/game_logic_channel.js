@@ -97,6 +97,9 @@ const initializeGameLogicChannel = async () => {
 
 // Handle received data
 const handleGameChannelEvent = (data, userId, lastPosition) => {
+    const gameElement = document.getElementById("game-element");
+    const gameId = gameElement.dataset.gameId;
+
     console.log(`data.type: ${data.type}`);
     switch (data.type) {
         case "game_state":
@@ -125,14 +128,28 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
             break;
 
         case "tile_action":
-            handleTileAction(data);
-            break;
-        case "enter_tic_tac_toe":
-            const gameElement = document.getElementById("game-element");
-            if (gameElement) {
-                const gameId = gameElement.dataset.gameId;
-                window.location.href = `/games/${gameId}/tic_tac_toe`;
+            let redirectUrl;
+            if (data.task_type) {
+                switch (data.task_type) {
+                    case "TIC":
+                        redirectUrl = `/games/${gameId}/tic_tac_toe/`;
+                        break;
+                    case "NPC":
+                        redirectUrl = `/games/${gameId}/npc_task/`;
+                        break;
+                    case "MATH":
+                        redirectUrl = `/games/${gameId}/math/`;
+                        break;
+                    default:
+                        console.log("Unknown task type:", data.task_type);
+                        return;
+                }
+                window.location.href = redirectUrl;
+                handleTileAction(data);
+            } else {
+                console.log("No task type found in tile_action data:", data);
             }
+
             break;
 
         case "balance_update":

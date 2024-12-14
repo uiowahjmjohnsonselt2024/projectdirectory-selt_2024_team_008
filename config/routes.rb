@@ -47,8 +47,15 @@ Rails.application.routes.draw do
     member do
       get :game_state, defaults: { format: :json }
       post :ensure_membership, defaults: { format: :json }
+
       get 'tic_tac_toe', to: 'tic_tac_toe#index', as: 'tic_tac_toe'
       post 'tic_tac_toe/play', to: 'tic_tac_toe#play', as: 'tic_tac_toe_play'
+
+      get 'npc_task', to: 'npc_task#show', as: 'npc_task'
+      post 'npc_task/chat', to: 'npc_task#chat', as: 'npc_task_chat'
+
+      get 'math_task', to: 'math_task#show', as: 'math_task'
+      post 'math_task/chat', to: 'math_task#chat'
     end
   end
 
