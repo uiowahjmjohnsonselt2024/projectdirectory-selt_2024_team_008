@@ -17,6 +17,7 @@
 //= require servers
 //= require chat_room
 //= require game_ui
+//= require background_slideshow
 
 // Include all other JavaScript files in the directory tree
 //= require_tree .
