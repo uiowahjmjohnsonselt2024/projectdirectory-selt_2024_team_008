@@ -22,17 +22,18 @@ body.instructions .title{
     font-size: 6rem;
 }
 
-.go-back-link {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 12px;
-    background: darkgreen;
+
+.top-navigation .return-btn {
+    background-color: green; /* Example button background color */
     color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
     border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    text-decoration: none;
 }
 
-.go-back-link:hover{
-    background: green;
+.top-navigation .return-btn:hover {
+    background-color: darkgreen; /* Darker shade for hover effect */
 }

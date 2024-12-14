@@ -5,25 +5,25 @@
 <% content_for :javascripts do %>
   <%= javascript_include_tag 'instructions' %>
 <% end %>
-
-<div class="top-navigation">
-  <%= button_to "Return", game_path(@game), class: "btn return-btn", method: :get %>
+<div class ="top-navigation">
+  <%= link_to "Return", (params[:origin] || games_path), class: "btn return-btn" %>
 </div>
+
 
 <div class="background-container">
   <div class="background-scene"></div>
 </div>
 <div class="title">How To Play</div>
 <div class="instructions-content">
+  <h2>Basics</h2>
   <ol>
-    <li>Begin by clicking into the starting tile.</li>
-    <li>Talk to the NPC, who will then ask you a question. You must answer the question correctly
-      to gain shards. If you answer incorrectly, you lose shards.</li>
-    <li>Use your Shards to purchase adjacent tiles.</li>
+    <li>Begin by clicking into the starting tile. This will begin one of the tasks.</li>
+    <li>There are 3 options for tasks: Tic Tac Toe, A math problem, and a riddle. These are randomly assigned to each tile.</li>
+    <li>If you complete the task, you gain 4 Shards. If you lose, you lose 2 Shards. Use your Shards to purchase adjacent tiles.</li>
   </ol>
   <h2>How to earn Shards?</h2>
   <ol>
-    <li>Complete tasks given by NPCs.</li>
+    <li>Complete tasks in your owned tiles.</li>
     <li>Purchase Shards directly from the Shop.</li>
   </ol>
   <h2>How To Travel Between Squares?</h2>

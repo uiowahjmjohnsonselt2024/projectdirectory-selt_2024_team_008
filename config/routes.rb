@@ -90,7 +90,6 @@ Rails.application.routes.draw do
   get 'instructions', to: 'instructions#show', as: 'instructions'
 
 
-
   resources :npc_task, only: [:create] do
     member do
       post :answer_riddle
