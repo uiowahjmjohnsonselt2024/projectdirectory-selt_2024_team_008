@@ -4,7 +4,7 @@
     const gameId = <%= @game.id %>;
 </script>
 <div class="top-navigation">
-  <%= button_to "Return", main_menu_path, class: "btn return-btn", method: :get %>
+  <%= button_to "Return", game_path(@game), class: "btn return-btn", method: :get %>
   <div class="shard-balance-display">
     <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
   </div>

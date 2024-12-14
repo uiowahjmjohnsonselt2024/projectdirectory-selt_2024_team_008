@@ -138,7 +138,7 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
                         redirectUrl = `/games/${gameId}/npc_task/`;
                         break;
                     case "MATH":
-                        redirectUrl = `/games/${gameId}/math/`;
+                        redirectUrl = `/games/${gameId}/math_task/`;
                         break;
                     default:
                         console.log("Unknown task type:", data.task_type);

@@ -55,7 +55,7 @@ Rails.application.routes.draw do
       post 'npc_task/chat', to: 'npc_task#chat', as: 'npc_task_chat'
 
       get 'math_task', to: 'math_task#show', as: 'math_task'
-      post 'math_task/chat', to: 'math_task#chat'
+      post 'math_task/chat', to: 'math_task#chat', as: 'math_task_chat'
     end
   end
 

@@ -1,4 +1,9 @@
 class MathTaskController < ApplicationController
+  def show
+    @game = Game.find(params[:id])
+    @shard_balance = current_user.shard_account.balance
+  end
+
   def chat
 
     user_message = params[:message]
