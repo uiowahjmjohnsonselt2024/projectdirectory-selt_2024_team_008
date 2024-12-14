@@ -8,6 +8,7 @@
 # end
 
 Rails.application.routes.draw do
+  get 'leaderboard/index'
   get 'character_creation/index'
   # Mount ActionCable server
   mount ActionCable.server => '/cable'
@@ -89,6 +90,7 @@ Rails.application.routes.draw do
 
   get 'instructions', to: 'instructions#show', as: 'instructions'
 
+  get 'leaderboard', to: 'leaderboard#index'
 
 
   resources :npc_task, only: [:create] do

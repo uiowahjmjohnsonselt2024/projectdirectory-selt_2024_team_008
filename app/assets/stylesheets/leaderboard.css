@@ -1,0 +1,50 @@
+/* Table Styles */
+.leaderboard-table {
+    width: 80%;
+    margin-top: 30px;
+    border-collapse: collapse;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-table th, .leaderboard-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.leaderboard-table th {
+    background-color: darkgreen;
+    color: white;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+.leaderboard-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.leaderboard-table tbody tr:hover {
+    background-color: #e0e0e0;
+}
+
+.leaderboard-table td {
+    font-size: 1rem;
+}
+
+.avatar-container {
+    display: flex;
+    align-items: center;  /* Vertically center the avatar and username */
+    gap: 10px;  /* Space between avatar and username */
+}
+
+.avatar {
+    width: 40px;  /* Resize avatar */
+    height: 40px;  /* Resize avatar */
+    border-radius: 50%;  /* Make the avatar circular */
+    object-fit: cover;  /* Ensure the image fits within the circle */
+}
+
+.username {
+    font-size: 14px;  /* Adjust the font size for the username */
+    font-weight: bold;
+}

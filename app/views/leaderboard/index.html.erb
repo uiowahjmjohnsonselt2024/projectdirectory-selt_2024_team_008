@@ -1,0 +1,44 @@
+<div class="top-navigation">
+  <div class="nav-left">
+    <%= button_to "Return to Menu", main_menu_path, class: "btn return-btn", method: :get %>
+  </div>
+  <div class="nav-center shard-balance-display">
+    <p>Shard Balance: <%= current_user.shard_account.balance %> Shards</p>
+  </div>
+  <div class="nav-right">
+  </div>
+</div>
+
+<div class="background-container">
+  <div class="background-scene"></div>
+</div>
+
+<h1 class="title">Leaderboard</h1>
+
+<table class="leaderboard-table">
+  <thead>
+  <tr>
+    <th>Rank</th>
+    <th>User</th>
+    <th>Balance (Shards)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @users.each_with_index do |user, index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td>
+        <div class="avatar-container">
+          <% if user.avatar && user.avatar.avatar_image_base64.present? %>
+            <%= image_tag "data:image/png;base64,#{user.avatar.avatar_image_base64}", alt: "#{user.username}'s avatar", class: "avatar" %>
+          <% else %>
+            <%= image_tag "defaultAvatar.png", alt: "Default avatar", class: "avatar" %>
+          <% end %>
+          <span class="username"><%= user.username %></span>
+        </div>
+      </td>
+      <td><%= number_to_currency(user.shard_account.balance, unit: 'Shards', format: "%n %u") %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
