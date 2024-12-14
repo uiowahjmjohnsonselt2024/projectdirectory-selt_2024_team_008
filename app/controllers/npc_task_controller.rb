@@ -8,11 +8,9 @@ class NpcTaskController < ApplicationController
     user_message = params[:message]&.strip&.downcase
 
     if user_message.nil?
-      # Array of topics for riddles
       topics = ["nature", "pop culture", "history", "technology", "science", "animals", "jokes", "movies"]
-      random_topic = topics.sample # Select a random topic
+      random_topic = topics.sample
 
-      # Generate a new riddle with the selected topic
       client = OpenAI::Client.new
       response = client.chat(
         parameters: {
@@ -26,27 +24,23 @@ class NpcTaskController < ApplicationController
       )
       npc_response = response.dig('choices', 0, 'message', 'content')
 
-      # Parse the riddle and answer
       riddle_data = JSON.parse(npc_response) rescue nil
       if riddle_data && riddle_data["riddle"] && riddle_data["answer"]
-        # Store the riddle and answer in the session (or database)
         session[:current_riddle] = riddle_data["riddle"]
         session[:correct_answer] = riddle_data["answer"].downcase.strip
         render json: { npc_message: riddle_data["riddle"] }
       else
-        render json: { error: "Failed to generate a valid riddle." }, status: :unprocessable_entity
+        render json: { error: "Failed to generate a valid riddle." }, status: :internal_server_error
       end
     else
-      # Validate the user's answer
       current_riddle = session[:current_riddle]
       correct_answer = session[:correct_answer]
 
       if current_riddle.nil? || correct_answer.nil?
-        render json: { npc_message: "Something went wrong. Please refresh to get a new riddle." }, status: :unprocessable_entity
+        render json: { error: "Riddle session data missing. Please refresh to get a new riddle." }, status: :internal_server_error
         return
       end
 
-      # Check the user's answer
       client = OpenAI::Client.new
       response = client.chat(
         parameters: {
@@ -62,24 +56,28 @@ class NpcTaskController < ApplicationController
       npc_message = response.dig('choices', 0, 'message', 'content')
 
       if npc_message&.downcase&.include?("correct")
-        # Correct answer logic
         shard_account = current_user.shard_account
         shard_account.balance += 4
         shard_account.save!
         new_shard_balance = shard_account.balance
-
         render json: { npc_message: "Correct! The answer is #{correct_answer}. Well done!", new_shard_balance: new_shard_balance }
       else
-        # Incorrect answer logic
         shard_account = current_user.shard_account
-        shard_account.balance -= 2
+        shard_account.balance = [shard_account.balance - 2, 0].max
         shard_account.save!
         new_shard_balance = shard_account.balance
         render json: { npc_message: "Wrong! The answer is #{correct_answer}!", new_shard_balance: new_shard_balance }
-        #render json: { npc_message: "Wrong. The answer is not correct. Come back later" }
       end
     end
+  rescue JSON::ParserError => e
+    Rails.logger.debug "JSON::ParserError: #{e.message}"
+    render json: { error: "Failed to parse OpenAI response: #{e.message}" }, status: :internal_server_error
   rescue StandardError => e
+    Rails.logger.debug "StandardError: #{e.message}"
     render json: { error: "Something went wrong: #{e.message}" }, status: :internal_server_error
   end
+
+
+
+
 end
