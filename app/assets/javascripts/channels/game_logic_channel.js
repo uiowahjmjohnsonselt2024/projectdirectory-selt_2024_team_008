@@ -167,6 +167,10 @@ const handleGameChannelEvent = (data, userId, lastPosition) => {
             showFlashMessage(data.message || "Invalid move.", "alert");
             break;
 
+        case "task_unavailable":
+            showFlashMessage(data.message, "alert"); // Display the cooldown flash message
+            break;
+
         case "error":
             showFlashMessage(data.message || "An error occurred.", 'alert');
             break;

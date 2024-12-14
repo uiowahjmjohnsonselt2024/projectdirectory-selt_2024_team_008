@@ -9,6 +9,7 @@ document.addEventListener("turbolinks:load", () => {
         return;
     }
 
+
     cells.forEach(cell => {
         // Add new listeners without replacing the node
         cell.addEventListener("mouseover", () => {
