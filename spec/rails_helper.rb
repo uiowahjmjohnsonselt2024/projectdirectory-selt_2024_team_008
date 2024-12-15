@@ -41,6 +41,9 @@ RSpec.configure do |config|
 
   config.include Devise::Test::IntegrationHelpers, type: :request
 
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::IntegrationHelpers, type: :feature
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
