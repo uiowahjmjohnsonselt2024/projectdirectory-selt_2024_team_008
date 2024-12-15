@@ -37,6 +37,21 @@ RSpec.describe TicTacToeController, type: :controller do
         expect(body["new_shard_balance"]).to eq(0)
       end
     end
+    context "when the player makes a winning move" do
+      let(:board_almost_won) { ["X","X", "", "", "", "", "", "", ""]}
+
+      it "rewards teh player with 4 shards and returns a winning status" do
+        expect(user.shard_account.balance).to eq(0)
+
+        post :play, params: { move: 2, current_turn: "X", "board[]" => board_almost_won }, as: :json
+        expect(response).to have_http_status(:success)
+        body = JSON.parse(response.body)
+        expect(body["status"]).to eq("win")
+        expect(body["board"][2]).to eq("X")
+        expect(body["message"]).to include("YOU WIN")
+        expect(user.shard_account.reload.balance).to eq(4)
+      end
+    end
   end
 
 end
