@@ -125,7 +125,6 @@ Rails.application.routes.draw do
 
   get 'math_task', to: 'math_task#show', as: 'math_task'
 
-
   # Catch-all route for unknown paths
   # match '*unmatched', to: 'errors#redirect_to_main_menu', via: :all, constraints: ->(req) {
   #   req.format.html? &&

@@ -87,3 +87,47 @@ body.main-menu #logoutButton{
     background-color: darkgreen; /* Darken the green background on hover */
     transform: scale(1.1); /* Slightly enlarge button on hover */
 }
+
+.music-toggle-container {
+    position: fixed;
+    bottom: 10px; /* Align to the bottom */
+    left: 10px;  /* Align to the left */
+    z-index: 9999; /* Ensure visibility above other elements */
+    display: flex;
+    align-items: center; /* Vertically center the text and button */
+    justify-content: flex-start;
+    gap: 10px; /* Add space between the button and text */
+}
+
+#toggle-music-btn {
+    background: transparent;
+    color: green;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50%; /* Circular button */
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#toggle-music-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Subtle hover effect */
+    transform: scale(1.1); /* Slight zoom on hover */
+}
+
+.music-toggle-text {
+    font-size: 1.2rem;
+    color: green;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    padding: 0;
+}
+
+.chat-room-header .music-toggle-container,
+.chat-section .music-toggle-container,
+.chat-room .music-toggle-container{
+    display: none !important;
+}
+

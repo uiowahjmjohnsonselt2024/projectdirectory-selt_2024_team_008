@@ -17,6 +17,7 @@
 //= require servers
 //= require chat_room
 //= require game_ui
+//= require background_slideshow
 
 // Include all other JavaScript files in the directory tree
 //= require_tree .
@@ -25,6 +26,38 @@
 console.log(">>> application.js loaded <<<");
 document.addEventListener("turbolinks:load", () => {
     console.log(">>> turbolinks:load event fired <<<");
+});
+
+document.addEventListener('turbolinks:load', function () {
+    var audio = document.getElementById('bg-audio');
+    var toggleBtn = document.getElementById('toggle-music-btn');
+
+    if (toggleBtn && audio) {
+        toggleBtn.addEventListener('click', function () {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    toggleBtn.textContent = '🔇'; // Update to mute icon
+                }).catch(err => {
+                    console.error('Error playing audio:', err);
+                });
+            } else {
+                audio.pause();
+                toggleBtn.textContent = '♫'; // Update to play icon
+            }
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const currentPath = window.location.pathname; // Get the current path
+    const musicToggleContainer = document.querySelector('.music-toggle-container');
+
+    // Define paths where the toggle button should not appear
+    const excludedPaths = ['/servers']; // Add specific paths for exclusion
+
+    if (excludedPaths.some(path => currentPath.startsWith(path)) && musicToggleContainer) {
+        musicToggleContainer.remove(); // Dynamically remove the music toggle button
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {

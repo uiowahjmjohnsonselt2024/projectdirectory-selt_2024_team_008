@@ -6,9 +6,22 @@
   <%= javascript_include_tag 'main_menu' %>
 <% end %>
 
-<div class="background-container">
-  <div class="background-scene"></div>
+<style>
+    .preload-images {
+        display: none;
+    }
+</style>
+<div class="preload-images">
+  <%= image_tag 'scrolling_bg1.png' %>
+  <%= image_tag 'scrolling_bg2.png' %>
+  <%= image_tag 'scrolling_bg3.png' %>
+  <%= image_tag 'scrolling_bg4.png' %>
+  <%= image_tag 'scrolling_bg5.png' %>
+  <%= image_tag 'scrolling_bg6.png' %>
 </div>
+
+
+<div class="background-container"></div>
 
 <div class="title">Shards of the Grid</div>
 
