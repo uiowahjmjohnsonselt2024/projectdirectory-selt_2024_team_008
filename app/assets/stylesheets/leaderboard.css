@@ -19,32 +19,37 @@
     text-transform: uppercase;
 }
 
+.leaderboard-table tbody tr {
+    background-color: rgba(255, 255, 255, 0.9); /* Ensure all rows have a base color */
+}
+
 .leaderboard-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: rgba(245, 245, 245, 0.9); /* Slightly darker for even rows */
 }
 
 .leaderboard-table tbody tr:hover {
-    background-color: #e0e0e0;
+    background-color: rgba(224, 224, 224, 1); /* Fully opaque on hover */
 }
 
 .leaderboard-table td {
     font-size: 1rem;
 }
 
+/* Avatar Container Styles */
 .avatar-container {
     display: flex;
-    align-items: center;  /* Vertically center the avatar and username */
-    gap: 10px;  /* Space between avatar and username */
+    align-items: center; /* Vertically center the avatar and username */
+    gap: 10px; /* Space between avatar and username */
 }
 
 .avatar {
-    width: 40px;  /* Resize avatar */
-    height: 40px;  /* Resize avatar */
-    border-radius: 50%;  /* Make the avatar circular */
-    object-fit: cover;  /* Ensure the image fits within the circle */
+    width: 40px; /* Resize avatar */
+    height: 40px; /* Resize avatar */
+    border-radius: 50%; /* Make the avatar circular */
+    object-fit: cover; /* Ensure the image fits within the circle */
 }
 
 .username {
-    font-size: 14px;  /* Adjust the font size for the username */
+    font-size: 14px; /* Adjust the font size for the username */
     font-weight: bold;
 }

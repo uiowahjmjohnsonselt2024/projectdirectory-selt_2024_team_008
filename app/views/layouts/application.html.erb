@@ -11,6 +11,17 @@
   <meta name="turbo-cache-control" content="no-cache">
   <meta name="rails-env" content="<%= Rails.env %>">
 
+  <audio id="bg-audio" loop hidden data-turbo-permanent>
+    <source src="<%= asset_path('game-music.mp3') %>" type="audio/mpeg">
+  </audio>
+  <div class="music-toggle-container">
+    <audio id="bg-audio" loop hidden>
+      <source src="<%= asset_path('game-music.mp3') %>" type="audio/mpeg">
+    </audio>
+    <button id="toggle-music-btn">♫</button>
+    <p class="music-toggle-text">Toggle Music</p>
+  </div>
+
   <script>
       console.log(">>> Inline script in application.html.erb loaded <<<");
   </script>
