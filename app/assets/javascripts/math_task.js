@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         startButton.classList.add("hidden"); // Hide start button
         responseForm.classList.remove("hidden"); // Show form
 
-        // Fetch the first riddle
+        // Fetch the first math question
         fetch(`/games/${gameId}/math_task/chat`, {
             method: "POST",
             headers: {

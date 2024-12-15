@@ -1,7 +1,7 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/user.rb": {
+      "/home/codio/workspace/app/models/user.rb": {
         "lines": [
           null,
           null,
@@ -41,16 +41,16 @@
           1,
           null,
           1,
-          214,
-          214,
+          216,
+          216,
           null,
-          214,
-          214,
+          216,
+          216,
           null,
           0,
           null,
           null,
-          214,
+          216,
           null,
           null,
           null,
@@ -82,19 +82,19 @@
           1,
           null,
           1,
-          214,
+          216,
           null,
           null,
           1,
-          214,
-          214,
-          214,
+          216,
+          216,
+          216,
           103,
           103,
           103,
           103,
           null,
-          111,
+          113,
           null,
           null,
           null,
@@ -143,7 +143,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/application_record.rb": {
+      "/home/codio/workspace/app/models/application_record.rb": {
         "lines": [
           null,
           null,
@@ -152,7 +152,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/server.rb": {
+      "/home/codio/workspace/app/models/server.rb": {
         "lines": [
           null,
           null,
@@ -256,7 +256,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/application_helper.rb": {
+      "/home/codio/workspace/app/helpers/application_helper.rb": {
         "lines": [
           null,
           null,
@@ -266,67 +266,67 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/character_creation_helper.rb": {
+      "/home/codio/workspace/app/helpers/character_creation_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/errors_helper.rb": {
+      "/home/codio/workspace/app/helpers/errors_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/inventory_helper.rb": {
+      "/home/codio/workspace/app/helpers/inventory_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/leaderboard_helper.rb": {
+      "/home/codio/workspace/app/helpers/leaderboard_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/math_task_helper.rb": {
+      "/home/codio/workspace/app/helpers/math_task_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/messages_helper.rb": {
+      "/home/codio/workspace/app/helpers/messages_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/mystery_boxes_helper.rb": {
+      "/home/codio/workspace/app/helpers/mystery_boxes_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/npc_task_helper.rb": {
+      "/home/codio/workspace/app/helpers/npc_task_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/servers_helper.rb": {
+      "/home/codio/workspace/app/helpers/servers_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/users/omniauth_callbacks_helper.rb": {
+      "/home/codio/workspace/app/helpers/users/omniauth_callbacks_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/helpers/welcome_helper.rb": {
+      "/home/codio/workspace/app/helpers/welcome_helper.rb": {
         "lines": [
           null,
           null,
@@ -334,7 +334,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/channels/application_cable/connection.rb": {
+      "/home/codio/workspace/app/channels/application_cable/connection.rb": {
         "lines": [
           1,
           1,
@@ -359,7 +359,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/channels/game_logic_channel.rb": {
+      "/home/codio/workspace/app/channels/game_logic_channel.rb": {
         "lines": [
           1,
           1,
@@ -635,7 +635,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/channels/application_cable/channel.rb": {
+      "/home/codio/workspace/app/channels/application_cable/channel.rb": {
         "lines": [
           1,
           1,
@@ -643,7 +643,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/channels/server_channel.rb": {
+      "/home/codio/workspace/app/channels/server_channel.rb": {
         "lines": [
           1,
           1,
@@ -758,7 +758,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/cards_controller.rb": {
+      "/home/codio/workspace/app/controllers/cards_controller.rb": {
         "lines": [
           1,
           1,
@@ -796,7 +796,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/application_controller.rb": {
+      "/home/codio/workspace/app/controllers/application_controller.rb": {
         "lines": [
           null,
           null,
@@ -842,15 +842,15 @@
           1,
           null,
           1,
-          88,
-          76,
+          92,
+          80,
           null,
           null,
           null,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/games_controller.rb": {
+      "/home/codio/workspace/app/controllers/games_controller.rb": {
         "lines": [
           null,
           null,
@@ -987,7 +987,71 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/npc_task_controller.rb": {
+      "/home/codio/workspace/app/controllers/math_task_controller.rb": {
+        "lines": [
+          1,
+          1,
+          0,
+          0,
+          null,
+          null,
+          1,
+          null,
+          4,
+          4,
+          4,
+          null,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          null,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          null,
+          2,
+          null,
+          null,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          2,
+          null,
+          null,
+          0,
+          null,
+          null
+        ]
+      },
+      "/home/codio/workspace/app/controllers/npc_task_controller.rb": {
         "lines": [
           1,
           1,
@@ -1074,7 +1138,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/shard_accounts_controller.rb": {
+      "/home/codio/workspace/app/controllers/shard_accounts_controller.rb": {
         "lines": [
           1,
           1,
@@ -1179,7 +1243,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/tic_tac_toe_controller.rb": {
+      "/home/codio/workspace/app/controllers/tic_tac_toe_controller.rb": {
         "lines": [
           1,
           1,
@@ -1277,7 +1341,7 @@
           null,
           null,
           null,
-          91,
+          90,
           null,
           null,
           1,
@@ -1290,7 +1354,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/avatar.rb": {
+      "/home/codio/workspace/app/models/avatar.rb": {
         "lines": [
           1,
           1,
@@ -1315,7 +1379,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/card.rb": {
+      "/home/codio/workspace/app/models/card.rb": {
         "lines": [
           1,
           1,
@@ -1347,7 +1411,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/game.rb": {
+      "/home/codio/workspace/app/models/game.rb": {
         "lines": [
           1,
           1,
@@ -1460,7 +1524,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/membership.rb": {
+      "/home/codio/workspace/app/models/membership.rb": {
         "lines": [
           null,
           null,
@@ -1492,7 +1556,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/shard_account.rb": {
+      "/home/codio/workspace/app/models/shard_account.rb": {
         "lines": [
           1,
           1,
@@ -1521,8 +1585,8 @@
           4,
           null,
           null,
-          1,
-          1,
+          3,
+          3,
           null,
           null,
           1,
@@ -1530,31 +1594,31 @@
           null,
           null,
           1,
-          2,
+          4,
           null,
           null,
           1,
           null,
           1,
           6,
+          0,
+          null,
+          null,
           6,
-          null,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
           6,
           5,
           null,
+          4,
+          null,
+          null,
+          null,
+          2,
+          2,
+          null,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/item.rb": {
+      "/home/codio/workspace/app/models/item.rb": {
         "lines": [
           1,
           1,
@@ -1565,7 +1629,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/user_item.rb": {
+      "/home/codio/workspace/app/models/user_item.rb": {
         "lines": [
           1,
           1,
@@ -1573,7 +1637,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/tile.rb": {
+      "/home/codio/workspace/app/models/tile.rb": {
         "lines": [
           1,
           1,
@@ -1597,7 +1661,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/message.rb": {
+      "/home/codio/workspace/app/models/message.rb": {
         "lines": [
           null,
           null,
@@ -1609,13 +1673,13 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/models/shop_item.rb": {
+      "/home/codio/workspace/app/models/shop_item.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/character_creation_controller.rb": {
+      "/home/codio/workspace/app/controllers/character_creation_controller.rb": {
         "lines": [
           1,
           1,
@@ -1648,8 +1712,11 @@
           0,
           0,
           null,
-          0,
-          0,
+          null,
+          null,
+          1,
+          null,
+          1,
           0,
           null,
           0,
@@ -1675,28 +1742,6 @@
           1,
           null,
           1,
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          null,
-          0,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          0,
-          null,
-          0,
-          0,
-          null,
           0,
           null,
           null,
@@ -1732,6 +1777,58 @@
           0,
           null,
           0,
+          null,
+          null,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0,
+          null,
+          0,
+          0,
+          null,
+          0,
+          null,
+          null,
+          null
+        ]
+      },
+      "/home/codio/workspace/app/controllers/shop_controller.rb": {
+        "lines": [
+          1,
+          1,
+          2,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null
+        ]
+      },
+      "/home/codio/workspace/app/controllers/mystery_boxes_controller.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          1,
+          null,
+          4,
+          4,
+          null,
+          null,
+          1,
+          null,
+          0,
+          null,
+          0,
           0,
           null,
           0,
@@ -1773,6 +1870,7 @@
           0,
           null,
           null,
+          1,
           0,
           0,
           null,
@@ -1780,7 +1878,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/inventory_controller.rb": {
+      "/home/codio/workspace/app/controllers/inventory_controller.rb": {
         "lines": [
           1,
           1,
@@ -1791,7 +1889,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/welcome_controller.rb": {
+      "/home/codio/workspace/app/controllers/welcome_controller.rb": {
         "lines": [
           null,
           null,
@@ -1801,7 +1899,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/leaderboard_controller.rb": {
+      "/home/codio/workspace/app/controllers/leaderboard_controller.rb": {
         "lines": [
           1,
           1,
@@ -1812,7 +1910,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/memberships_controller.rb": {
+      "/home/codio/workspace/app/controllers/memberships_controller.rb": {
         "lines": [
           1,
           1,
@@ -1828,6 +1926,9 @@
           0,
           null,
           null,
+          3,
+          3,
+          3,
           null,
           null,
           1,
@@ -1850,6 +1951,9 @@
           null,
           1,
           null,
+          1,
+          3,
+          2,
           null,
           null,
           null,
@@ -1865,7 +1969,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/messages_controller.rb": {
+      "/home/codio/workspace/app/controllers/messages_controller.rb": {
         "lines": [
           1,
           1,
@@ -1921,7 +2025,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/servers_controller.rb": {
+      "/home/codio/workspace/app/controllers/servers_controller.rb": {
         "lines": [
           1,
           1,
@@ -1989,7 +2093,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/main_menu_controller.rb": {
+      "/home/codio/workspace/app/controllers/main_menu_controller.rb": {
         "lines": [
           null,
           null,
@@ -2018,7 +2122,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/users/omniauth_callbacks_controller.rb": {
+      "/home/codio/workspace/app/controllers/users/omniauth_callbacks_controller.rb": {
         "lines": [
           1,
           1,
@@ -2039,7 +2143,7 @@
           null
         ]
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/constraints/role_route_constraint.rb": {
+      "/home/codio/workspace/app/constraints/role_route_constraint.rb": {
         "lines": [
           0,
           0,
@@ -2052,7 +2156,22 @@
           0,
           null,
           0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/home/codio/workspace/app/controllers/errors_controller.rb": {
+        "lines": [
           null,
+          null,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
           0,
           0,
           0,
@@ -2060,94 +2179,11 @@
         ],
         "branches": {}
       },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/errors_controller.rb": {
-        "lines": [
-          null,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "branches": {}
-      },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/instructions_controller.rb": {
+      "/home/codio/workspace/app/controllers/instructions_controller.rb": {
         "lines": [
           0,
           0,
           null,
-          0,
-          0,
-          0,
-          0
-        ],
-        "branches": {}
-      },
-      "/Users/mattstensby/Desktop/SELTREPOSITORY/final_project/projectdirectory-selt_2024_team_008/app/controllers/math_task_controller.rb": {
-        "lines": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
-          null,
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
           0,
           0,
           0,
@@ -2156,6 +2192,6 @@
         "branches": {}
       }
     },
-    "timestamp": 1734228844
+    "timestamp": 1734231801
   }
 }
