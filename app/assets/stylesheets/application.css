@@ -33,52 +33,51 @@
     animation: changeBackground 36s infinite;
 }
 
-@keyframes changeBackground {
-    0% { background-image: url('/assets/scrolling_bg1.png'); }
-    16.67% { background-image: url('/assets/scrolling_bg2.png'); }
-    33.33% { background-image: url('/assets/scrolling_bg3.png'); }
-    50% { background-image: url('/assets/scrolling_bg4.png'); }
-    66.67% { background-image: url('/assets/scrolling_bg5.png'); }
-    83.33% { background-image: url('/assets/scrolling_bg6.png'); }
-    100% { background-image: url('/assets/scrolling_bg1.png'); }
-}
+/*@keyframes changeBackground {*/
+/*    0% { background-image: url(<%= asset_path('scrolling_bg1.png') %>); }*/
+/*    16.67% { background-image: url(<%= asset_path('scrolling_bg2.png') %>); }*/
+/*    33.33% { background-image: url(<%= asset_path('scrolling_bg3.png') %>); }*/
+/*    50% { background-image: url(<%= asset_path('scrolling_bg4.png') %>); }*/
+/*    66.67% { background-image: url(<%= asset_path('scrolling_bg5.png') %>); }*/
+/*    83.33% { background-image: url(<%= asset_path('scrolling_bg6.png') %>); }*/
+/*    100% { background-image: url(<%= asset_path('scrolling_bg1.png') %>); }*/
+/*}*/
 
-.full-game-page-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: url('/assets/scrolling_bg4.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
+/*.full-game-page-image {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    z-index: -1;*/
+/*    background-image: url(<%= asset_path('scrolling_bg4.png') %>);*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    background-repeat: no-repeat;*/
+/*}*/
 
+/*.full-shop-page-image {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    z-index: -1;*/
+/*    background-image: url(<%= asset_path('shop_image.png') %>);*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    background-repeat: no-repeat;*/
+/*}*/
 
-.full-shop-page-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: url('/assets/shop_image.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.full-leaderboard-page-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: url('/assets/scrolling_bg3.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
+/*.full-leaderboard-page-image {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    z-index: -1;*/
+/*    background-image: url(<%= asset_path('scrolling_bg3.png') %>);*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    background-repeat: no-repeat;*/
+/*}*/
