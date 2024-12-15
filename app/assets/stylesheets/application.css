@@ -69,3 +69,16 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.full-leaderboard-page-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url('/assets/scrolling_bg3.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
