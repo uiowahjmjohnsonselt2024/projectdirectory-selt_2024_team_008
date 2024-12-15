@@ -101,6 +101,20 @@ RSpec.describe TicTacToeController, type: :controller do
         expect(user.shard_account.reload.balance).to eq(0) # No shard changes
       end
     end
+    context "when an unexpected server error occurs" do
+      before do
+        allow(controller).to receive(:process_game_logic).and_raise(StandardError, "Unexpected error")
+      end
+
+      it "returns a 500 error with an error message" do
+        post :play, params: { move: 0, current_turn: "X", "board[]" => empty_board }, as: :json
+        expect(response).to have_http_status(:internal_server_error)
+        body = JSON.parse(response.body)
+
+        expect(body["error"]).to include("Unexpected error")
+      end
+    end
+
 
 
 
