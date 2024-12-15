@@ -27,20 +27,18 @@ RSpec.describe TicTacToeController, type: :controller do
         expect(response).to have_http_status(:success)
         body = JSON.parse(response.body)
 
-        # Player placed 'X' at position 0
-        # CPU should place 'O' in one of the empty spots
         expect(body["status"]).to eq("continue")
         expect(body["board"][0]).to eq("X")
         expect(body["board"].count("O")).to eq(1)
         expect(body["message"]).to eq("")
-        # No shard change on continue
+
         expect(body["new_shard_balance"]).to eq(0)
       end
     end
     context "when the player makes a winning move" do
       let(:board_almost_won) { ["X","X", "", "", "", "", "", "", ""]}
 
-      it "rewards teh player with 4 shards and returns a winning status" do
+      it "rewards the player with 4 shards and returns a winning status" do
         expect(user.shard_account.balance).to eq(0)
 
         post :play, params: { move: 2, current_turn: "X", "board[]" => board_almost_won }, as: :json
@@ -52,6 +50,60 @@ RSpec.describe TicTacToeController, type: :controller do
         expect(user.shard_account.reload.balance).to eq(4)
       end
     end
+
+    context "when the CPU wins" do
+      let(:board_almost_lost) { ["X", "O", "X", "X", "O", "", "", "", ""] } # Checks a middle column victory
+
+      it "penalizes the player by subtracting 2 shards and returns a loss" do
+
+        expect(user.shard_account.balance).to eq(0)
+
+        # Stub `cpu_turn` to simulate the CPU making the winning move
+        allow(controller).to receive(:cpu_turn).and_return({
+                                                             board: ["X", "O", "X", "X", "O", "", "", "O", "X"], # CPU places "O" in position 7
+                                                             status: "loss",
+                                                             message: "YOU LOSE! You Just lost 2 Shards."
+                                                           })
+
+
+        post :play, params: { move: 8, current_turn: "X", "board[]" => board_almost_lost }, as: :json
+
+
+        expect(response).to have_http_status(:success)
+
+
+        body = JSON.parse(response.body)
+
+
+        expect(body["status"]).to eq("loss")
+
+
+        expect(body["message"]).to eq("YOU LOSE! You Just lost 2 Shards.")
+
+
+        expect(body["board"]).to eq(["X", "O", "X", "X", "O", "", "", "O", "X"])
+
+
+        expect(user.shard_account.reload.balance).to eq(-2)
+      end
+    end
+
+    context "when the game ends in a draw" do
+      let(:almost_full_board) { ["X", "O", "X", "X", "O", "O", "O", "X", ""] }
+
+      it "returns a draw status without changing shards" do
+        post :play, params: { move: 8, current_turn: "X", "board[]" => almost_full_board }, as: :json
+        expect(response).to have_http_status(:success)
+        body = JSON.parse(response.body)
+
+        expect(body["status"]).to eq("draw")
+        expect(body["message"]).to eq("It was a draw. Please Press 'Go Back' to try again.")
+        expect(user.shard_account.reload.balance).to eq(0) # No shard changes
+      end
+    end
+
+
+
   end
 
 end
