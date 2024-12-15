@@ -14,7 +14,6 @@
     </div>
     <div id="wrapper" class="hide">
       <div class="timestamp">Generated <abbr class="timeago" title="2024-12-15T03:03:21+00:00">2024-12-15T03:03:21+00:00</abbr></div>
-      <ul class="group_tabs"></ul>
 
       <div id="content">
         <div class="file_list_container" id="AllFiles">
@@ -11116,7 +11115,7 @@
 
             
 
-            <code class="ruby">      end</code>
+            <code class="ruby">        Rails.logger.info(&quot;ShardAccount After Increment: #{shard_account.balance}&quot;)</code>
           </li>
         </div>
       
@@ -11128,7 +11127,7 @@
 
             
 
-            <code class="ruby">      render json: { math_message: math_message, new_shard_balance: new_shard_balance }</code>
+            <code class="ruby">        new_shard_balance = shard_account.balance</code>
           </li>
         </div>
       
@@ -11138,12 +11137,42 @@
 
             
 
-            <code class="ruby">    end</code>
+            <code class="ruby">        math_message = &quot;Sorry. That&#39;s the wrong answer. You lose 2 shards.&quot;</code>
           </li>
         </div>
       
         <div>
           <li class="never" data-hits="" data-linenumber="57">
+            
+
+            
+
+            <code class="ruby">      end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="58">
+            
+
+            
+
+            <code class="ruby">      render json: { math_message: math_message, new_shard_balance: new_shard_balance }</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="59">
+            
+
+            
+
+            <code class="ruby">    end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="60">
             
 
             
@@ -11163,7 +11192,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="59">
+          <li class="missed" data-hits="0" data-linenumber="59">
             
 
             
@@ -11173,7 +11202,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="60">
+          <li class="missed" data-hits="0" data-linenumber="60">
             
 
             
